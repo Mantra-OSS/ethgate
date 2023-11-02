@@ -1,0 +1,373 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PunkerSchema has the same print 1`] = `
+"type Query {
+  """The node"""
+  node(
+    """The ID of the node"""
+    id: ID!
+  ): Node
+  root: Chain!
+}
+
+"""The node interface"""
+interface Node {
+  """The ID of the node"""
+  id: ID!
+
+  """The meta data of the node"""
+  meta: NodeMeta!
+}
+
+"""The meta data of a node"""
+type NodeMeta {
+  """The type of the node"""
+  type: String!
+
+  """The local ID of the node"""
+  localId: String!
+
+  """The data of the node"""
+  data: JSON!
+
+  """The time of the node"""
+  time: String!
+
+  """The name of the node"""
+  name: String!
+}
+
+"""
+The \`JSON\` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""A blockchain"""
+type Chain implements Node {
+  id: ID!
+  meta: NodeMeta!
+  chainId: String!
+  name: String!
+  parentId: String
+  chains(
+    """The number of nodes to return after the cursor"""
+    first: Int
+
+    """The cursor after which to return nodes"""
+    after: Cursor
+
+    """The number of nodes to return before the cursor"""
+    last: Int
+
+    """The cursor before which to return nodes"""
+    before: Cursor
+  ): ChainHasChainConnection!
+  blocks(
+    """The number of nodes to return after the cursor"""
+    first: Int
+
+    """The cursor after which to return nodes"""
+    after: Cursor
+
+    """The number of nodes to return before the cursor"""
+    last: Int
+
+    """The cursor before which to return nodes"""
+    before: Cursor
+  ): ChainHasBlockConnection!
+  descendantBlocks(
+    """The number of nodes to return after the cursor"""
+    first: Int
+
+    """The cursor after which to return nodes"""
+    after: Cursor
+
+    """The number of nodes to return before the cursor"""
+    last: Int
+
+    """The cursor before which to return nodes"""
+    before: Cursor
+  ): ChainHasDescendantBlockConnection!
+  transactions(
+    """The number of nodes to return after the cursor"""
+    first: Int
+
+    """The cursor after which to return nodes"""
+    after: Cursor
+
+    """The number of nodes to return before the cursor"""
+    last: Int
+
+    """The cursor before which to return nodes"""
+    before: Cursor
+  ): ChainHasTransactionConnection!
+  chain(
+    """The EIP155 ID of the chain"""
+    id: String!
+  ): Chain
+  block(hash: String, number: U64): Block
+  transaction(hash: String): Transaction
+
+  """The parent chain"""
+  parent: Chain
+}
+
+type ChainHasChainConnection implements Connection {
+  edges: [ChainHasChainEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""A connection to a list of items"""
+interface Connection {
+  """A list of edges"""
+  edges: [Edge]
+
+  """Information to aid in pagination"""
+  pageInfo: PageInfo!
+}
+
+"""An edge in a connection"""
+interface Edge {
+  """The item at the end of the edge"""
+  node: Node
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""A cursor for use in pagination"""
+scalar Cursor
+
+type ChainHasChainEdge implements Edge {
+  node: Chain!
+  cursor: String!
+}
+
+type ChainHasBlockConnection implements Connection {
+  edges: [ChainHasBlockEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ChainHasBlockEdge implements Edge {
+  node: Block!
+  cursor: String!
+}
+
+"""The block object"""
+type Block implements Node {
+  id: ID!
+  meta: NodeMeta!
+  chainId: String!
+  timestamp: U64!
+  hash: Hash!
+  number: U64!
+  parentHash: Hash!
+  gasLimit: U64!
+  gasUsed: U64!
+  baseFeePerGas: U64!
+  logsBloom: Hex!
+  miner: Address!
+  size: U64!
+  transactions(
+    """The number of nodes to return after the cursor"""
+    first: Int
+
+    """The cursor after which to return nodes"""
+    after: Cursor
+
+    """The number of nodes to return before the cursor"""
+    last: Int
+
+    """The cursor before which to return nodes"""
+    before: Cursor
+  ): BlockHasTransactionConnection!
+  receipts(
+    """The number of nodes to return after the cursor"""
+    first: Int
+
+    """The cursor after which to return nodes"""
+    after: Cursor
+
+    """The number of nodes to return before the cursor"""
+    last: Int
+
+    """The cursor before which to return nodes"""
+    before: Cursor
+  ): BlockHasReceiptConnection!
+  transaction(hash: String, index: Int): Transaction
+
+  """The chain"""
+  chain: Chain!
+  parent: Block!
+  transactionCount: Int!
+}
+
+scalar U64
+
+scalar Hash
+
+scalar Hex
+
+scalar Address
+
+type BlockHasTransactionConnection implements Connection {
+  edges: [BlockHasTransactionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BlockHasTransactionEdge implements Edge {
+  node: Transaction!
+  cursor: String!
+}
+
+type Transaction implements Node {
+  id: ID!
+  meta: NodeMeta!
+  chainId: String!
+  blockHash: Hash!
+  blockNumber: U64!
+  from: Address!
+  gas: U64!
+  gasPrice: U64!
+  hash: Hash!
+  input: Hex!
+  nonce: Hex!
+  to: Address!
+  transactionIndex: U64!
+  value: Hex!
+  v: Hex!
+  r: Hex!
+  s: Hex!
+  receipt: Receipt!
+
+  """The chain"""
+  chain: Chain!
+  block: Block!
+}
+
+type Receipt implements Node {
+  id: ID!
+  meta: NodeMeta!
+  chainId: String!
+  blockHash: Hash!
+  blockNumber: U64!
+  contractAddress: String
+  cumulativeGasUsed: U64!
+  from: Address!
+  gasUsed: U64!
+  logsBloom: Hex!
+  status: Hex!
+  to: Address!
+  transactionHash: Hash!
+  transactionIndex: U64!
+  logs(
+    """The number of nodes to return after the cursor"""
+    first: Int
+
+    """The cursor after which to return nodes"""
+    after: Cursor
+
+    """The number of nodes to return before the cursor"""
+    last: Int
+
+    """The cursor before which to return nodes"""
+    before: Cursor
+  ): ReceiptHasLogConnection!
+  log(index: Int): Log
+  block: Block!
+}
+
+type ReceiptHasLogConnection implements Connection {
+  edges: [ReceiptHasLogEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ReceiptHasLogEdge implements Edge {
+  node: Log!
+  cursor: String!
+}
+
+type Log implements Node {
+  id: ID!
+  meta: NodeMeta!
+  chainId: String!
+  address: Address!
+  topics: [Hash]!
+  data: Hex!
+  blockNumber: U64!
+  transactionHash: Hash!
+  transactionIndex: U64!
+  blockHash: Hash!
+  logIndex: U64!
+  removed: Boolean!
+  block: Block!
+  transaction: Block!
+  receipt: Block!
+}
+
+type BlockHasReceiptConnection implements Connection {
+  edges: [BlockHasReceiptEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BlockHasReceiptEdge implements Edge {
+  node: Receipt!
+  cursor: String!
+}
+
+type ChainHasDescendantBlockConnection implements Connection {
+  edges: [ChainHasDescendantBlockEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ChainHasDescendantBlockEdge implements Edge {
+  node: Block!
+  cursor: String!
+}
+
+type ChainHasTransactionConnection implements Connection {
+  edges: [ChainHasTransactionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ChainHasTransactionEdge implements Edge {
+  node: Transaction!
+  cursor: String!
+}
+
+type Subscription {
+  """The network blocks subscription"""
+  chain_blocks(
+    """The ID of an network object"""
+    id: ID!
+
+    """The number of blocks to return"""
+    first: Int
+
+    """The cursor to start from"""
+    before: Cursor
+  ): ChainHasBlocksSubscription
+  greetings: String
+}
+
+"""The network blocks subscription"""
+type ChainHasBlocksSubscription {
+  """The edges of the subscription"""
+  edges: [ChainHasBlockEdge!]!
+}"
+`;
