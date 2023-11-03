@@ -21,10 +21,10 @@
     "paths": {
       "@/*": ["./*"],
       "@ethgate/spec-node": ["./akshara/spec"],
-      "@ethgate/node": ["./akshara"],
+      "@ethgate/lib-node": ["./akshara"],
       "@ethgate/spec-solver": ["./solver/spec"],
-      "@ethgate/solver": ["./solver"],
-      "@ethgate/utils": ["./utils"]
+      "@ethgate/lib-solver": ["./solver"],
+      "@ethgate/lib-utils": ["./utils"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

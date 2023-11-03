@@ -1,4 +1,4 @@
-import { Pool, Result } from '@ethgate/lib-utils';
+import { Pool, Result } from "@ethgate/lib-utils";
 import type {
   AksharaBlockData,
   AksharaChainData,
@@ -8,8 +8,8 @@ import type {
   AksharaDaResult,
   EthereumCall,
   PeerTypes,
-} from '@ethgate/spec-node';
-import { AksharaDaClientAbstract } from '@ethgate/spec-node';
+} from "@ethgate/spec-node";
+import { AksharaDaClientAbstract } from "@ethgate/spec-node";
 
 import {
   EthereumPeer,
@@ -17,10 +17,10 @@ import {
   logFromEth,
   receiptFromEth,
   transactionFromEth,
-} from '../index.js';
+} from "../index.js";
 
-import { type Fetch } from './peer/index.js';
-import { BatchLoader } from './utils.js';
+import { type Fetch } from "./peer/index.js";
+import { BatchLoader } from "./utils.js";
 
 const ENABLE_CACHING = false;
 
@@ -33,8 +33,8 @@ const ENABLE_CACHING = false;
 // };
 
 export class AksharaDaClient extends AksharaDaClientAbstract {
-  readonly #pool: AksharaPeerPool;
-  readonly #loader: BatchLoader<AksharaDaCall, AksharaDaResult, string>;
+  readonly pool: AksharaPeerPool;
+  readonly loader: BatchLoader<AksharaDaCall, AksharaDaResult, string>;
   latestBlocks: Map<AksharaChainId, AksharaBlockData> = new Map();
 
   constructor(root: AksharaChainData, fetchFn: Fetch) {
@@ -53,16 +53,16 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
       cacheMap: new Map(),
       persistCache: ENABLE_CACHING,
     };
-    this.#pool = new AksharaPeerPool(
+    this.pool = new AksharaPeerPool(
       peers
         .map((peer) => ({
           peer,
           priority: Math.floor(Math.random() * 100),
         }))
-        .sort((a, b) => a.priority - b.priority),
+        .sort((a, b) => a.priority - b.priority)
     );
-    this.#loader = new BatchLoader({
-      batchLoadFn: this.#batchLoad,
+    this.loader = new BatchLoader({
+      batchLoadFn: this._batchLoad,
       cacheKeyFn: (call) => JSON.stringify(call),
       batchScheduleFn: configg.batchScheduleFn,
       cacheMap: configg.cacheMap,
@@ -70,15 +70,15 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
     });
   }
 
-  #batchLoad = async (
-    calls: ReadonlyArray<AksharaDaCall>,
+  _batchLoad = async (
+    calls: ReadonlyArray<AksharaDaCall>
   ): Promise<Array<AksharaDaResult | Error>> => {
     const DEBUG = false;
     if (DEBUG) {
-      const logName = 'DataLoaderTransport.#batchLoad';
+      const logName = "DataLoaderTransport.#batchLoad";
       const logArgs = [
         `[${logName}]`,
-        `Loading ${calls.length} request${calls.length === 1 ? '' : 's'}:`,
+        `Loading ${calls.length} request${calls.length === 1 ? "" : "s"}:`,
       ];
       if (calls.length === 1) {
         console.groupCollapsed(...logArgs, calls[0][0], calls[0][1]);
@@ -95,48 +95,58 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
 
     const peerCalls = calls.map((call): EthereumCall => {
       switch (call[0]) {
-        case 'GetObject': {
+        case "GetObject": {
           const [{ type, ...key }] = call[1];
           switch (type) {
-            case 'Block': {
-              if ('hash' in key) {
-                return ['eth_getBlockByHash', [key.hash, false]];
-              } else if ('number' in key) {
-                return ['eth_getBlockByNumber', [`0x${key.number.toString(16)}`, false]];
+            case "Block": {
+              if ("hash" in key) {
+                return ["eth_getBlockByHash", [key.hash, false]];
+              } else if ("number" in key) {
+                return [
+                  "eth_getBlockByNumber",
+                  [`0x${key.number.toString(16)}`, false],
+                ];
               } else {
-                throw new Error('Not implemented 2351');
+                throw new Error("Not implemented 2351");
               }
             }
-            case 'Transaction': {
-              if ('hash' in key) {
-                return ['eth_getTransactionByHash', [key.hash]];
-              } else if ('blockNumber' in key && 'transactionIndex' in key) {
+            case "Transaction": {
+              if ("hash" in key) {
+                return ["eth_getTransactionByHash", [key.hash]];
+              } else if ("blockNumber" in key && "transactionIndex" in key) {
                 return [
-                  'eth_getTransactionByBlockNumberAndIndex',
-                  [`0x${key.blockNumber.toString(16)}`, `0x${key.transactionIndex.toString(16)}`],
+                  "eth_getTransactionByBlockNumberAndIndex",
+                  [
+                    `0x${key.blockNumber.toString(16)}`,
+                    `0x${key.transactionIndex.toString(16)}`,
+                  ],
                 ];
-              } else if ('blockHash' in key && 'transactionIndex' in key) {
+              } else if ("blockHash" in key && "transactionIndex" in key) {
                 return [
-                  'eth_getTransactionByBlockHashAndIndex',
+                  "eth_getTransactionByBlockHashAndIndex",
                   [key.blockHash, `0x${key.transactionIndex.toString(16)}`],
                 ];
               } else {
-                throw new Error('Not implemented 6284');
+                throw new Error("Not implemented 6284");
               }
             }
-            case 'Receipt': {
-              if ('transactionHash' in key) {
-                return ['eth_getTransactionReceipt', [key.transactionHash]];
+            case "Receipt": {
+              if ("transactionHash" in key) {
+                return ["eth_getTransactionReceipt", [key.transactionHash]];
               } else {
-                throw new Error('Not implemented 6284');
+                throw new Error("Not implemented 6284");
               }
             }
-            case 'Log': {
-              if ('transactionHash' in key && 'logIndex' in key) {
-                return ['eth_getTransactionReceipt', [key.transactionHash]];
-              } else if ('blockNumber' in key && 'transactionIndex' in key && 'logIndex' in key) {
+            case "Log": {
+              if ("transactionHash" in key && "logIndex" in key) {
+                return ["eth_getTransactionReceipt", [key.transactionHash]];
+              } else if (
+                "blockNumber" in key &&
+                "transactionIndex" in key &&
+                "logIndex" in key
+              ) {
                 return [
-                  'eth_getLogs',
+                  "eth_getLogs",
                   [
                     {
                       fromBlock: `0x${key.blockNumber.toString(16)}`,
@@ -144,9 +154,13 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
                     },
                   ],
                 ];
-              } else if ('blockHash' in key && 'transactionIndex' in key && 'logIndex' in key) {
+              } else if (
+                "blockHash" in key &&
+                "transactionIndex" in key &&
+                "logIndex" in key
+              ) {
                 return [
-                  'eth_getLogs',
+                  "eth_getLogs",
                   [
                     {
                       blockHash: key.blockHash,
@@ -156,16 +170,15 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
               }
             }
           }
-          throw new Error('Not implemented 2321');
+          throw new Error("Not implemented 2321");
         }
-        case 'GetLatestBlock': {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        case "GetLatestBlock": {
           const [key] = call[1];
-          return ['eth_getBlockByNumber', ['latest', false]];
+          return ["eth_getBlockByNumber", ["latest", false]];
         }
         default: {
-          console.log('call', call);
-          throw new Error('Not implemented asd');
+          console.log("call", call);
+          throw new Error("Not implemented asd");
         }
       }
     });
@@ -178,73 +191,98 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
           }
           const call = calls[i];
           switch (call[0]) {
-            case 'GetObject': {
+            case "GetObject": {
               type CallResult = AksharaDaResult<(typeof call)[0]>;
               if (!result.value) {
-                return Result.err(new Error(`Object not found: ${JSON.stringify(call)}`));
+                return Result.err(
+                  new Error(`Object not found: ${JSON.stringify(call)}`)
+                );
               }
               const [{ type, ...key }] = call[1];
               switch (type) {
-                case 'Block': {
-                  const block = blockFromEth(this.root.chainId, result.value as any);
+                case "Block": {
+                  const block = blockFromEth(
+                    this.root.chainId,
+                    result.value as any
+                  );
                   return Result.ok(block) satisfies CallResult;
                 }
-                case 'Transaction': {
-                  const transaction = transactionFromEth(this.root.chainId, result.value as any);
+                case "Transaction": {
+                  const transaction = transactionFromEth(
+                    this.root.chainId,
+                    result.value as any
+                  );
                   return Result.ok(transaction) satisfies CallResult;
                 }
-                case 'Receipt': {
-                  const receipt = receiptFromEth(this.root.chainId, result.value as any);
+                case "Receipt": {
+                  const receipt = receiptFromEth(
+                    this.root.chainId,
+                    result.value as any
+                  );
                   return Result.ok(receipt) satisfies CallResult;
                 }
-                case 'Log': {
-                  if ('transactionHash' in key && 'logIndex' in key) {
-                    const receipt = receiptFromEth(this.root.chainId, result.value as any);
+                case "Log": {
+                  if ("transactionHash" in key && "logIndex" in key) {
+                    const receipt = receiptFromEth(
+                      this.root.chainId,
+                      result.value as any
+                    );
                     const log = receipt.logs[key.logIndex];
                     return Result.ok(log) satisfies CallResult;
                   } else if (
-                    'blockNumber' in key &&
-                    'transactionIndex' in key &&
-                    'logIndex' in key
+                    "blockNumber" in key &&
+                    "transactionIndex" in key &&
+                    "logIndex" in key
                   ) {
-                    const logs = (result.value as any[]).map((log: PeerTypes.Log) =>
-                      logFromEth(this.root.chainId, log),
+                    const logs = (result.value as any[]).map(
+                      (log: PeerTypes.Log) => logFromEth(this.root.chainId, log)
                     );
                     const log = logs.find(
                       (log) =>
                         log.blockNumber === key.blockNumber &&
                         log.transactionIndex === key.transactionIndex &&
-                        log.logIndex === key.logIndex,
+                        log.logIndex === key.logIndex
                     );
                     return Result.ok(log) satisfies CallResult;
                   } else {
-                    const log = logFromEth(this.root.chainId, result.value as any);
+                    const log = logFromEth(
+                      this.root.chainId,
+                      result.value as any
+                    );
                     return Result.ok(log) satisfies CallResult;
                   }
                 }
                 default: {
-                  throw new Error('Not implemented 0342');
+                  throw new Error("Not implemented 0342");
                 }
               }
             }
-            case 'GetLatestBlock': {
-              type CallResult = AksharaDaResult<'GetLatestBlock'>;
+            case "GetLatestBlock": {
+              type CallResult = AksharaDaResult<"GetLatestBlock">;
               if (!result.value) {
-                return Result.err(new Error(`Latest block not found: ${JSON.stringify(call)}`));
+                return Result.err(
+                  new Error(`Latest block not found: ${JSON.stringify(call)}`)
+                );
               }
-              const block = blockFromEth(this.root.chainId, result.value as any);
+              const block = blockFromEth(
+                this.root.chainId,
+                result.value as any
+              );
               this.latestBlocks.set(this.root.chainId, block);
               return Result.ok(block) satisfies CallResult;
             }
             default: {
-              console.log('call', call);
-              throw new Error('Not implemented asd');
+              console.log("call", call);
+              throw new Error("Not implemented asd");
             }
           }
         });
       });
 
-    const innerResponses = await Promise.any([this.#pool.withPeer(fn), this.#pool.withPeer(fn)]);
+    const innerResponses = await Promise.any([
+      this.pool.withPeer(fn),
+      this.pool.withPeer(fn),
+    ]);
 
     const responses = innerResponses.map((innerResponse) => {
       if (innerResponse.isErr) {
@@ -263,8 +301,10 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
     return responses;
   };
 
-  async executeBatch(calls: AksharaDaMethod['Call'][]): Promise<AksharaDaMethod['Result'][]> {
-    const responses = await this.#loader.loadMany(calls);
+  async executeBatch(
+    calls: AksharaDaMethod["Call"][]
+  ): Promise<AksharaDaMethod["Result"][]> {
+    const responses = await this.loader.loadMany(calls);
     return responses as any;
   }
 }
@@ -275,14 +315,14 @@ type PoolItem = {
 };
 
 export class AksharaPeerPool {
-  #pool: Pool<PoolItem>;
+  _pool: Pool<PoolItem>;
 
   constructor(items: PoolItem[]) {
-    this.#pool = new Pool(items);
+    this._pool = new Pool(items);
   }
 
   async withPeer<T>(fn: (peer: EthereumPeer) => Promise<T>): Promise<T> {
-    const item = await this.#pool.acquire();
+    const item = await this._pool.acquire();
     try {
       // console.log('acquired', item.peer);
       return await fn(item.peer);
@@ -290,7 +330,7 @@ export class AksharaPeerPool {
       (async () => {
         // console.log('releasing...', item.peer);
         // await new Promise((resolve) => setTimeout(resolve, 10000));
-        this.#pool.release(item);
+        this._pool.release(item);
         // console.log('released', item.peer);
       })();
     }

@@ -3,7 +3,7 @@ import type {
   GraphQLObjectTypeConfig,
   GraphQLOutputType,
   ThunkObjMap,
-} from 'graphql';
+} from "graphql";
 import {
   GraphQLID,
   GraphQLInt,
@@ -14,8 +14,8 @@ import {
   GraphQLString,
   resolveObjMapThunk,
   resolveReadonlyArrayThunk,
-} from 'graphql';
-import { GraphQLJSON } from 'graphql-type-json';
+} from "graphql";
+import { GraphQLJSON } from "graphql-type-json";
 
 import {
   BlockHasLog,
@@ -28,29 +28,29 @@ import {
   type EdgeAbstract,
   type NodeAbstract,
   ReceiptHasLog,
-} from '../../data/index.js';
-import type { EdgeType, NodeType } from '../../graph/index.js';
-import type { SchemaContext } from '../schema.js';
-import { schemaToGql } from '../zod.js';
+} from "../../data/index.js";
+import type { EdgeType, NodeType } from "../../graph/index.js";
+import type { SchemaContext } from "../schema.js";
+import { schemaToGql } from "../zod.js";
 
-import { GraphQLRelayCursor, GraphQLRelayPageInfo } from './relay.js';
+import { GraphQLRelayCursor, GraphQLRelayPageInfo } from "./relay.js";
 
 const pageArgs = {
   first: {
     type: GraphQLInt,
-    description: 'The number of nodes to return after the cursor',
+    description: "The number of nodes to return after the cursor",
   },
   after: {
     type: GraphQLRelayCursor,
-    description: 'The cursor after which to return nodes',
+    description: "The cursor after which to return nodes",
   },
   last: {
     type: GraphQLInt,
-    description: 'The number of nodes to return before the cursor',
+    description: "The number of nodes to return before the cursor",
   },
   before: {
     type: GraphQLRelayCursor,
-    description: 'The cursor before which to return nodes',
+    description: "The cursor before which to return nodes",
   },
 };
 
@@ -65,69 +65,74 @@ const edgeTypes = [
   ReceiptHasLog,
 ];
 
-export class SchemaType<TSource> extends GraphQLObjectType<TSource, SchemaContext> {
+export class SchemaType<TSource> extends GraphQLObjectType<
+  TSource,
+  SchemaContext
+> {
   constructor(config: GraphQLObjectTypeConfig<any, any>) {
     super(config);
   }
 }
 
 export const SchemaNodeMeta = new SchemaType({
-  name: 'NodeMeta',
+  name: "NodeMeta",
   fields: () => ({
     type: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'The type of the node',
+      description: "The type of the node",
     },
     localId: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'The local ID of the node',
+      description: "The local ID of the node",
     },
     data: {
       type: new GraphQLNonNull(GraphQLJSON),
-      description: 'The data of the node',
+      description: "The data of the node",
     },
     time: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'The time of the node',
+      description: "The time of the node",
     },
     name: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'The name of the node',
+      description: "The name of the node",
     },
   }),
-  description: 'The meta data of a node',
+  description: "The meta data of a node",
 });
 
 export const SchemaNodeInterface = new GraphQLInterfaceType({
-  name: 'Node',
+  name: "Node",
   fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLID),
-      description: 'The ID of the node',
+      description: "The ID of the node",
     },
     meta: {
       type: new GraphQLNonNull(SchemaNodeMeta),
-      description: 'The meta data of the node',
+      description: "The meta data of the node",
     },
   }),
-  description: 'The node interface',
+  description: "The node interface",
   resolveType: (node) => node.type,
 });
 
 export class SchemaNodeType<
   TNode extends NodeAbstract,
-  TNodeCtor extends NodeType<TNode> = NodeType<TNode>,
+  TNodeCtor extends NodeType<TNode> = NodeType<TNode>
 > extends SchemaType<TNode> {
   constructor(
     schemaNodeTypes: Map<string, SchemaNodeType<any>>,
     schemaEdgeTypes: Map<string, SchemaEdgeType<any>>,
     nodeCtor: TNodeCtor,
-    config: Readonly<GraphQLObjectTypeConfig<TNode, SchemaContext>>,
+    config: Readonly<GraphQLObjectTypeConfig<TNode, SchemaContext>>
   ) {
     super({
       ...config,
       interfaces: () => [
-        ...(config.interfaces ? resolveReadonlyArrayThunk(config.interfaces) : []),
+        ...(config.interfaces
+          ? resolveReadonlyArrayThunk(config.interfaces)
+          : []),
         SchemaNodeInterface,
       ],
       fields: () => ({
@@ -147,40 +152,45 @@ export class SchemaNodeType<
         // Ethgate data fields
         // TODO: for any
         ...Object.fromEntries(
-          Object.entries(nodeCtor.schema.properties).flatMap(([key, schema]) => {
-            let gqlType: GraphQLOutputType | void = schemaToGql(schema);
-            if (!gqlType) {
-              return [];
+          Object.entries(nodeCtor.schema.properties).flatMap(
+            ([key, schema]) => {
+              let gqlType: GraphQLOutputType | void = schemaToGql(schema);
+              if (!gqlType) {
+                return [];
+              }
+              const required = nodeCtor.schema.required.includes(key as any);
+              if (required) {
+                gqlType = new GraphQLNonNull(gqlType);
+              }
+              const field = {
+                type: gqlType,
+                resolve(node: TNode) {
+                  return node.data[key];
+                },
+              };
+              return [[key, field]];
             }
-            const required = nodeCtor.schema.required.includes(key as any);
-            if (required) {
-              gqlType = new GraphQLNonNull(gqlType);
-            }
-            const field = {
-              type: gqlType,
-              resolve(node: TNode) {
-                return node.data[key];
-              },
-            };
-            return [[key, field]];
-          }),
+          )
         ),
         // Connection fields
         ...edgeTypes
-          .filter((edgeType) => edgeType.tail.name === nodeCtor.schema.aksharaType)
-          .reduce(
-            (acc, edgeType) => {
-              acc[edgeType.connectionName] = {
-                type: new GraphQLNonNull(schemaEdgeTypes.get(edgeType.name)!.connectionType),
-                args: pageArgs,
-                resolve: (node, args, ctx) => {
-                  return ctx.db.getConnection(edgeType.name, node.id, args).collect();
-                },
-              };
-              return acc;
-            },
-            {} as Record<string, GraphQLFieldConfig<any, SchemaContext, any>>,
-          ),
+          .filter(
+            (edgeType) => edgeType.tail.name === nodeCtor.schema.aksharaType
+          )
+          .reduce((acc, edgeType) => {
+            acc[edgeType.connectionName] = {
+              type: new GraphQLNonNull(
+                schemaEdgeTypes.get(edgeType.typeName)!.connectionType
+              ),
+              args: pageArgs,
+              resolve: (node, args, ctx) => {
+                return ctx.db
+                  .getConnection(edgeType.typeName, node.id, args)
+                  .collect();
+              },
+            };
+            return acc;
+          }, {} as Record<string, GraphQLFieldConfig<any, SchemaContext, any>>),
         // Own fields
         ...(config.fields ? resolveObjMapThunk(config.fields) : {}),
       }),
@@ -189,16 +199,16 @@ export class SchemaNodeType<
 }
 
 export const SchemaConnectionInterface = new GraphQLInterfaceType({
-  name: 'Connection',
-  description: 'A connection to a list of items',
+  name: "Connection",
+  description: "A connection to a list of items",
   fields: () => ({
     edges: {
       type: new GraphQLList(SchemaEdgeInterface),
-      description: 'A list of edges',
+      description: "A list of edges",
     },
     pageInfo: {
       type: new GraphQLNonNull(GraphQLRelayPageInfo),
-      description: 'Information to aid in pagination',
+      description: "Information to aid in pagination",
     },
   }),
   resolveType: (node) => node.type,
@@ -207,14 +217,16 @@ export const SchemaConnectionInterface = new GraphQLInterfaceType({
 type SchemaConnectionTypeConfig<TSource = any> = {
   edgeType: () => GraphQLObjectType;
   fields?: ThunkObjMap<GraphQLFieldConfig<TSource, SchemaContext>>;
-} & Omit<GraphQLObjectTypeConfig<TSource, SchemaContext>, 'fields'>;
+} & Omit<GraphQLObjectTypeConfig<TSource, SchemaContext>, "fields">;
 
 export class SchemaConnectionType<TSource = any> extends SchemaType<TSource> {
   constructor(config: Readonly<SchemaConnectionTypeConfig<TSource>>) {
     super({
       ...config,
       interfaces: () => [
-        ...(config.interfaces ? resolveReadonlyArrayThunk(config.interfaces) : []),
+        ...(config.interfaces
+          ? resolveReadonlyArrayThunk(config.interfaces)
+          : []),
         SchemaConnectionInterface,
       ],
       fields: () => ({
@@ -222,7 +234,9 @@ export class SchemaConnectionType<TSource = any> extends SchemaType<TSource> {
         ...(config.fields ? resolveObjMapThunk(config.fields) : {}),
         // ConnectionInterface fields
         edges: {
-          type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(config.edgeType()))),
+          type: new GraphQLNonNull(
+            new GraphQLList(new GraphQLNonNull(config.edgeType()))
+          ),
         },
         pageInfo: {
           type: new GraphQLNonNull(GraphQLRelayPageInfo),
@@ -236,40 +250,42 @@ export class SchemaConnectionType<TSource = any> extends SchemaType<TSource> {
 }
 
 export const SchemaEdgeInterface = new GraphQLInterfaceType({
-  name: 'Edge',
-  description: 'An edge in a connection',
+  name: "Edge",
+  description: "An edge in a connection",
   fields: () => ({
     node: {
       type: SchemaNodeInterface,
-      description: 'The item at the end of the edge',
+      description: "The item at the end of the edge",
     },
     cursor: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'A cursor for use in pagination',
+      description: "A cursor for use in pagination",
     },
   }),
 });
 
 type SchemaEdgeTypeConfig<TSource = any> = {
   fields?: ThunkObjMap<GraphQLFieldConfig<TSource, SchemaContext>>;
-} & Omit<GraphQLObjectTypeConfig<TSource, SchemaContext>, 'fields'>;
+} & Omit<GraphQLObjectTypeConfig<TSource, SchemaContext>, "fields">;
 
 export class SchemaEdgeType<
   TEdge extends EdgeAbstract,
-  TEdgeCtor extends EdgeType<TEdge> = EdgeType<TEdge>,
+  TEdgeCtor extends EdgeType<TEdge> = EdgeType<TEdge>
 > extends SchemaType<TEdge> {
   connectionType: SchemaConnectionType;
 
   constructor(
     schemaNodeTypes: Map<string, SchemaNodeType<any>>,
     edgeCtor: TEdgeCtor,
-    config: Readonly<SchemaEdgeTypeConfig<TEdge>>,
+    config: Readonly<SchemaEdgeTypeConfig<TEdge>>
   ) {
     super({
       ...config,
       name: `${config.name}Edge`,
       interfaces: [
-        ...(config.interfaces ? resolveReadonlyArrayThunk(config.interfaces) : []),
+        ...(config.interfaces
+          ? resolveReadonlyArrayThunk(config.interfaces)
+          : []),
         SchemaEdgeInterface,
       ],
       fields: () => ({
@@ -277,7 +293,9 @@ export class SchemaEdgeType<
         ...(config.fields ? resolveObjMapThunk(config.fields) : {}),
         // EdgeInterface fields
         node: {
-          type: new GraphQLNonNull(schemaNodeTypes.get(edgeCtor.head.schema.aksharaType)!),
+          type: new GraphQLNonNull(
+            schemaNodeTypes.get(edgeCtor.head.schema.aksharaType)!
+          ),
           resolve: (edge, args: unknown, ctx: SchemaContext) => {
             return ctx.db.getNode(edge.headId);
           },

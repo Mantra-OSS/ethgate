@@ -309,9 +309,9 @@ export const asdasd = () => {
 
   edgeTypes.forEach((edgeType) => {
     const asd = new SchemaEdgeType(schemaNodeTypes, edgeType, {
-      name: edgeType.name,
+      name: edgeType.typeName,
     });
-    schemaEdgeTypes.set(edgeType.name, asd);
+    schemaEdgeTypes.set(edgeType.typeName, asd);
   });
 
   return {

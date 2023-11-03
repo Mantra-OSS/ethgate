@@ -6,17 +6,26 @@ import type {
   PageInfo,
   QueryResponse,
   Variables,
-} from "@/solver";
+} from "@ethgate/lib-solver";
 import { memoize } from "lodash";
 import { use, useCallback, useEffect, useState } from "react";
 // import type { Observable } from 'rxjs';
 
-import {
-  EthgateSolverMainThread,
-  type EthgateSolverServer,
-} from "../backend/server.js";
+import { Akshara, AksharaDatabase } from "@ethgate/lib-node";
+import { chains } from "@mantra-oss/chains";
 
-export const serverPromise = EthgateSolverMainThread.create();
+export class AksharaDom extends Akshara {
+  constructor() {
+    const database = new AksharaDatabase({
+      name: "akshara-worker",
+      indexedDB: globalThis.indexedDB,
+      IDBKeyRange: globalThis.IDBKeyRange,
+    });
+    super({ chains, fetchFn: globalThis.fetch.bind(globalThis), database });
+  }
+}
+
+export const serverPromise = new AksharaDom();
 
 // export class PunkerBackendClient {
 //   #backend: EthgateSolverServer | Promise<EthgateSolverServer> = serverPromise;
