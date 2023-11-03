@@ -1,22 +1,26 @@
-'use client';
-
-import type { AksharaBlockKey } from '@/akshara';
-import { formatBlockId } from '@/akshara';
 import BlockView from '@/app/components/BlockView';
-import { useNode } from '@/app/helpers/hooks';
-import type { Block } from '@/solver';
+import { readObject } from '@/app/helpers/akshara.server';
+import type { Metadata } from 'next';
 
-export default function BlockPage({
-  params,
-}: {
-  params: { chainId: string; blockNumber: string };
-}) {
-  const { chainId } = params;
+type Params = { chainId: string; blockNumber: string };
 
-  const key: AksharaBlockKey = {
-    chainId,
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const nodeData = await readObject({
+    type: 'Block',
+    chainId: params.chainId,
     number: parseInt(params.blockNumber, 10),
+  });
+  return {
+    title: nodeData?.name,
   };
-  const node = useNode<Block>(`Block:${formatBlockId(key)}`);
-  return <BlockView node={node} />;
+}
+
+export default async function BlockPage({ params }: { params: Params }) {
+  console.log(params);
+  const nodeData = await readObject({
+    type: 'Block',
+    chainId: params.chainId,
+    number: parseInt(params.blockNumber, 10),
+  });
+  return <BlockView node={nodeData} />;
 }

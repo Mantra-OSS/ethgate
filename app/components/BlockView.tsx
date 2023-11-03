@@ -1,3 +1,5 @@
+'use client';
+
 import type { Block } from '@ethgate/lib-solver';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
