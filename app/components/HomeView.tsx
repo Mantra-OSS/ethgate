@@ -1,25 +1,18 @@
-"use client";
-import type { Chain } from "@ethgate/lib-solver";
-import {
-  Container,
-  Divider,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+'use client';
+import type { Chain } from '@ethgate/lib-solver';
+import { Container, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 // import ChainBlockList from './ChainBlockList';
-import { FallbackBoundary } from "../components/ui";
-import { useNode } from "@/app/helpers/hooks";
+import { FallbackBoundary } from '../components/ui';
+import { useNode } from '@/app/helpers/hooks';
 
 // import ChainDescendantBlockList from './ChainDescendantBlockList';
-import ChainChainList from "./ChainChainList";
-import ChainOverview from "./ChainOverview";
-import ChainTransactionList from "./ChainTransactionList";
+import ChainChainList from './ChainChainList';
+import ChainOverview from './ChainOverview';
+import ChainTransactionList from './ChainTransactionList';
 
 export default function HomeView() {
-  const node = useNode<Chain>("Chain:1");
+  const node = useNode<Chain>('Chain:1');
 
   return (
     <>
@@ -43,7 +36,7 @@ export default function HomeView() {
               </Typography>
               <Divider />
               <FallbackBoundary>
-                <Stack direction="row" sx={{ overflowX: "auto" }}>
+                <Stack direction="row" sx={{ overflowX: 'auto' }}>
                   <ChainChainList chain={node} />
                 </Stack>
               </FallbackBoundary>

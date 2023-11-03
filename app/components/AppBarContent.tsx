@@ -1,17 +1,10 @@
-import { NavigateNext } from "@mui/icons-material";
-import {
-  Box,
-  Breadcrumbs,
-  Link,
-  Stack,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { Suspense } from "react";
+import { NavigateNext } from '@mui/icons-material';
+import { Box, Breadcrumbs, Link, Stack, Toolbar, Typography } from '@mui/material';
+import { Suspense } from 'react';
 
-import { useNode } from "@/app/helpers/hooks";
+import { useNode } from '@/app/helpers/hooks';
 
-import ChangeLanguage from "./ChangeLanguage";
+import ChangeLanguage from './ChangeLanguage';
 
 export type RouteCrumb = {
   id: string;
@@ -21,13 +14,7 @@ export type RouteCrumb = {
   nodeId?: string;
 };
 
-function AppBarContentBreadcrumbNode({
-  id,
-  crumb,
-}: {
-  id: string;
-  crumb: RouteCrumb;
-}) {
+function AppBarContentBreadcrumbNode({ id, crumb }: { id: string; crumb: RouteCrumb }) {
   const node = useNode(id as any);
 
   return <>{(node as any).meta.name}</>;
@@ -49,10 +36,7 @@ function AppBreadcrumbs() {
   // crumb.isCurrentPage
 
   return (
-    <Breadcrumbs
-      separator={<NavigateNext fontSize="small" />}
-      aria-label="breadcrumb"
-    >
+    <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
       {crumbs.map((crumb) => (
         <Link key={crumb.id} href={crumb.pathname}>
           <Suspense>

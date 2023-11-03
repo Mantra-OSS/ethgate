@@ -1,25 +1,19 @@
-"use client";
-import type { Chain } from "@ethgate/lib-solver";
-import { Divider, Stack, Typography } from "@mui/material";
-import {
-  AnimatedAxis,
-  AnimatedGrid,
-  AnimatedLineSeries,
-  Tooltip,
-  XYChart,
-} from "@visx/xychart";
+'use client';
+import type { Chain } from '@ethgate/lib-solver';
+import { Divider, Stack, Typography } from '@mui/material';
+import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 
 export default function ChainOverview({ node }: { node: Chain }) {
   const data1 = [
-    { x: "2020-01-01", y: 50 },
-    { x: "2020-01-02", y: 10 },
-    { x: "2020-01-03", y: 20 },
+    { x: '2020-01-01', y: 50 },
+    { x: '2020-01-02', y: 10 },
+    { x: '2020-01-03', y: 20 },
   ];
 
   const data2 = [
-    { x: "2020-01-01", y: 30 },
-    { x: "2020-01-02", y: 40 },
-    { x: "2020-01-03", y: 80 },
+    { x: '2020-01-01', y: 30 },
+    { x: '2020-01-02', y: 40 },
+    { x: '2020-01-03', y: 80 },
   ];
 
   const accessors = {
@@ -39,11 +33,7 @@ export default function ChainOverview({ node }: { node: Chain }) {
           <Typography>{node.data.chainId}</Typography>
         </Stack>
       </Stack>
-      <XYChart
-        height={300}
-        xScale={{ type: "band" }}
-        yScale={{ type: "linear" }}
-      >
+      <XYChart height={300} xScale={{ type: 'band' }} yScale={{ type: 'linear' }}>
         <AnimatedAxis orientation="bottom" />
         <AnimatedGrid columns={false} numTicks={4} />
         <AnimatedLineSeries dataKey="Line 1" data={data1} {...accessors} />
@@ -59,7 +49,7 @@ export default function ChainOverview({ node }: { node: Chain }) {
                 {tooltipData.nearestDatum.key}
               </div>
               {accessors.xAccessor(tooltipData.nearestDatum.datum)}
-              {", "}
+              {', '}
               {accessors.yAccessor(tooltipData.nearestDatum.datum)}
             </div>
           )}

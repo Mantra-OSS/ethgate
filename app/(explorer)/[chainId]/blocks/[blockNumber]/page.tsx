@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { AksharaBlockKey, formatBlockId } from "@/akshara";
-import BlockView from "@/app/components/BlockView";
-import { useNode } from "@/app/helpers/hooks";
-import { Block } from "@/solver";
-import { useParams } from "next/navigation";
+import { AksharaBlockKey, formatBlockId } from '@/akshara';
+import BlockView from '@/app/components/BlockView';
+import { useNode } from '@/app/helpers/hooks';
+import { Block } from '@/solver';
+import { useParams } from 'next/navigation';
 
 export default function BlockPage() {
   const params = useParams<{ chainId: string; blockNumber: string }>();

@@ -1,14 +1,11 @@
-import type { Time } from "@/akshara";
+import type { Time } from '@/akshara';
 
-export type ObjectId<
-  Type extends string,
-  LocalId extends string = string
-> = `${Type}:${LocalId}`;
+export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
 
 export abstract class NodeAbstract<
   Name extends string = any,
   Data extends object = any,
-  Id extends ObjectId<Name> = ObjectId<Name>
+  Id extends ObjectId<Name> = ObjectId<Name>,
 > {
   abstract readonly type: Name;
   readonly id: Id;
@@ -23,7 +20,7 @@ export abstract class EdgeAbstract<
   Name extends string = any,
   TailId extends string = any,
   HeadId extends string = any,
-  Data extends object = any
+  Data extends object = any,
 > {
   abstract readonly type: Name;
   readonly tailId: TailId;
@@ -42,30 +39,24 @@ export abstract class EdgeAbstract<
 }
 
 export type PageArgs<Edge extends EdgeAbstract> = {
-  before?: Edge["cursor"];
-  after?: Edge["cursor"];
+  before?: Edge['cursor'];
+  after?: Edge['cursor'];
   last?: number;
   first?: number;
 };
 export type PageInfo<Edge extends EdgeAbstract> = {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
-  startCursor?: Edge["cursor"];
-  endCursor?: Edge["cursor"];
+  startCursor?: Edge['cursor'];
+  endCursor?: Edge['cursor'];
 };
-export type EdgeGenerator<Edge extends EdgeAbstract> = AsyncGenerator<
-  Edge,
-  undefined,
-  undefined
->;
+export type EdgeGenerator<Edge extends EdgeAbstract> = AsyncGenerator<Edge, undefined, undefined>;
 export type ConnectionGenerator<Edge extends EdgeAbstract> = AsyncGenerator<
   Edge,
   PageInfo<Edge>,
   undefined
 >;
-export class Connection<Edge extends EdgeAbstract>
-  implements ConnectionGenerator<Edge>
-{
+export class Connection<Edge extends EdgeAbstract> implements ConnectionGenerator<Edge> {
   readonly _generator: ConnectionGenerator<Edge>;
 
   constructor(generator: ConnectionGenerator<Edge>) {
@@ -106,7 +97,7 @@ export abstract class DatabaseError extends Error {
 }
 
 export class DatabaseNodeNotFoundError extends DatabaseError {
-  readonly name = "DatabaseNodeNotFoundError";
+  readonly name = 'DatabaseNodeNotFoundError';
   constructor(pred: any) {
     super(`Node not found: ${JSON.stringify(pred)}`);
   }
@@ -114,18 +105,16 @@ export class DatabaseNodeNotFoundError extends DatabaseError {
 
 export abstract class DatabaseAbstract<
   DatabaseNode extends NodeAbstract,
-  DatabaseEdge extends EdgeAbstract
+  DatabaseEdge extends EdgeAbstract,
 > {
-  abstract getNode<Node extends DatabaseNode>(
-    id: Node["id"]
-  ): Promise<Node | undefined>;
+  abstract getNode<Node extends DatabaseNode>(id: Node['id']): Promise<Node | undefined>;
   abstract getConnection<Edge extends DatabaseEdge>(
-    type: Edge["type"],
-    tailId_: Edge["tailId"],
-    args_: PageArgs<Edge["headId"]>
+    type: Edge['type'],
+    tailId_: Edge['tailId'],
+    args_: PageArgs<Edge['headId']>,
   ): Connection<Edge>;
 
-  async readNode<Node extends DatabaseNode>(id: Node["id"]): Promise<Node> {
+  async readNode<Node extends DatabaseNode>(id: Node['id']): Promise<Node> {
     const node = await this.getNode(id);
     if (!node) {
       throw new DatabaseNodeNotFoundError(id);

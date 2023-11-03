@@ -1,15 +1,12 @@
-import { Result } from "@ethgate/lib-utils";
-import type { EthereumCall, EthereumResult } from "@ethgate/spec-node";
-import {
-  EthereumPeerAbstract,
-  EthereumPeerExecuteError,
-} from "@ethgate/spec-node";
+import { Result } from '@ethgate/lib-utils';
+import type { EthereumCall, EthereumResult } from '@ethgate/spec-node';
+import { EthereumPeerAbstract, EthereumPeerExecuteError } from '@ethgate/spec-node';
 
 import {
   EthereumPeerFetchError,
   EthereumPeerJsonRpc2Error,
   EthereumPeerResponseError,
-} from "./error";
+} from './error';
 
 export type Fetch = any;
 
@@ -31,17 +28,15 @@ export class EthereumPeer extends EthereumPeerAbstract {
   async post(message: unknown): Promise<unknown> {
     const request = {
       url: this.url,
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(message),
       // mode: 'no-cors',
     };
 
-    const response = await this.fetch(request.url, request).catch(
-      (error: unknown) => {
-        throw new EthereumPeerFetchError(error, request);
-      }
-    );
+    const response = await this.fetch(request.url, request).catch((error: unknown) => {
+      throw new EthereumPeerFetchError(error, request);
+    });
 
     const received = await response.json().catch((error: unknown) => {
       throw new EthereumPeerResponseError(error, request, response);
@@ -52,14 +47,14 @@ export class EthereumPeer extends EthereumPeerAbstract {
 
   async executeBatch(calls: EthereumCall[]): Promise<EthereumResult[]> {
     const rpcRequests = calls.map((call, i) => ({
-      jsonrpc: "2.0" as const,
+      jsonrpc: '2.0' as const,
       id: i,
       method: call[0],
       params: call[1],
     })) satisfies ReadonlyArray<any>;
 
     const rpcResponses = (await this.post(rpcRequests)) as Array<{
-      jsonrpc: "2.0";
+      jsonrpc: '2.0';
       id: number;
       result: any;
       error: any;
@@ -69,9 +64,7 @@ export class EthereumPeer extends EthereumPeerAbstract {
       const response = rpcResponses as unknown;
       const error = new EthereumPeerExecuteError(
         calls,
-        `Expected array, got ${typeof response} from ${
-          this.url
-        }: ${JSON.stringify(response)}`
+        `Expected array, got ${typeof response} from ${this.url}: ${JSON.stringify(response)}`,
       );
 
       throw error;
@@ -84,10 +77,7 @@ export class EthereumPeer extends EthereumPeerAbstract {
     const responses = rpcResponses.map((rpcResponse) => {
       if (rpcResponse.error) {
         return Result.err(
-          new EthereumPeerJsonRpc2Error(
-            rpcResponse.error.code,
-            rpcResponse.error.message
-          )
+          new EthereumPeerJsonRpc2Error(rpcResponse.error.code, rpcResponse.error.message),
         );
       }
       return Result.ok(rpcResponse.result);

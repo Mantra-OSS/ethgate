@@ -1,4 +1,4 @@
-import type { EthereumCall } from "./peer";
+import type { EthereumCall } from './peer';
 
 export abstract class EthereumPeerError extends Error {
   abstract readonly name: `EthereumPeer${string}Error`;
@@ -8,7 +8,7 @@ export abstract class EthereumPeerError extends Error {
 }
 
 export class EthereumPeerCallError extends EthereumPeerError {
-  readonly name = "EthereumPeerCallError";
+  readonly name = 'EthereumPeerCallError';
   readonly call: EthereumCall;
   constructor(call: EthereumCall, message: string, options?: ErrorOptions) {
     super(`${message}\n  ${JSON.stringify(call)}`, options);
@@ -17,13 +17,10 @@ export class EthereumPeerCallError extends EthereumPeerError {
 }
 
 export class EthereumPeerExecuteError extends EthereumPeerError {
-  readonly name = "EthereumPeerExecuteError";
+  readonly name = 'EthereumPeerExecuteError';
   readonly calls: EthereumCall[];
   constructor(calls: EthereumCall[], message: string, options?: ErrorOptions) {
-    super(
-      `${message}\n  ${calls.map((call) => JSON.stringify(call)).join("\n  ")}`,
-      options
-    );
+    super(`${message}\n  ${calls.map((call) => JSON.stringify(call)).join('\n  ')}`, options);
     this.calls = calls;
   }
 }

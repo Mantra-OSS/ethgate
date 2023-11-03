@@ -1,28 +1,28 @@
-import type { EthgateSolverDatabase } from "../database/database";
-import type { ProperPageArgs } from "../graph";
+import type { EthgateSolverDatabase } from '../database/database';
+import type { ProperPageArgs } from '../graph';
 
-import { Chain } from "./akshara";
-import { Block } from "./akshara";
-import type { EdgeGenerator } from "./database/abstract";
-import { EdgeAbstract } from "./database/abstract";
+import { Chain } from './akshara';
+import { Block } from './akshara';
+import type { EdgeGenerator } from './database/abstract';
+import { EdgeAbstract } from './database/abstract';
 
 export class ChainHasDescendantBlock extends EdgeAbstract<
-  "ChainHasDescendantBlock",
-  Chain["id"],
-  Block["id"],
+  'ChainHasDescendantBlock',
+  Chain['id'],
+  Block['id'],
   {
     blockNumber: number;
   }
 > {
-  static typeName = "ChainHasDescendantBlock" as const;
-  type = "ChainHasDescendantBlock" as const;
+  static typeName = 'ChainHasDescendantBlock' as const;
+  type = 'ChainHasDescendantBlock' as const;
   static tail = Chain.type;
   static head = Block;
-  static connectionName = "descendantBlocks";
+  static connectionName = 'descendantBlocks';
   static async *get(
-    tailId: ChainHasDescendantBlock["tailId"],
+    tailId: ChainHasDescendantBlock['tailId'],
     args: ProperPageArgs<ChainHasDescendantBlock>,
-    ctx: EthgateSolverDatabase
+    ctx: EthgateSolverDatabase,
   ): EdgeGenerator<ChainHasDescendantBlock> {
     // let assocs;
     // // const tail = await ctx.readNode<Chain>(tailId);

@@ -1,6 +1,6 @@
-import type { AksharaAbstract, AksharaConfig } from "@/akshara";
-import { chains } from "@mantra-oss/chains";
-import { EthgateSolverDatabase } from "../database";
+import type { AksharaAbstract, AksharaConfig } from '@/akshara';
+import { chains } from '@mantra-oss/chains';
+import { EthgateSolverDatabase } from '../database';
 
 export type PunkerBackendConfig = {
   node: AksharaAbstract;
@@ -8,7 +8,7 @@ export type PunkerBackendConfig = {
 };
 
 export class EthgateSolver {
-  chains: AksharaConfig["chains"];
+  chains: AksharaConfig['chains'];
   database: EthgateSolverDatabase;
 
   static async create(config: PunkerBackendConfig): Promise<EthgateSolver> {
@@ -21,10 +21,7 @@ export class EthgateSolver {
     return new EthgateSolver(database, networks);
   }
 
-  private constructor(
-    database: EthgateSolverDatabase,
-    chains: AksharaConfig["chains"]
-  ) {
+  private constructor(database: EthgateSolverDatabase, chains: AksharaConfig['chains']) {
     this.chains = chains;
     this.database = database;
   }

@@ -1,10 +1,10 @@
-import { Akshara, AksharaDatabase } from "@ethgate/lib-node";
-import { chains } from "@mantra-oss/chains";
+import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
+import { chains } from '@mantra-oss/chains';
 
 export class AksharaDom extends Akshara {
   constructor() {
     const database = new AksharaDatabase({
-      name: "akshara-worker",
+      name: 'akshara-worker',
       indexedDB: globalThis.indexedDB,
       IDBKeyRange: globalThis.IDBKeyRange,
     });

@@ -1,14 +1,14 @@
-"use client";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { mapValues } from "lodash";
-import { IntlProvider } from "react-intl";
-import { RecoilRoot } from "recoil";
+'use client';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { mapValues } from 'lodash';
+import { IntlProvider } from 'react-intl';
+import { RecoilRoot } from 'recoil';
 
-import tr from "../lang/tr.json";
-import { ViewerProvider, useViewer } from "../viewer";
+import tr from '../lang/tr.json';
+import { ViewerProvider, useViewer } from '../viewer';
 
-import { theme } from "./theme";
-import { useRouter } from "next/router";
+import { theme } from './theme';
+import { useRouter } from 'next/router';
 
 function AppIntlProvider({ children }: { children: React.ReactNode }) {
   // const router = useRouter();
@@ -18,7 +18,7 @@ function AppIntlProvider({ children }: { children: React.ReactNode }) {
   const viewer = useViewer();
 
   const messages =
-    viewer.locale === "tr"
+    viewer.locale === 'tr'
       ? // TODO: Load lazily
         mapValues(tr, (value) => value.defaultMessage)
       : {};
@@ -30,11 +30,7 @@ function AppIntlProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function AppProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
       <RecoilRoot>

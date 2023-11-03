@@ -1,4 +1,4 @@
-export { flow, pipe } from "fp-ts/lib/function";
+export { flow, pipe } from 'fp-ts/lib/function';
 
 export async function* fromRange(start: number, end: number) {
   if (start === end) {
@@ -48,9 +48,7 @@ type SyncMap<T, U> = (item: T) => U;
 type AsyncMap<T, U> = (item: T) => Promise<U>;
 type Map<T, U> = SyncMap<T, U> | AsyncMap<T, U>;
 
-export function filter<T, S extends T>(
-  filterFn: (item: T) => item is S
-): Operator<T, S>;
+export function filter<T, S extends T>(filterFn: (item: T) => item is S): Operator<T, S>;
 export function filter<T>(filterFn: Predicate<T>): Operator<T, T>;
 export function filter<T>(filterFn: Predicate<T>) {
   return async function* filter(iter: AsyncGenerator<T>) {
@@ -133,9 +131,7 @@ export function tap<T>(nextFn: (value: T) => void) {
 type WithItem<T> = <R>(fn: Map<T, R>) => Promise<R>;
 
 export function pool<C>() {
-  return async function* pool<T extends C>(
-    iter: AsyncGenerator<T>
-  ): AsyncGenerator<WithItem<T>> {
+  return async function* pool<T extends C>(iter: AsyncGenerator<T>): AsyncGenerator<WithItem<T>> {
     const items: T[] = [];
     const waiting: ((item: T) => void)[] = [];
 

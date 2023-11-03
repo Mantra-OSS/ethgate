@@ -1,10 +1,5 @@
-import type {
-  Akshara,
-  AksharaAbstract,
-  AksharaBlockData,
-  AksharaChainId,
-} from "@/akshara";
-import { parseGlobalId } from "@ethgate/spec-solver";
+import type { Akshara, AksharaAbstract, AksharaBlockData, AksharaChainId } from '@/akshara';
+import { parseGlobalId } from '@ethgate/spec-solver';
 
 import type {
   Chain,
@@ -13,9 +8,9 @@ import type {
   NodeAbstract,
   PageArgs,
   PageInfo,
-} from "../data";
-import { Block, ChainHasBlock, Connection, DatabaseAbstract } from "../data";
-import { SolverGraph } from "../graph";
+} from '../data';
+import { Block, ChainHasBlock, Connection, DatabaseAbstract } from '../data';
+import { SolverGraph } from '../graph';
 
 const graph = new SolverGraph();
 
@@ -23,10 +18,7 @@ export type EthgateSolverDatabaseConfig = {
   node: AksharaAbstract;
 };
 
-export class EthgateSolverDatabase extends DatabaseAbstract<
-  NodeAbstract,
-  EdgeAbstract
-> {
+export class EthgateSolverDatabase extends DatabaseAbstract<NodeAbstract, EdgeAbstract> {
   node: AksharaAbstract;
 
   /**
@@ -44,17 +36,15 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
     this.node = config.node;
   }
 
-  async *getBlocksByTag(
-    chainId: AksharaChainId
-  ): AsyncGenerator<AksharaBlockData, never, void> {
+  async *getBlocksByTag(chainId: AksharaChainId): AsyncGenerator<AksharaBlockData, never, void> {
     while (true) {
-      const block = await this.node.execute("GetLatestBlock", [{ chainId }]);
+      const block = await this.node.execute('GetLatestBlock', [{ chainId }]);
       if (!block) continue;
       yield block;
     }
   }
 
-  async *networkUpdates(networkId: Chain["id"]): AsyncGenerator<ChainHasBlock> {
+  async *networkUpdates(networkId: Chain['id']): AsyncGenerator<ChainHasBlock> {
     const [, chainId] = parseGlobalId(networkId);
     const latestBlocks = this.getBlocksByTag(chainId);
     let last;
@@ -62,39 +52,28 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
       const block = new Block(providerBlock);
       if (last && last.id === block.id) continue;
       last = block;
-      const edge = new ChainHasBlock(
-        networkId,
-        block.id,
-        {},
-        block.data.timestamp
-      );
+      const edge = new ChainHasBlock(networkId, block.id, {}, block.data.timestamp);
       yield edge;
     }
   }
 
-  async getNode<Node extends NodeAbstract>(
-    id: Node["id"]
-  ): Promise<Node | undefined> {
+  async getNode<Node extends NodeAbstract>(id: Node['id']): Promise<Node | undefined> {
     const [type] = parseGlobalId(id);
-    const nodeType = graph.nodeTypes.find(
-      (nodeType) => nodeType.schema.aksharaType === type
-    )!;
+    const nodeType = graph.nodeTypes.find((nodeType) => nodeType.schema.aksharaType === type)!;
     return nodeType.get(id, this);
   }
   async *_getConnection<Edge extends EdgeAbstract>(
-    type: Edge["type"],
-    tailId: Edge["tailId"],
-    args: PageArgs<Edge>
+    type: Edge['type'],
+    tailId: Edge['tailId'],
+    args: PageArgs<Edge>,
   ): ConnectionGenerator<Edge> {
     if (args.first && args.last) {
-      throw new Error("Cannot specify both first and last");
+      throw new Error('Cannot specify both first and last');
     }
     const isForward = !args.last;
     const limit = isForward ? args.first! : args.last!;
 
-    const edgeType = graph.edgeTypes.find(
-      (edgeType) => edgeType.name === type
-    )!;
+    const edgeType = graph.edgeTypes.find((edgeType) => edgeType.name === type)!;
     const edges = edgeType.get(
       tailId,
       {
@@ -103,7 +82,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
         isForward,
         limit: limit + 1,
       },
-      this
+      this,
     );
 
     const pageInfo: PageInfo<Edge> = {
@@ -139,13 +118,11 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
     return pageInfo;
   }
   getConnection<Edge extends EdgeAbstract>(
-    type: Edge["type"],
-    tailId_: Edge["tailId"],
-    args_: PageArgs<Edge>
+    type: Edge['type'],
+    tailId_: Edge['tailId'],
+    args_: PageArgs<Edge>,
   ): Connection<Edge> {
-    const connection = new Connection<Edge>(
-      this._getConnection(type, tailId_, args_)
-    );
+    const connection = new Connection<Edge>(this._getConnection(type, tailId_, args_));
     return connection;
   }
 }

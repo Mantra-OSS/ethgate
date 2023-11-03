@@ -1,5 +1,5 @@
-"use client";
-import { Close } from "@mui/icons-material";
+'use client';
+import { Close } from '@mui/icons-material';
 import {
   Alert,
   AppBar,
@@ -10,25 +10,21 @@ import {
   Snackbar,
   Stack,
   Typography,
-} from "@mui/material";
-import { Suspense } from "react";
-import type { FallbackProps } from "react-error-boundary";
-import { ErrorBoundary } from "react-error-boundary";
-import { useRecoilValue } from "recoil";
+} from '@mui/material';
+import { Suspense } from 'react';
+import type { FallbackProps } from 'react-error-boundary';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useRecoilValue } from 'recoil';
 
-import { notificationsState } from "../viewer";
-import AppBarContent from "../components/AppBarContent";
-import AppFooter from "../components/AppFooter";
-import AppProvider from "../components/App";
+import { notificationsState } from '../viewer';
+import AppBarContent from '../components/AppBarContent';
+import AppFooter from '../components/AppFooter';
+import AppProvider from '../components/App';
 
-export default function ExplorerLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ExplorerLayout({ children }: { children: React.ReactNode }) {
   return (
     <AppProvider>
-      <Stack style={{ minHeight: "100vh" }}>
+      <Stack style={{ minHeight: '100vh' }}>
         {/* <AppFrameNotifications /> */}
         <AppBar position="sticky">
           <AppBarContent />
@@ -69,12 +65,7 @@ export function AppFrameNotifications() {
               <Button color="secondary" size="small" onClick={handleClose}>
                 UNDO
               </Button>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-              >
+              <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
                 <Close fontSize="small" />
               </IconButton>
             </>
@@ -82,9 +73,9 @@ export function AppFrameNotifications() {
         >
           {(() => {
             switch (notification.type) {
-              case "alert": {
+              case 'alert': {
                 switch (notification.severity) {
-                  case "error": {
+                  case 'error': {
                     return (
                       <Alert severity="error">
                         {/* TODO: Translation */}
@@ -93,20 +84,14 @@ export function AppFrameNotifications() {
                       </Alert>
                     );
                   }
-                  case "warning": {
-                    return (
-                      <Alert severity="warning">{notification.message}</Alert>
-                    );
+                  case 'warning': {
+                    return <Alert severity="warning">{notification.message}</Alert>;
                   }
-                  case "info": {
-                    return (
-                      <Alert severity="info">{notification.message}</Alert>
-                    );
+                  case 'info': {
+                    return <Alert severity="info">{notification.message}</Alert>;
                   }
-                  case "success": {
-                    return (
-                      <Alert severity="success">{notification.message}</Alert>
-                    );
+                  case 'success': {
+                    return <Alert severity="success">{notification.message}</Alert>;
                   }
                 }
               }
@@ -189,15 +174,9 @@ function SuspenseFallbackView() {
   );
 }
 
-function AppFrameFallbackContainer({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AppFrameFallbackContainer({ children }: { children: React.ReactNode }) {
   return (
-    <Container
-      style={{ textAlign: "center", marginTop: "auto", marginBottom: "auto" }}
-    >
+    <Container style={{ textAlign: 'center', marginTop: 'auto', marginBottom: 'auto' }}>
       {children}
     </Container>
   );

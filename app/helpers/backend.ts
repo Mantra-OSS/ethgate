@@ -4,15 +4,15 @@ import {
   type NodeAbstract,
   type PageArgs,
   type PageInfo,
-} from "@ethgate/lib-solver";
-import { cache } from "react";
-import { Akshara, AksharaDatabase } from "@ethgate/lib-node";
-import { chains } from "@mantra-oss/chains";
+} from '@ethgate/lib-solver';
+import { cache } from 'react';
+import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
+import { chains } from '@mantra-oss/chains';
 
 export class AksharaDom extends Akshara {
   constructor() {
     const database = new AksharaDatabase({
-      name: "akshara-worker",
+      name: 'akshara-worker',
       indexedDB: globalThis.indexedDB,
       IDBKeyRange: globalThis.IDBKeyRange,
     });
@@ -49,20 +49,16 @@ export const serverPromise = EthgateSolverMainThread.create();
 //   }
 // }
 
-export const readNode = cache(async function readNode<T extends NodeAbstract>(
-  id: T["id"]
-) {
+export const readNode = cache(async function readNode<T extends NodeAbstract>(id: T['id']) {
   const database = (await serverPromise).solver.database;
   const node = await database.readNode(id);
   return node;
 });
 
-export const readConnection = cache(async function readConnection<
-  Edge extends EdgeAbstract
->(
-  type: Edge["type"],
-  tailId: Edge["tailId"],
-  args: PageArgs<Edge>
+export const readConnection = cache(async function readConnection<Edge extends EdgeAbstract>(
+  type: Edge['type'],
+  tailId: Edge['tailId'],
+  args: PageArgs<Edge>,
 ): Promise<{ edges: Edge[]; pageInfo: PageInfo<Edge> }> {
   const database = (await serverPromise).solver.database;
   const connection = database.getConnection(type, tailId, args).collect();

@@ -1,11 +1,6 @@
-import type { AksharaObjectSchema } from "@/akshara";
+import type { AksharaObjectSchema } from '@/akshara';
 
-import type {
-  AksharaTypeContext,
-  EdgeAbstract,
-  EdgeGenerator,
-  NodeAbstract,
-} from "../data";
+import type { AksharaTypeContext, EdgeAbstract, EdgeGenerator, NodeAbstract } from '../data';
 
 // export type NodeType = {
 //   //idgetter
@@ -17,28 +12,24 @@ import type {
 // type Asd  =  RegExpConstructor;
 
 export interface NodeType<T extends NodeAbstract> {
-  name: T["type"];
-  schema: Extract<AksharaObjectSchema, { aksharaType: T["type"] }>;
-  get(id: T["id"], ctx: AksharaTypeContext): Promise<T | void>;
+  name: T['type'];
+  schema: Extract<AksharaObjectSchema, { aksharaType: T['type'] }>;
+  get(id: T['id'], ctx: AksharaTypeContext): Promise<T | void>;
 }
 
 export type ProperPageArgs<T extends EdgeAbstract> = {
-  before?: T["cursor"];
-  after?: T["cursor"];
+  before?: T['cursor'];
+  after?: T['cursor'];
   isForward: boolean;
   limit: number;
 };
 
 export interface EdgeType<T extends EdgeAbstract> {
-  name: T["type"];
+  name: T['type'];
   tail: NodeType<any>;
   head: NodeType<any>;
   connectionName: string;
-  get(
-    tailId: T["tailId"],
-    args: ProperPageArgs<T>,
-    ctx: AksharaTypeContext
-  ): EdgeGenerator<T>;
+  get(tailId: T['tailId'], args: ProperPageArgs<T>, ctx: AksharaTypeContext): EdgeGenerator<T>;
 }
 
 export abstract class SolverGraphAbstract {

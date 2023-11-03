@@ -1,14 +1,10 @@
-import { AksharaChainKey, formatChainId } from "@/akshara";
-import AppProvider from "@/app/components/App";
-import ChainView from "@/app/components/ChainView";
-import { readNode } from "@/app/helpers/backend";
-import { Chain } from "@/solver";
+import { AksharaChainKey, formatChainId } from '@/akshara';
+import AppProvider from '@/app/components/App';
+import ChainView from '@/app/components/ChainView';
+import { readNode } from '@/app/helpers/backend';
+import { Chain } from '@/solver';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { chainId: string };
-}) {
+export async function generateMetadata({ params }: { params: { chainId: string } }) {
   const { chainId } = params;
 
   const key: AksharaChainKey = {
@@ -20,11 +16,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function ChainPage({
-  params,
-}: {
-  params: { chainId: string };
-}) {
+export default async function ChainPage({ params }: { params: { chainId: string } }) {
   const { chainId } = params;
 
   const key: AksharaChainKey = {

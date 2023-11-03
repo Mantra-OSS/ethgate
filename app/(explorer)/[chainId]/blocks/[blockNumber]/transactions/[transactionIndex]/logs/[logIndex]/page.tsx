@@ -1,3 +1,3 @@
 export default function LogPage() {
-  return "LogPage";
+  return 'LogPage';
 }

@@ -1,8 +1,4 @@
-import type {
-  Block,
-  BlockHasTransaction,
-  Transaction,
-} from "@ethgate/lib-solver";
+import type { Block, BlockHasTransaction, Transaction } from '@ethgate/lib-solver';
 import {
   Avatar,
   Collapse,
@@ -12,24 +8,24 @@ import {
   ListItemText,
   Stack,
   Typography,
-} from "@mui/material";
-import { useCallback, useTransition } from "react";
-import { TransitionGroup } from "react-transition-group";
+} from '@mui/material';
+import { useCallback, useTransition } from 'react';
+import { TransitionGroup } from 'react-transition-group';
 
-import InfiniteList from "../components/InfiniteList";
-import { useNode } from "@/app/helpers/hooks";
-import { useConnection } from "../helpers/hooks";
+import InfiniteList from '../components/InfiniteList';
+import { useNode } from '@/app/helpers/hooks';
+import { useConnection } from '../helpers/hooks';
 
 export default function BlockTransactionList({ block }: { block: Block }) {
   const [, startTransition] = useTransition();
 
   const [transactions, hasNext, loadNext] = useConnection<BlockHasTransaction>(
-    "BlockHasTransaction",
+    'BlockHasTransaction',
     block.id,
     {
       // TODO: Paginate
       first: 10,
-    }
+    },
   );
   const onLoadNext = useCallback(() => {
     startTransition(() => {
@@ -57,17 +53,11 @@ export default function BlockTransactionList({ block }: { block: Block }) {
   );
 }
 
-export function BlockTransactionListItem({
-  transactionId,
-}: {
-  transactionId: Transaction["id"];
-}) {
+export function BlockTransactionListItem({ transactionId }: { transactionId: Transaction['id'] }) {
   const node = useNode<Transaction>(transactionId);
 
   return (
-    <ListItemButton
-      href={`${node.blockNumber}/transactions/${node.transactionIndex}`}
-    >
+    <ListItemButton href={`${node.blockNumber}/transactions/${node.transactionIndex}`}>
       <ListItemAvatar>
         <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar>
       </ListItemAvatar>
@@ -88,9 +78,7 @@ export function BlockTransactionListItem({
             </Typography>
           </Stack>
           <Stack direction="column">
-            <Typography>
-              {(parseInt(node.value, 16) / 10 ** 18).toFixed(2)} ETH
-            </Typography>
+            <Typography>{(parseInt(node.value, 16) / 10 ** 18).toFixed(2)} ETH</Typography>
           </Stack>
         </Stack>
       </ListItemText>

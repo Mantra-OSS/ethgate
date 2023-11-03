@@ -1,4 +1,4 @@
-import { Result } from "@ethgate/lib-utils";
+import { Result } from '@ethgate/lib-utils';
 import type {
   AksharaBlockData,
   AksharaBlockId,
@@ -15,12 +15,12 @@ import type {
   AksharaResult,
   AksharaTransactionId,
   AksharaTransactionKey,
-} from "@ethgate/spec-node";
-import { AksharaAbstract, type AksharaChainId } from "@ethgate/spec-node";
-import type { Chain } from "@mantra-oss/chains";
+} from '@ethgate/spec-node';
+import { AksharaAbstract, type AksharaChainId } from '@ethgate/spec-node';
+import type { Chain } from '@mantra-oss/chains';
 
-import { AksharaDaClient } from "../consensus/client";
-import type { AksharaDatabase } from "..";
+import { AksharaDaClient } from '../consensus/client';
+import type { AksharaDatabase } from '..';
 
 export type FetchFn = (...args: any[]) => Promise<any>;
 // export type FetchFn = typeof fetch;
@@ -90,13 +90,13 @@ export class Akshara extends AksharaAbstract {
     const results = await Promise.all(
       calls.map(async (call) => {
         switch (call[0]) {
-          case "GetObject": {
+          case 'GetObject': {
             type CallResult = AksharaResult<(typeof call)[0]>;
 
             const [id] = call[1];
-            const key = typeof id === "string" ? parseObjectId(id) : id;
+            const key = typeof id === 'string' ? parseObjectId(id) : id;
 
-            if (key.type === "Chain") {
+            if (key.type === 'Chain') {
               const chain = this._getChain(key.chainId);
               return Result.ok(chain) satisfies CallResult;
             }
@@ -108,26 +108,22 @@ export class Akshara extends AksharaAbstract {
 
             const client = this.getDaClient(key.chainId);
             let object;
-            if (
-              key.type === "Receipt" &&
-              "blockNumber" in key &&
-              "transactionIndex" in key
-            ) {
+            if (key.type === 'Receipt' && 'blockNumber' in key && 'transactionIndex' in key) {
               // TODO: Check cache
-              const transaction = await client.execute("GetObject", [
+              const transaction = await client.execute('GetObject', [
                 {
                   ...key,
-                  type: "Transaction",
+                  type: 'Transaction',
                 },
               ]);
               if (transaction) {
                 await this.database._put({
-                  type: "Transaction",
+                  type: 'Transaction',
                   ...transaction,
                 });
                 object = await client.execute(call[0], [
                   {
-                    type: "Receipt",
+                    type: 'Receipt',
                     chainId: key.chainId,
                     transactionHash: (transaction as any).hash,
                   },
@@ -143,19 +139,19 @@ export class Akshara extends AksharaAbstract {
 
             return Result.ok(object) satisfies CallResult;
           }
-          case "GetLatestBlock": {
+          case 'GetLatestBlock': {
             type CallResult = AksharaResult<(typeof call)[0]>;
 
             const [key] = call[1];
 
             const client = this.getDaClient(key.chainId);
-            const block = await client.execute("GetLatestBlock", [key]);
+            const block = await client.execute('GetLatestBlock', [key]);
 
             await this.database.putBlock(block);
 
             return Result.ok(block) satisfies CallResult;
           }
-          case "GetChains": {
+          case 'GetChains': {
             type CallResult = AksharaResult<(typeof call)[0]>;
 
             const [{ chainId }] = call[1];
@@ -164,20 +160,17 @@ export class Akshara extends AksharaAbstract {
               .map((chain) => chain.chainId);
             return Result.ok(chains) satisfies CallResult;
           }
-          case "GetBlockRange": {
-            type CallResult = AksharaResult<"GetBlockRange">;
+          case 'GetBlockRange': {
+            type CallResult = AksharaResult<'GetBlockRange'>;
 
             const [key, pos, limit] = call[1];
             if (pos) {
-              throw new Error("pos is not supported");
+              throw new Error('pos is not supported');
             }
 
-            const chainIds = key.chainId
-              ? [key.chainId]
-              : Object.keys(this.chains);
+            const chainIds = key.chainId ? [key.chainId] : Object.keys(this.chains);
 
-            const earliestBlocks: Map<AksharaChainId, AksharaBlockData> =
-              new Map();
+            const earliestBlocks: Map<AksharaChainId, AksharaBlockData> = new Map();
             await Promise.all(
               chainIds.map(async (chainId) => {
                 const client = this.getDaClient(chainId);
@@ -185,14 +178,10 @@ export class Akshara extends AksharaAbstract {
                 if (latestBlock) {
                   earliestBlocks.set(chainId, latestBlock);
                 }
-              })
+              }),
             );
 
-            const cachedBlocks = await this.database.getBlocks(
-              key,
-              null,
-              limit
-            );
+            const cachedBlocks = await this.database.getBlocks(key, null, limit);
 
             const blocks = [];
             for (const cachedBlock of cachedBlocks) {
@@ -238,20 +227,20 @@ export class Akshara extends AksharaAbstract {
                     Array(restLimit)
                       .fill(0)
                       .map((_, i) => [
-                        "GetObject",
+                        'GetObject',
                         [
                           {
-                            type: "Block",
+                            type: 'Block',
                             chainId,
                             number: earliestBlock.number - i - 1,
                           },
                         ],
-                      ])
+                      ]),
                   );
 
                   const blocks = blocks_.map((block) => {
                     if (block.isErr || !block.value) {
-                      throw new Error("Block not found");
+                      throw new Error('Block not found');
                     }
                     return block.value as AksharaBlockData;
                   });
@@ -259,7 +248,7 @@ export class Akshara extends AksharaAbstract {
                   // earliestBlocks[chainId] = blocks[blocks.length - 1];
 
                   await this.database.putBlocks(blocks);
-                })
+                }),
               );
               // console.log(
               //   'earliestBlocks',
@@ -271,11 +260,7 @@ export class Akshara extends AksharaAbstract {
               // );
 
               {
-                const cachedBlocks = await this.database.getBlocks(
-                  key,
-                  null,
-                  limit
-                );
+                const cachedBlocks = await this.database.getBlocks(key, null, limit);
                 for (const cachedBlock of cachedBlocks) {
                   if (!chainIds.includes(cachedBlock.chainId)) {
                     continue;
@@ -306,16 +291,13 @@ export class Akshara extends AksharaAbstract {
           default: {
             type CallResult = AksharaResult<(typeof call)[0]>;
 
-            const [{ chainId }] = call[1] as [
-              { chainId: AksharaChainId },
-              ...unknown[]
-            ];
+            const [{ chainId }] = call[1] as [{ chainId: AksharaChainId }, ...unknown[]];
             const client = this.getDaClient(chainId);
             const result = await client.execute(call[0], call[1]);
             return Result.ok(result) as any satisfies CallResult;
           }
         }
-      })
+      }),
     );
 
     return results;
@@ -326,11 +308,11 @@ export const parseChainId = (id: string): AksharaChainKey => {
   return { chainId: id };
 };
 export const parseBlockId = (id: string): AksharaBlockKey => {
-  const [chainId, number] = id.split("-");
+  const [chainId, number] = id.split('-');
   return { chainId, number: parseInt(number, 10) };
 };
 export const parseTransactionId = (id: string): AksharaTransactionKey => {
-  const [chainId, blockNumber, transactionIndex] = id.split("-");
+  const [chainId, blockNumber, transactionIndex] = id.split('-');
   return {
     chainId,
     blockNumber: parseInt(blockNumber, 10),
@@ -338,7 +320,7 @@ export const parseTransactionId = (id: string): AksharaTransactionKey => {
   };
 };
 export const parseReceiptId = (id: string): AksharaReceiptKey => {
-  const [chainId, blockNumber, transactionIndex] = id.split("-");
+  const [chainId, blockNumber, transactionIndex] = id.split('-');
   return {
     chainId,
     blockNumber: parseInt(blockNumber, 10),
@@ -346,7 +328,7 @@ export const parseReceiptId = (id: string): AksharaReceiptKey => {
   };
 };
 export const parseLogId = (id: string): AksharaLogKey => {
-  const [chainId, blockNumber, transactionIndex, logIndex] = id.split("-");
+  const [chainId, blockNumber, transactionIndex, logIndex] = id.split('-');
   return {
     chainId,
     blockNumber: parseInt(blockNumber, 10),
@@ -356,30 +338,30 @@ export const parseLogId = (id: string): AksharaLogKey => {
 };
 
 export const parseObjectId = (id: string): AksharaObjectKey => {
-  const path = id.split("-");
+  const path = id.split('-');
   switch (path.length) {
     case 1: {
-      return { type: "Chain", ...parseChainId(id) };
+      return { type: 'Chain', ...parseChainId(id) };
     }
     case 2: {
-      return { type: "Block", ...parseBlockId(id) };
+      return { type: 'Block', ...parseBlockId(id) };
     }
     case 3: {
-      const [, , transactionIndex] = id.split("-");
-      if (transactionIndex.endsWith("r")) {
+      const [, , transactionIndex] = id.split('-');
+      if (transactionIndex.endsWith('r')) {
         return {
-          type: "Receipt",
+          type: 'Receipt',
           ...parseReceiptId(id),
         };
       } else {
-        return { type: "Transaction", ...parseTransactionId(id) };
+        return { type: 'Transaction', ...parseTransactionId(id) };
       }
     }
     case 4: {
-      return { type: "Log", ...parseLogId(id) };
+      return { type: 'Log', ...parseLogId(id) };
     }
     default: {
-      throw new Error("Not implemented 9452");
+      throw new Error('Not implemented 9452');
     }
   }
 };
@@ -388,47 +370,45 @@ export const formatChainId = (key: AksharaChainKey): AksharaChainId => {
   return `${key.chainId}`;
 };
 export const formatBlockId = (key: AksharaBlockKey): AksharaBlockId => {
-  if ("number" in key) {
+  if ('number' in key) {
     return `${key.chainId}-${key.number}`;
   }
-  throw new Error("Not implemented 9452");
+  throw new Error('Not implemented 9452');
 };
-export const formatTransactionId = (
-  key: AksharaTransactionKey
-): AksharaTransactionId => {
-  if ("blockNumber" in key) {
+export const formatTransactionId = (key: AksharaTransactionKey): AksharaTransactionId => {
+  if ('blockNumber' in key) {
     return `${key.chainId}-${key.blockNumber}-${key.transactionIndex}`;
   }
-  throw new Error("Not implemented 9452");
+  throw new Error('Not implemented 9452');
 };
 export const formatReceiptId = (key: AksharaReceiptKey): AksharaReceiptId => {
-  if ("blockNumber" in key) {
+  if ('blockNumber' in key) {
     return `${key.chainId}-${key.blockNumber}-${key.transactionIndex}r`;
   }
-  throw new Error("Not implemented 9452");
+  throw new Error('Not implemented 9452');
 };
 export const formatLogId = (key: AksharaLogKey): AksharaLogId => {
-  if ("blockNumber" in key) {
+  if ('blockNumber' in key) {
     return `${key.chainId}-${key.blockNumber}-${key.transactionIndex}-${key.logIndex}`;
   }
-  throw new Error("Not implemented 9452");
+  throw new Error('Not implemented 9452');
 };
 
 export const formatObjectId = (key: AksharaObjectKey): AksharaObjectId => {
   switch (key.type) {
-    case "Chain": {
+    case 'Chain': {
       return formatChainId(key);
     }
-    case "Block": {
+    case 'Block': {
       return formatBlockId(key);
     }
-    case "Transaction": {
+    case 'Transaction': {
       return formatTransactionId(key);
     }
-    case "Receipt": {
+    case 'Receipt': {
       return formatReceiptId(key);
     }
-    case "Log": {
+    case 'Log': {
       return formatLogId(key);
     }
   }

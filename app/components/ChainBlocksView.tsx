@@ -1,10 +1,10 @@
-import type { Chain } from "@ethgate/lib-solver";
-import { Divider, Grid, Paper, Stack, Typography } from "@mui/material";
+import type { Chain } from '@ethgate/lib-solver';
+import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 //import NodePageBarContent from '../components/NodePage';
-import { FallbackBoundary } from "../components/ui";
+import { FallbackBoundary } from '../components/ui';
 
-import ChainBlockList from "./ChainBlockList";
+import ChainBlockList from './ChainBlockList';
 export default function ChainBlocksView({ node }: { node: Chain }) {
   return (
     <Grid container spacing={1} padding={1}>

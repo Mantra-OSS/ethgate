@@ -1,4 +1,4 @@
-import type { Block, BlockHasLog, Log } from "@ethgate/lib-solver";
+import type { Block, BlockHasLog, Log } from '@ethgate/lib-solver';
 import {
   Avatar,
   Collapse,
@@ -8,25 +8,21 @@ import {
   ListItemText,
   Stack,
   Typography,
-} from "@mui/material";
-import { useCallback, useTransition } from "react";
-import { TransitionGroup } from "react-transition-group";
+} from '@mui/material';
+import { useCallback, useTransition } from 'react';
+import { TransitionGroup } from 'react-transition-group';
 
-import InfiniteList from "../components/InfiniteList";
-import { useNode } from "@/app/helpers/hooks";
-import { useConnection } from "../helpers/hooks";
+import InfiniteList from '../components/InfiniteList';
+import { useNode } from '@/app/helpers/hooks';
+import { useConnection } from '../helpers/hooks';
 
 export default function BlockLogList({ block }: { block: Block }) {
   const [, startTransition] = useTransition();
 
-  const [logs, hasNext, loadNext] = useConnection<BlockHasLog>(
-    "BlockHasLog",
-    block.id,
-    {
-      // TODO: Paginate
-      first: 10,
-    }
-  );
+  const [logs, hasNext, loadNext] = useConnection<BlockHasLog>('BlockHasLog', block.id, {
+    // TODO: Paginate
+    first: 10,
+  });
 
   const onLoadNext = useCallback(() => {
     startTransition(() => {
@@ -54,7 +50,7 @@ export default function BlockLogList({ block }: { block: Block }) {
   );
 }
 
-export function BlockLogListItem({ logId }: { logId: Log["id"] }) {
+export function BlockLogListItem({ logId }: { logId: Log['id'] }) {
   const node = useNode<Log>(logId);
 
   return (
