@@ -1,9 +1,11 @@
 import { useNode } from '@/app/helpers/hooks';
 import { NavigateNext } from '@mui/icons-material';
 import { Box, Breadcrumbs, Link, Stack, Toolbar, Typography } from '@mui/material';
+import Image from 'next/image';
 import { Suspense } from 'react';
 
 import ChangeLanguage from './ChangeLanguage';
+import logo from './logo.svg';
 
 export type RouteCrumb = {
   id: string;
@@ -56,6 +58,7 @@ function AppBreadcrumbs() {
 export default function AppBarContent() {
   return (
     <Toolbar>
+      <Image src={logo} alt="ethgate.io logo" width={32} height={32} />
       <AppBreadcrumbs />
       <Box flex={1} />
       <Stack direction="row" spacing={2}>
