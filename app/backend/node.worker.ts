@@ -1,0 +1,1 @@
+import '@ethgate/node-worker';
