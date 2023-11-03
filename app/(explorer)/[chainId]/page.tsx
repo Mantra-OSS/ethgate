@@ -1,11 +1,23 @@
 import type { AksharaChainKey } from '@/akshara';
 import { formatChainId } from '@/akshara';
-import AppProvider from '@/app/components/App';
 import ChainView from '@/app/components/ChainView';
 import { readNode } from '@/app/helpers/backend';
 import type { Chain } from '@/solver';
+import type { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: { chainId: string } }) {
+// export async function generateStaticParams() {
+//   const chains = ['1', '10'];
+
+//   return chains.map((chain) => ({
+//     chainId: chain.data.chainId,
+//   }))
+// }
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { chainId: string };
+}): Promise<Metadata> {
   const { chainId } = params;
 
   const key: AksharaChainKey = {

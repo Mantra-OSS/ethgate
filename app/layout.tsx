@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'ethgate.io',
-  description: 'ethgate.io',
+  description: 'Block explorer for Ethereum and friends',
 };
 export const viewport: Viewport = {
   // themeColor: '#000000',
