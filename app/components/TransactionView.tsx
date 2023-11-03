@@ -1,9 +1,9 @@
+import { useNode } from '@/app/helpers/hooks';
 import type { Receipt, Transaction } from '@ethgate/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
 
 // import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
-import { useNode } from '@/app/helpers/hooks';
 
 import ReceiptLogList from './ReceiptLogList';
 import ReceiptOverview from './ReceiptOverview';

@@ -1,8 +1,7 @@
+import { useNode } from '@/app/helpers/hooks';
 import { NavigateNext } from '@mui/icons-material';
 import { Box, Breadcrumbs, Link, Stack, Toolbar, Typography } from '@mui/material';
 import { Suspense } from 'react';
-
-import { useNode } from '@/app/helpers/hooks';
 
 import ChangeLanguage from './ChangeLanguage';
 

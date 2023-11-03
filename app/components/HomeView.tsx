@@ -1,10 +1,10 @@
 'use client';
+import { useNode } from '@/app/helpers/hooks';
 import type { Chain } from '@ethgate/lib-solver';
 import { Container, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 // import ChainBlockList from './ChainBlockList';
 import { FallbackBoundary } from '../components/ui';
-import { useNode } from '@/app/helpers/hooks';
 
 // import ChainDescendantBlockList from './ChainDescendantBlockList';
 import ChainChainList from './ChainChainList';

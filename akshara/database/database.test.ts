@@ -1,5 +1,5 @@
 import type { Address, AksharaChainId, Hash, Hex } from '@ethgate/spec-node';
-import { describe, expect, it, beforeEach } from '@jest/globals';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 
 import { AksharaDatabase } from './database';

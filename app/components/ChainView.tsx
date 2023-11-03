@@ -5,11 +5,11 @@ import { Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 
 //import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
+import { useNode } from '../helpers/hooks';
 
 import ChainBlockList from './ChainBlockList';
 import ChainOverview from './ChainOverview';
 import ChainTransactionList from './ChainTransactionList';
-import { useNode } from '../helpers/hooks';
 
 export default function ChainView({ nodeId }: { nodeId: Chain['id'] }) {
   const node = useNode<Chain>(nodeId);

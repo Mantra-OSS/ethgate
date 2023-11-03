@@ -1,3 +1,4 @@
+import { useNode } from '@/app/helpers/hooks';
 import type { Block, BlockHasLog, Log } from '@ethgate/lib-solver';
 import {
   Avatar,
@@ -13,7 +14,6 @@ import { useCallback, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 
 import InfiniteList from '../components/InfiniteList';
-import { useNode } from '@/app/helpers/hooks';
 import { useConnection } from '../helpers/hooks';
 
 export default function BlockLogList({ block }: { block: Block }) {

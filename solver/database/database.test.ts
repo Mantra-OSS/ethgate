@@ -1,5 +1,5 @@
-import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
 import { ETHGATE_NODE_TEST_CHAINS } from '@/akshara/testing';
+import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 

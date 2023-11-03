@@ -1,5 +1,6 @@
 'use client';
 
+import { useNode } from '@/app/helpers/hooks';
 import type { Block, Chain, ChainHasTransaction, Transaction } from '@ethgate/lib-solver';
 import {
   Avatar,
@@ -18,7 +19,6 @@ import { FormattedRelativeTime } from 'react-intl';
 import { TransitionGroup } from 'react-transition-group';
 
 import InfiniteList from '../components/InfiniteList';
-import { useNode } from '@/app/helpers/hooks';
 import { useConnection } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
 

@@ -16,10 +16,10 @@ import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
-import { notificationsState } from '../viewer';
+import AppProvider from '../components/App';
 import AppBarContent from '../components/AppBarContent';
 import AppFooter from '../components/AppFooter';
-import AppProvider from '../components/App';
+import { notificationsState } from '../viewer';
 
 export default function ExplorerLayout({ children }: { children: React.ReactNode }) {
   return (

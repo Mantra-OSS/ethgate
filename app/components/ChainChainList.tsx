@@ -1,3 +1,4 @@
+import { useNode } from '@/app/helpers/hooks';
 import type { ChainHasChain } from '@ethgate/lib-solver';
 import { type Chain } from '@ethgate/lib-solver';
 import {
@@ -14,7 +15,6 @@ import { useCallback, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 
 import InfiniteList from '../components/InfiniteList';
-import { useNode } from '@/app/helpers/hooks';
 import { useConnection } from '../helpers/hooks';
 
 export default function ChainChainList({ chain }: { chain: Chain }) {

@@ -1,13 +1,13 @@
+import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
 import {
-  EthgateSolver,
   type EdgeAbstract,
+  EthgateSolver,
   type NodeAbstract,
   type PageArgs,
   type PageInfo,
 } from '@ethgate/lib-solver';
-import { cache } from 'react';
-import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
 import { chains } from '@mantra-oss/chains';
+import { cache } from 'react';
 
 export class AksharaDom extends Akshara {
   constructor() {
@@ -24,7 +24,7 @@ export class EthgateSolverMainThread {
   solver: EthgateSolver;
 
   static async create() {
-    let node = new AksharaDom();
+    const node = new AksharaDom();
     const solver = await EthgateSolver.create({ node });
     return new EthgateSolverMainThread(solver);
   }

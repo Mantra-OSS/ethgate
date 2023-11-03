@@ -1,8 +1,9 @@
-import { AksharaChainKey, formatChainId } from '@/akshara';
+import type { AksharaChainKey } from '@/akshara';
+import { formatChainId } from '@/akshara';
 import AppProvider from '@/app/components/App';
 import ChainView from '@/app/components/ChainView';
 import { readNode } from '@/app/helpers/backend';
-import { Chain } from '@/solver';
+import type { Chain } from '@/solver';
 
 export async function generateMetadata({ params }: { params: { chainId: string } }) {
   const { chainId } = params;

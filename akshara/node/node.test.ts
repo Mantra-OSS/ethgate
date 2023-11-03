@@ -1,5 +1,5 @@
 import type { AksharaBlockData, AksharaChainId } from '@ethgate/spec-node';
-import { describe, expect, it, jest, beforeAll, beforeEach } from '@jest/globals';
+import { beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { type Mock } from 'jest-mock';
 
