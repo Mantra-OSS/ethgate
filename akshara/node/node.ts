@@ -22,7 +22,8 @@ import type { Chain } from "@mantra-oss/chains";
 import { AksharaDaClient } from "../consensus/client";
 import type { AksharaDatabase } from "..";
 
-export type FetchFn = typeof fetch;
+export type FetchFn = (...args: any[]) => Promise<any>;
+// export type FetchFn = typeof fetch;
 
 export type AksharaConfig = {
   chains: Record<AksharaChainId, Chain>;

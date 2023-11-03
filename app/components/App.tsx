@@ -8,8 +8,13 @@ import tr from "../lang/tr.json";
 import { ViewerProvider, useViewer } from "../viewer";
 
 import { theme } from "./theme";
+import { useRouter } from "next/router";
 
 function AppIntlProvider({ children }: { children: React.ReactNode }) {
+  // const router = useRouter();
+
+  // console.log(router.locale);
+
   const viewer = useViewer();
 
   const messages =

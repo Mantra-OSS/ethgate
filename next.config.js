@@ -15,6 +15,7 @@ const nextConfig = {
     // https://nextjs.org/docs/app/building-your-application/configuring/typescript#statically-typed-links
     typedRoutes: true,
   },
+  transpilePackages: ["@mantra-oss/chains"],
 };
 
 module.exports = withMDX(nextConfig);
