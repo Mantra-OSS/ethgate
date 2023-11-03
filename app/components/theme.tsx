@@ -2,10 +2,11 @@ import { createTheme } from "@mui/material";
 import type { LinkProps } from "@mui/material/Link";
 import { forwardRef } from "react";
 import NextLink, { type LinkProps as NextLinkProps } from "next/link";
+import type { Route } from "next";
 // import type { LinkProps as RouterLinkProps } from 'react-router-dom';
 // import { Link as RouterLink } from 'react-router-dom';
 
-export const LinkWrapper = forwardRef<HTMLAnchorElement, NextLinkProps>(
+export const LinkWrapper = forwardRef<HTMLAnchorElement, NextLinkProps<Route>>(
   function LinkWrapper(props, ref) {
     const { ...other } = props;
     return <NextLink ref={ref} {...other} />;

@@ -11,6 +11,10 @@ const nextConfig = {
     defaultLocale: "en-US",
     localeDetection: false,
   },
+  experimental: {
+    // https://nextjs.org/docs/app/building-your-application/configuring/typescript#statically-typed-links
+    typedRoutes: true,
+  },
 };
 
 module.exports = withMDX(nextConfig);
