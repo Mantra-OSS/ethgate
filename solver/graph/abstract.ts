@@ -1,11 +1,11 @@
-import type { AksharaObjectSchema } from "@/akshara/index.js";
+import type { AksharaObjectSchema } from "@/akshara";
 
 import type {
   AksharaTypeContext,
   EdgeAbstract,
   EdgeGenerator,
   NodeAbstract,
-} from "../data/index.js";
+} from "../data";
 
 // export type NodeType = {
 //   //idgetter

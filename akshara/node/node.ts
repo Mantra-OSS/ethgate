@@ -19,8 +19,8 @@ import type {
 import { AksharaAbstract, type AksharaChainId } from "@ethgate/spec-node";
 import type { Chain } from "@mantra-oss/chains";
 
-import { AksharaDaClient } from "../consensus/client.js";
-import type { AksharaDatabase } from "../index.js";
+import { AksharaDaClient } from "../consensus/client";
+import type { AksharaDatabase } from "..";
 
 export type FetchFn = typeof fetch;
 

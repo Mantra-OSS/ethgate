@@ -1,16 +1,16 @@
-import { createTheme } from '@mui/material';
-import type { LinkProps } from '@mui/material/Link';
-import { forwardRef } from 'react';
-import type { LinkProps as RouterLinkProps } from 'react-router-dom';
-import { Link as RouterLink } from 'react-router-dom';
+import { createTheme } from "@mui/material";
+import type { LinkProps } from "@mui/material/Link";
+import { forwardRef } from "react";
+import NextLink, { type LinkProps as NextLinkProps } from "next/link";
+// import type { LinkProps as RouterLinkProps } from 'react-router-dom';
+// import { Link as RouterLink } from 'react-router-dom';
 
-export const LinkBehavior = forwardRef<
-  HTMLAnchorElement,
-  Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }
->(function LinkBehavior(props, ref) {
-  const { href, ...other } = props;
-  return <RouterLink ref={ref} to={href} {...other} />;
-});
+export const LinkWrapper = forwardRef<HTMLAnchorElement, NextLinkProps>(
+  function LinkWrapper(props, ref) {
+    const { ...other } = props;
+    return <NextLink ref={ref} {...other} />;
+  }
+);
 
 // https://zenoo.github.io/mui-theme-creator/
 export const theme = createTheme({
@@ -32,68 +32,68 @@ export const theme = createTheme({
   // https://m2.material.io/design/color/the-color-system.html
   // https://m2.material.io/inline-tools/color/
   palette: {
-    mode: 'dark',
+    mode: "dark",
     background: {
-      default: '#382F3A',
+      default: "#382F3A",
       // paper: '#2A232C',
     },
     primary: {
-      main: '#FFC107',
+      main: "#FFC107",
     },
   },
   // https://mui.com/material-ui/customization/typography/
   // https://m2.material.io/design/typography/the-type-system.html
   typography: {
     fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
+    ].join(","),
     fontWeightLight: 300,
     fontWeightMedium: 500,
     fontWeightBold: 700,
     body1: {
-      fontSize: '0.8rem',
+      fontSize: "0.8rem",
     },
     body2: {
-      fontSize: '0.7rem',
+      fontSize: "0.7rem",
     },
     h1: {
-      fontSize: '2rem',
+      fontSize: "2rem",
     },
     h2: {
-      fontSize: '1.75rem',
+      fontSize: "1.75rem",
     },
     h3: {
-      fontSize: '1.50rem',
+      fontSize: "1.50rem",
     },
     h4: {
-      fontSize: '1.25rem',
+      fontSize: "1.25rem",
     },
     h5: {
-      fontSize: '1rem',
+      fontSize: "1rem",
     },
     h6: {
-      fontSize: '0.9rem',
+      fontSize: "0.9rem",
     },
   },
   // https://mui.com/material-ui/customization/theme-components/
   components: {
     MuiLink: {
       defaultProps: {
-        component: LinkBehavior,
+        component: LinkWrapper,
       } as LinkProps,
     },
     MuiButtonBase: {
       defaultProps: {
-        LinkComponent: LinkBehavior,
+        LinkComponent: LinkWrapper,
       },
     },
   },

@@ -1,10 +1,10 @@
-import type { Log } from '@ethgate/lib-solver';
-import { Divider, Grid, Paper, Stack } from '@mui/material';
+import type { Log } from "@ethgate/lib-solver";
+import { Divider, Grid, Paper, Stack } from "@mui/material";
 
-//import NodePageBarContent from '../components/NodePage.js';
-import { FallbackBoundary } from '../components/ui.js';
+//import NodePageBarContent from '../components/NodePage';
+import { FallbackBoundary } from "../components/ui";
 
-import LogOverview from './LogOverview.js';
+import LogOverview from "./LogOverview";
 
 export default function LogView({ node }: { node: Log }) {
   return (

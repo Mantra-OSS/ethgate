@@ -10,7 +10,7 @@ import type {
   AksharaReceiptKey,
   AksharaTransactionData,
   AksharaTransactionKey,
-} from "./object.js";
+} from "./object";
 
 export abstract class AksharaDatabaseAbstract {
   abstract _get(key: AksharaObjectKey): Promise<AksharaObjectData | void>;

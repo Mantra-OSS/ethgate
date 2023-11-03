@@ -9,7 +9,7 @@ import {
   EthereumPeerFetchError,
   EthereumPeerJsonRpc2Error,
   EthereumPeerResponseError,
-} from "./error.js";
+} from "./error";
 
 export type Fetch = any;
 

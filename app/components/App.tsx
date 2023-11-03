@@ -1,24 +1,13 @@
+"use client";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { mapValues } from "lodash";
 import { IntlProvider } from "react-intl";
-import {
-  RouterProvider,
-  createBrowserRouter,
-  createHashRouter,
-} from "react-router-dom";
 import { RecoilRoot } from "recoil";
 
 import tr from "../lang/tr.json";
-import { ViewerProvider, useViewer } from "../viewer/index.js";
+import { ViewerProvider, useViewer } from "../viewer";
 
-import routes from "./routes.js";
-import { theme } from "./theme.js";
-
-const HASH_ROUTER = false;
-
-const router = HASH_ROUTER
-  ? createHashRouter(routes)
-  : createBrowserRouter(routes);
+import { theme } from "./theme";
 
 function AppIntlProvider({ children }: { children: React.ReactNode }) {
   const viewer = useViewer();

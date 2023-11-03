@@ -1,12 +1,12 @@
-import type { Block } from '@ethgate/lib-solver';
-import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
+import type { Block } from "@ethgate/lib-solver";
+import { Divider, Grid, Paper, Stack, Typography } from "@mui/material";
 
-//import NodePageBarContent from '../components/NodePage.js';
-import { FallbackBoundary } from '../components/ui.js';
+//import NodePageBarContent from '../components/NodePage';
+import { FallbackBoundary } from "../components/ui";
 
-import BlockLogList from './BlockLogList.js';
-import BlockOverview from './BlockOverview.js';
-import BlockTransactionList from './BlockTransactionList.js';
+import BlockLogList from "./BlockLogList";
+import BlockOverview from "./BlockOverview";
+import BlockTransactionList from "./BlockTransactionList";
 
 export default function BlockView({ node }: { node: Block }) {
   return (

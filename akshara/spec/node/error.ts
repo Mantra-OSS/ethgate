@@ -1,4 +1,4 @@
-import type { AksharaCall } from "./node.js";
+import type { AksharaCall } from "./node";
 
 export abstract class AksharaError extends Error {
   abstract readonly name: `Akshara${string}Error`;

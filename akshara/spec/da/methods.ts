@@ -1,4 +1,4 @@
-import type { RpcClientMethod as Method } from '@ethgate/lib-utils';
+import type { RpcClientMethod as Method } from "@ethgate/lib-utils";
 
 import type {
   Address,
@@ -10,14 +10,14 @@ import type {
   AksharaObjectKey,
   Hash,
   Hex,
-} from '../db/index.js';
+} from "../db";
 
 export type AksharaDaMethod =
-  | Method<'GetObject', [AksharaObjectKey], AksharaObjectData | undefined>
-  | Method<'GetLatestBlock', [AksharaChainKey], AksharaBlockData>
-  | Method<'GetChains', [AksharaChainKey], Array<AksharaChainId>>
+  | Method<"GetObject", [AksharaObjectKey], AksharaObjectData | undefined>
+  | Method<"GetLatestBlock", [AksharaChainKey], AksharaBlockData>
+  | Method<"GetChains", [AksharaChainKey], Array<AksharaChainId>>
   | Method<
-      'GetLogs',
+      "GetLogs",
       [
         AksharaChainKey,
         filter: {
@@ -25,7 +25,7 @@ export type AksharaDaMethod =
           toBlock: Hex;
           address?: Address | Array<Address>;
           topics?: Hash | Array<Hash>;
-        },
+        }
       ],
       Array<AksharaLogData>
     >;

@@ -18,10 +18,10 @@ import {
 } from "@ethgate/spec-node";
 import { parseGlobalId } from "@ethgate/spec-solver";
 
-import type { NodeType, ProperPageArgs } from "../graph/index.js";
+import type { NodeType, ProperPageArgs } from "../graph";
 
-import type { EdgeGenerator, ObjectId } from "./database/abstract.js";
-import { EdgeAbstract, NodeAbstract } from "./database/abstract.js";
+import type { EdgeGenerator, ObjectId } from "./database/abstract";
+import { EdgeAbstract, NodeAbstract } from "./database/abstract";
 
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;

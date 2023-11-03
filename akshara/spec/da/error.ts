@@ -1,4 +1,4 @@
-import type { AksharaDaCall } from "./client.js";
+import type { AksharaDaCall } from "./client";
 
 export abstract class AksharaDaError extends Error {
   abstract readonly name: `AksharaDa${string}Error`;

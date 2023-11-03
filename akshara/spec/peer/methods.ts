@@ -1,4 +1,4 @@
-import type { RpcClientMethod as Method } from '@ethgate/lib-utils';
+import type { RpcClientMethod as Method } from "@ethgate/lib-utils";
 
 import type {
   Address,
@@ -11,40 +11,54 @@ import type {
   Receipt,
   Transaction,
   TransactionRequest,
-} from './types.js';
+} from "./types";
 
 export type EthereumMethod =
-  | Method<'eth_blockNumber', [], number>
+  | Method<"eth_blockNumber", [], number>
   | Method<
-      'eth_getBlockByHash',
+      "eth_getBlockByHash",
       [blockHash: Hash, hydratedTransactions: boolean],
       Block | undefined
     >
   | Method<
-      'eth_getBlockByNumber',
+      "eth_getBlockByNumber",
       [blockNumberOrTag: Hex | BlockTag, hydratedTransactions: boolean],
       Block | undefined
     >
-  | Method<'eth_getTransactionByHash', [transactionHash: Hash], Transaction | undefined>
-  | Method<'eth_getTransactionReceipt', [transactionHash: Hash], Receipt | undefined>
   | Method<
-      'eth_getTransactionByBlockNumberAndIndex',
+      "eth_getTransactionByHash",
+      [transactionHash: Hash],
+      Transaction | undefined
+    >
+  | Method<
+      "eth_getTransactionReceipt",
+      [transactionHash: Hash],
+      Receipt | undefined
+    >
+  | Method<
+      "eth_getTransactionByBlockNumberAndIndex",
       [blockNumberOrTag: Hex | BlockTag, transactionIndex: Hex],
       Receipt | undefined
     >
   | Method<
-      'eth_getTransactionByBlockHashAndIndex',
+      "eth_getTransactionByBlockHashAndIndex",
       [blockHash: Hash, transactionIndex: Hex],
       Receipt | undefined
     >
   | Method<
-      'eth_call',
-      [transaction: TransactionRequest, blockNumberOrTagOrHash: Hex | BlockTag | Hash],
+      "eth_call",
+      [
+        transaction: TransactionRequest,
+        blockNumberOrTagOrHash: Hex | BlockTag | Hash
+      ],
       Hex
     >
   | Method<
-      'eth_createAccessList',
-      [transaction: TransactionRequest, blockNumberOrTagOrHash: Hex | BlockTag | Hash],
+      "eth_createAccessList",
+      [
+        transaction: TransactionRequest,
+        blockNumberOrTagOrHash: Hex | BlockTag | Hash
+      ],
       Readonly<{
         accessList: Eip2930AccessList;
         error?: string;
@@ -52,7 +66,7 @@ export type EthereumMethod =
       }>
     >
   | Method<
-      'eth_getLogs',
+      "eth_getLogs",
       [
         filter: {
           fromBlock?: Hex;
@@ -60,19 +74,31 @@ export type EthereumMethod =
           address?: Address | ReadonlyArray<Address>;
           topics?: Hash | ReadonlyArray<Hash>;
           blockHash?: Hash;
-        },
+        }
       ],
       ReadonlyArray<Log>
     >
-  | Method<'eth_getBalance', [address: Address, blockNumberOrTagOrHash: Hex | BlockTag | Hash], Hex>
   | Method<
-      'eth_getTransactionCount',
+      "eth_getBalance",
       [address: Address, blockNumberOrTagOrHash: Hex | BlockTag | Hash],
       Hex
     >
   | Method<
-      'eth_getStorageAt',
-      [address: Address, storageSlot: Hash, blockNumberOrTagOrHash: Hex | BlockTag | Hash],
+      "eth_getTransactionCount",
+      [address: Address, blockNumberOrTagOrHash: Hex | BlockTag | Hash],
       Hex
     >
-  | Method<'eth_getCode', [address: Address, blockNumberOrTagOrHash: Hex | BlockTag | Hash], Hex>;
+  | Method<
+      "eth_getStorageAt",
+      [
+        address: Address,
+        storageSlot: Hash,
+        blockNumberOrTagOrHash: Hex | BlockTag | Hash
+      ],
+      Hex
+    >
+  | Method<
+      "eth_getCode",
+      [address: Address, blockNumberOrTagOrHash: Hex | BlockTag | Hash],
+      Hex
+    >;

@@ -1,14 +1,18 @@
-import type { Chain } from '@ethgate/lib-solver';
-import { Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
+"use client";
 
-//import NodePageBarContent from '../components/NodePage.js';
-import { FallbackBoundary } from '../components/ui.js';
+import type { Chain } from "@ethgate/lib-solver";
+import { Divider, Grid, Link, Paper, Stack, Typography } from "@mui/material";
 
-import ChainBlockList from './ChainBlockList.js';
-import ChainOverview from './ChainOverview.js';
-import ChainTransactionList from './ChainTransactionList.js';
+//import NodePageBarContent from '../components/NodePage';
+import { FallbackBoundary } from "../components/ui";
 
-export default function ChainView({ node }: { node: Chain }) {
+import ChainBlockList from "./ChainBlockList";
+import ChainOverview from "./ChainOverview";
+import ChainTransactionList from "./ChainTransactionList";
+import { useNode } from "../helpers/hooks";
+
+export default function ChainView({ nodeId }: { nodeId: Chain["id"] }) {
+  const node = useNode<Chain>(nodeId);
   return (
     <Grid container spacing={1} padding={1}>
       <Grid item xs={12}>

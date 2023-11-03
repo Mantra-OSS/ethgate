@@ -1,9 +1,9 @@
-import type { Result } from './result.js';
+import type { Result } from "./result";
 
 export type RpcClientMethod<
   Name extends string = any,
   Params extends unknown[] = any,
-  Value = any,
+  Value = any
 > = {
   Name: Name;
   Params: Params;
@@ -13,21 +13,24 @@ export type RpcClientMethod<
 };
 
 export abstract class RpcClient<Method extends RpcClientMethod> {
-  abstract executeBatch(calls: Method['Call'][]): Promise<Method['Result'][]>;
+  abstract executeBatch(calls: Method["Call"][]): Promise<Method["Result"][]>;
 
   async executeMany<
-    Calls extends Method['Call'][],
-    Results extends Method['Result'][] = {
-      [P in keyof Calls]: Extract<Method, { Name: Calls[P][0] }>['Result'];
-    },
+    Calls extends Method["Call"][],
+    Results extends Method["Result"][] = {
+      [P in keyof Calls]: Extract<Method, { Name: Calls[P][0] }>["Result"];
+    }
   >(calls: Calls): Promise<Results> {
     return this.executeBatch(calls as any) as any;
   }
 
   async execute<
-    MethodName extends Method['Name'],
-    Call extends Method['Call'] = Extract<Method, { Name: MethodName }>['Call'],
-    Value extends Method['Value'] = Extract<Method, { Name: MethodName }>['Value'],
+    MethodName extends Method["Name"],
+    Call extends Method["Call"] = Extract<Method, { Name: MethodName }>["Call"],
+    Value extends Method["Value"] = Extract<
+      Method,
+      { Name: MethodName }
+    >["Value"]
   >(method: MethodName, params: Call[1]): Promise<Value> {
     const [result] = await this.executeBatch([[method, params]]);
     if (result.isErr) {

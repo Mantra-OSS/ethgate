@@ -1,15 +1,19 @@
-import { formatLogId, formatTransactionId } from '@ethgate/lib-node';
-import type { AksharaBlockKey, AksharaLogKey, AksharaTransactionKey } from '@ethgate/spec-node';
-import { lazy } from 'react';
+import { formatLogId, formatTransactionId } from "@ethgate/lib-node";
+import type {
+  AksharaBlockKey,
+  AksharaLogKey,
+  AksharaTransactionKey,
+} from "@ethgate/spec-node";
+import { lazy } from "react";
 
-import type { PunkerRouteObject, RouteMatch } from '../app/routes.js';
+import type { PunkerRouteObject, RouteMatch } from "../app/routes";
 
-const HomePage = lazy(() => import('./HomePage.js'));
-const ChainPage = lazy(() => import('./ChainPage.js'));
-const ChainBlocksPage = lazy(() => import('./ChainBlocksPage.js'));
-const BlockPage = lazy(() => import('./BlockPage.js'));
-const TransactionPage = lazy(() => import('./TransactionPage.js'));
-const LogPage = lazy(() => import('./LogPage.js'));
+const HomePage = lazy(() => import("./HomePage.js"));
+const ChainPage = lazy(() => import("./ChainPage.js"));
+const ChainBlocksPage = lazy(() => import("./ChainBlocksPage.js"));
+const BlockPage = lazy(() => import("./BlockPage.js"));
+const TransactionPage = lazy(() => import("./TransactionPage.js"));
+const LogPage = lazy(() => import("./LogPage.js"));
 
 // TODO: Add 3091 compat: https://eips.ethereum.org/EIPS/eip-3091
 const chainRoutes = [
@@ -17,7 +21,7 @@ const chainRoutes = [
     index: true,
     element: <ChainPage />,
     loader: ({ params }) => {
-      const { chainId = '1' } = params;
+      const { chainId = "1" } = params;
 
       return {
         chainId,
@@ -25,11 +29,11 @@ const chainRoutes = [
     },
   },
   {
-    path: 'blocks',
+    path: "blocks",
     handle: { crumb: ({ params }: RouteMatch) => ({ title: `Blocks` }) },
     element: <ChainBlocksPage />,
     loader: ({ params }) => {
-      const { chainId = '1' } = params;
+      const { chainId = "1" } = params;
 
       const key = {
         chainId,
@@ -41,21 +45,25 @@ const chainRoutes = [
   },
 
   {
-    path: 'block/:blockNumberOrHash',
-    handle: { crumb: ({ params }: RouteMatch) => ({ title: `Block ${params.blockNumberOrHash}` }) },
+    path: "block/:blockNumberOrHash",
+    handle: {
+      crumb: ({ params }: RouteMatch) => ({
+        title: `Block ${params.blockNumberOrHash}`,
+      }),
+    },
     children: [
       {
         index: true,
         element: <BlockPage />,
         loader: ({ params, ...rest }) => {
-          const { chainId = '1', blockNumberOrHash } = params;
+          const { chainId = "1", blockNumberOrHash } = params;
 
           if (!blockNumberOrHash) {
-            throw new Error('Missing block number or hash');
+            throw new Error("Missing block number or hash");
           }
 
           let key: AksharaBlockKey;
-          if (blockNumberOrHash.startsWith('0x')) {
+          if (blockNumberOrHash.startsWith("0x")) {
             key = { chainId, hash: blockNumberOrHash };
           } else {
             key = { chainId, number: parseInt(blockNumberOrHash, 10) };
@@ -67,7 +75,7 @@ const chainRoutes = [
         },
       },
       {
-        path: 'tx/:transactionIndexOrHash',
+        path: "tx/:transactionIndexOrHash",
         handle: {
           crumb: ({ params }: RouteMatch) => ({
             title: `Transaction ${params.transactionIndexOrHash}`,
@@ -78,55 +86,59 @@ const chainRoutes = [
             index: true,
             element: <TransactionPage />,
             loader: ({ params }) => {
-              const { chainId = '1', blockNumberOrHash, transactionIndexOrHash } = params;
+              const {
+                chainId = "1",
+                blockNumberOrHash,
+                transactionIndexOrHash,
+              } = params;
 
               if (!blockNumberOrHash) {
-                throw new Error('Missing block number or hash');
+                throw new Error("Missing block number or hash");
               }
 
               let blockKey: AksharaBlockKey;
-              if (blockNumberOrHash.startsWith('0x')) {
+              if (blockNumberOrHash.startsWith("0x")) {
                 blockKey = { chainId, hash: blockNumberOrHash };
               } else {
                 blockKey = { chainId, number: parseInt(blockNumberOrHash, 10) };
               }
 
               if (!transactionIndexOrHash) {
-                throw new Error('Missing transaction index or hash');
+                throw new Error("Missing transaction index or hash");
               }
 
               let key: AksharaTransactionKey;
-              if (transactionIndexOrHash.startsWith('0x')) {
-                if ('number' in blockKey) {
+              if (transactionIndexOrHash.startsWith("0x")) {
+                if ("number" in blockKey) {
                   key = {
                     chainId: blockKey.chainId,
                     blockNumber: blockKey.number,
                     hash: transactionIndexOrHash,
                   };
-                } else if ('hash' in blockKey) {
+                } else if ("hash" in blockKey) {
                   key = {
                     chainId: blockKey.chainId,
                     blockHash: blockKey.hash,
                     hash: transactionIndexOrHash,
                   };
                 } else {
-                  throw new Error('Missing block number or hash');
+                  throw new Error("Missing block number or hash");
                 }
               } else {
-                if ('number' in blockKey) {
+                if ("number" in blockKey) {
                   key = {
                     chainId: blockKey.chainId,
                     blockNumber: blockKey.number,
                     transactionIndex: parseInt(transactionIndexOrHash, 10),
                   };
-                } else if ('hash' in blockKey) {
+                } else if ("hash" in blockKey) {
                   key = {
                     chainId: blockKey.chainId,
                     blockHash: blockKey.hash,
                     transactionIndex: parseInt(transactionIndexOrHash, 10),
                   };
                 } else {
-                  throw new Error('Missing block number or hash');
+                  throw new Error("Missing block number or hash");
                 }
               }
 
@@ -134,64 +146,73 @@ const chainRoutes = [
             },
           },
           {
-            path: 'log/:logIndex',
+            path: "log/:logIndex",
             element: <LogPage />,
-            handle: { crumb: ({ params }: RouteMatch) => ({ title: `Log ${params.logIndex}` }) },
+            handle: {
+              crumb: ({ params }: RouteMatch) => ({
+                title: `Log ${params.logIndex}`,
+              }),
+            },
             loader: ({ params }) => {
-              const { chainId = '1', blockNumberOrHash, transactionIndexOrHash, logIndex } = params;
+              const {
+                chainId = "1",
+                blockNumberOrHash,
+                transactionIndexOrHash,
+                logIndex,
+              } = params;
 
               if (!blockNumberOrHash) {
-                throw new Error('Missing block number or hash');
+                throw new Error("Missing block number or hash");
               }
 
               let blockKey: AksharaBlockKey;
-              if (blockNumberOrHash.startsWith('0x')) {
+              if (blockNumberOrHash.startsWith("0x")) {
                 blockKey = { chainId, hash: blockNumberOrHash };
               } else {
                 blockKey = { chainId, number: parseInt(blockNumberOrHash, 10) };
               }
 
               if (!transactionIndexOrHash) {
-                throw new Error('Missing transaction index or hash');
+                throw new Error("Missing transaction index or hash");
               }
 
               let transactionKey: AksharaTransactionKey;
-              if (transactionIndexOrHash.startsWith('0x')) {
-                if ('number' in blockKey) {
+              if (transactionIndexOrHash.startsWith("0x")) {
+                if ("number" in blockKey) {
                   transactionKey = {
                     chainId: blockKey.chainId,
                     blockNumber: blockKey.number,
                     hash: transactionIndexOrHash,
                   };
-                } else if ('hash' in blockKey) {
+                } else if ("hash" in blockKey) {
                   transactionKey = {
                     chainId: blockKey.chainId,
                     blockHash: blockKey.hash,
                     hash: transactionIndexOrHash,
                   };
                 } else {
-                  throw new Error('Missing block number or hash');
+                  throw new Error("Missing block number or hash");
                 }
               } else {
-                if ('number' in blockKey) {
+                if ("number" in blockKey) {
                   transactionKey = {
                     chainId: blockKey.chainId,
                     blockNumber: blockKey.number,
                     transactionIndex: parseInt(transactionIndexOrHash, 10),
                   };
-                } else if ('hash' in blockKey) {
+                } else if ("hash" in blockKey) {
                   transactionKey = {
                     chainId: blockKey.chainId,
                     blockHash: blockKey.hash,
                     transactionIndex: parseInt(transactionIndexOrHash, 10),
                   };
                 } else {
-                  throw new Error('Missing block number or hash');
+                  throw new Error("Missing block number or hash");
                 }
               }
 
               if (!logIndex) {
-                throw new Error('Missing log index');
+                throw new Error("Missing log index");
               }
 
               const key: AksharaLogKey = {
@@ -214,13 +235,15 @@ const explorerRoutes = [
     element: <HomePage />,
   },
   {
-    path: ':chainId',
+    path: ":chainId",
     loader: ({ params }) => {
       return {
         chainId: params.chainId,
       };
     },
-    handle: { crumb: ({ params }: RouteMatch) => ({ title: `Chain ${params.chainId}` }) },
+    handle: {
+      crumb: ({ params }: RouteMatch) => ({ title: `Chain ${params.chainId}` }),
+    },
     children: [...chainRoutes],
   },
   ...chainRoutes,

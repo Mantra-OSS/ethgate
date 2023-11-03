@@ -1,2 +1,2 @@
-export * from './error.js';
-export * from './peer.js';
+export * from "./error";
+export * from "./peer";

@@ -1,13 +1,13 @@
-import type { Receipt } from '@ethgate/lib-solver';
-import { Typography } from '@mui/material';
-import { Suspense } from 'react';
+import type { Receipt } from "@ethgate/lib-solver";
+import { Typography } from "@mui/material";
+import { Suspense } from "react";
 
-import { useNode } from '../helpers/backend.js';
+import { useNode } from "@/app/helpers/hooks";
 
-import ReceiptLogList from './ReceiptLogList.js';
-//import ReceiptOverview from './ReceiptOverview.js';
+import ReceiptLogList from "./ReceiptLogList";
+//import ReceiptOverview from './ReceiptOverview';
 
-export default function ReceiptView({ nodeId }: { nodeId: Receipt['id'] }) {
+export default function ReceiptView({ nodeId }: { nodeId: Receipt["id"] }) {
   const node = useNode<Receipt>(nodeId);
 
   return (

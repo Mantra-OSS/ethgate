@@ -1,4 +1,5 @@
-import HomeView from "../components/HomeView.js";
+"use client";
+import HomeView from "../components/HomeView";
 
 export default function HomePage() {
   return <HomeView />;

@@ -1,5 +1,5 @@
-import type { EthgateSolverDatabase } from "../database/database.js";
-import type { ProperPageArgs } from "../graph/index.js";
+import type { EthgateSolverDatabase } from "../database/database";
+import type { ProperPageArgs } from "../graph";
 
 import {
   Block,
@@ -10,9 +10,9 @@ import {
   Log,
   ReceiptHasLog,
   Transaction,
-} from "./akshara.js";
-import type { EdgeGenerator } from "./database/abstract.js";
-import { EdgeAbstract } from "./database/abstract.js";
+} from "./akshara";
+import type { EdgeGenerator } from "./database/abstract";
+import { EdgeAbstract } from "./database/abstract";
 
 export class BlockHasLog extends EdgeAbstract<
   "BlockHasLog",

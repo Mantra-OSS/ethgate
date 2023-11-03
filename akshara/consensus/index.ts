@@ -1,3 +1,3 @@
-export * from './peer/index.js';
-export * from './ethereum.js';
-export * from './client.js';
+export * from "./peer";
+export * from "./ethereum";
+export * from "./client";

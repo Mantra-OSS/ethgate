@@ -1,6 +1,6 @@
-import { RpcClient } from '@ethgate/lib-utils';
-// import type { EthgateAksharaDaAbstract } from '../da/index.js';
-import { maxTime, minTime } from '@ethgate/spec-node';
+import { RpcClient } from "@ethgate/lib-utils";
+// import type { EthgateAksharaDaAbstract } from '../da';
+import { maxTime, minTime } from "@ethgate/spec-node";
 
 import type {
   AksharaBlockData,
@@ -22,19 +22,17 @@ import type {
   AksharaTransactionId,
   AksharaTransactionKey,
   Time,
-} from '../db/index.js';
+} from "../db";
 
-import type { AksharaMethod } from './methods.js';
+import type { AksharaMethod } from "./methods";
 
-export type AksharaCall<Name extends AksharaMethod['Name'] = AksharaMethod['Name']> = Extract<
-  AksharaMethod,
-  { Name: Name }
->['Call'];
+export type AksharaCall<
+  Name extends AksharaMethod["Name"] = AksharaMethod["Name"]
+> = Extract<AksharaMethod, { Name: Name }>["Call"];
 
-export type AksharaResult<Name extends AksharaMethod['Name'] = AksharaMethod['Name']> = Extract<
-  AksharaMethod,
-  { Name: Name }
->['Result'];
+export type AksharaResult<
+  Name extends AksharaMethod["Name"] = AksharaMethod["Name"]
+> = Extract<AksharaMethod, { Name: Name }>["Result"];
 
 export type AksharaPageArgs<Cursor extends string> = {
   isForward: boolean;
@@ -53,56 +51,64 @@ export abstract class AksharaAbstract extends RpcClient<AksharaMethod> {
   // }
 
   async getObject<T extends AksharaObjectData = any>(
-    idOrKey: AksharaObjectId | AksharaObjectKey,
+    idOrKey: AksharaObjectId | AksharaObjectKey
   ): Promise<T | undefined> {
-    return this.execute('GetObject', [idOrKey]);
+    return this.execute("GetObject", [idOrKey]);
   }
-  async getChain(idOrKey: AksharaChainId | AksharaChainKey): Promise<AksharaChainData | undefined> {
-    return this.execute('GetObject', [
-      typeof idOrKey === 'string' ? idOrKey : { type: 'Chain', ...idOrKey },
+  async getChain(
+    idOrKey: AksharaChainId | AksharaChainKey
+  ): Promise<AksharaChainData | undefined> {
+    return this.execute("GetObject", [
+      typeof idOrKey === "string" ? idOrKey : { type: "Chain", ...idOrKey },
     ]);
   }
-  async getBlock(idOrKey: AksharaBlockId | AksharaBlockKey): Promise<AksharaBlockData | undefined> {
-    return this.execute('GetObject', [
-      typeof idOrKey === 'string' ? idOrKey : { type: 'Block', ...idOrKey },
+  async getBlock(
+    idOrKey: AksharaBlockId | AksharaBlockKey
+  ): Promise<AksharaBlockData | undefined> {
+    return this.execute("GetObject", [
+      typeof idOrKey === "string" ? idOrKey : { type: "Block", ...idOrKey },
     ]);
   }
   async getTransaction(
-    idOrKey: AksharaTransactionId | AksharaTransactionKey,
+    idOrKey: AksharaTransactionId | AksharaTransactionKey
   ): Promise<AksharaTransactionData | undefined> {
-    return this.execute('GetObject', [
-      typeof idOrKey === 'string' ? idOrKey : { type: 'Transaction', ...idOrKey },
+    return this.execute("GetObject", [
+      typeof idOrKey === "string"
+        ? idOrKey
+        : { type: "Transaction", ...idOrKey },
     ]);
   }
   async getReceipt(
-    idOrKey: AksharaReceiptId | AksharaReceiptKey,
+    idOrKey: AksharaReceiptId | AksharaReceiptKey
   ): Promise<AksharaReceiptData | undefined> {
-    return this.execute('GetObject', [
-      typeof idOrKey === 'string' ? idOrKey : { type: 'Receipt', ...idOrKey },
+    return this.execute("GetObject", [
+      typeof idOrKey === "string" ? idOrKey : { type: "Receipt", ...idOrKey },
     ]);
   }
-  async getLog(idOrKey: AksharaLogId | AksharaLogKey): Promise<AksharaLogData | undefined> {
-    return this.execute('GetObject', [
-      typeof idOrKey === 'string' ? idOrKey : { type: 'Log', ...idOrKey },
+  async getLog(
+    idOrKey: AksharaLogId | AksharaLogKey
+  ): Promise<AksharaLogData | undefined> {
+    return this.execute("GetObject", [
+      typeof idOrKey === "string" ? idOrKey : { type: "Log", ...idOrKey },
     ]);
   }
 
   async getChains(chainId: AksharaChainId): Promise<AksharaChainId[]> {
-    return this.execute('GetChains', [{ chainId }]);
+    return this.execute("GetChains", [{ chainId }]);
   }
   async *blockNumbers(
     key: Partial<AksharaChainKey>,
     high: Time,
     low: Time,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    buffer: number,
+    buffer: number
   ): AsyncGenerator<number, undefined, undefined> {
     if (low !== minTime) {
-      throw new Error('low must be minTime');
+      throw new Error("low must be minTime");
     }
     let time = high;
     if (time >= maxTime) {
-      const [latestBlock] = await this.execute('GetBlockRange', [key, 0, 1]);
+      const [latestBlock] = await this.execute("GetBlockRange", [key, 0, 1]);
       if (!latestBlock) {
         return;
       }

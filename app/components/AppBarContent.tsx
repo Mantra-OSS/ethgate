@@ -1,13 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { NavigateNext } from '@mui/icons-material';
-import { Box, Breadcrumbs, Link, Stack, Toolbar, Typography } from '@mui/material';
-import { Suspense } from 'react';
-import { useMatches } from 'react-router-dom';
+import { NavigateNext } from "@mui/icons-material";
+import {
+  Box,
+  Breadcrumbs,
+  Link,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Suspense } from "react";
 
-import { useNode } from '../helpers/backend.js';
+import { useNode } from "@/app/helpers/hooks";
 
-import ChangeLanguage from './ChangeLanguage.js';
-import type { RouteMatch } from './routes.js';
+import ChangeLanguage from "./ChangeLanguage";
 
 export type RouteCrumb = {
   id: string;
@@ -17,14 +21,21 @@ export type RouteCrumb = {
   nodeId?: string;
 };
 
-function AppBarContentBreadcrumbNode({ id, crumb }: { id: string; crumb: RouteCrumb }) {
+function AppBarContentBreadcrumbNode({
+  id,
+  crumb,
+}: {
+  id: string;
+  crumb: RouteCrumb;
+}) {
   const node = useNode(id as any);
 
   return <>{(node as any).meta.name}</>;
 }
 
 function AppBreadcrumbs() {
-  const matches = useMatches() as RouteMatch[];
+  // const matches = useMatches() as RouteMatch[];
+  const matches = [] as any[];
   const crumbs = matches
     .filter((match) => match.handle && match.handle!.crumb(match))
     .map((match, index) => ({
@@ -38,7 +49,10 @@ function AppBreadcrumbs() {
   // crumb.isCurrentPage
 
   return (
-    <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
+    <Breadcrumbs
+      separator={<NavigateNext fontSize="small" />}
+      aria-label="breadcrumb"
+    >
       {crumbs.map((crumb) => (
         <Link key={crumb.id} href={crumb.pathname}>
           <Suspense>

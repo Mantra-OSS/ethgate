@@ -17,10 +17,10 @@ import {
   logFromEth,
   receiptFromEth,
   transactionFromEth,
-} from "../index.js";
+} from "..";
 
-import { type Fetch } from "./peer/index.js";
-import { BatchLoader } from "./utils.js";
+import { type Fetch } from "./peer";
+import { BatchLoader } from "./utils";
 
 const ENABLE_CACHING = false;
 

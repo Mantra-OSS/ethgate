@@ -3,7 +3,7 @@ import type {
   AksharaAbstract,
   AksharaBlockData,
   AksharaChainId,
-} from "@/akshara/index.js";
+} from "@/akshara";
 import { parseGlobalId } from "@ethgate/spec-solver";
 
 import type {
@@ -13,14 +13,9 @@ import type {
   NodeAbstract,
   PageArgs,
   PageInfo,
-} from "../data/index.js";
-import {
-  Block,
-  ChainHasBlock,
-  Connection,
-  DatabaseAbstract,
-} from "../data/index.js";
-import { SolverGraph } from "../graph/index.js";
+} from "../data";
+import { Block, ChainHasBlock, Connection, DatabaseAbstract } from "../data";
+import { SolverGraph } from "../graph";
 
 const graph = new SolverGraph();
 

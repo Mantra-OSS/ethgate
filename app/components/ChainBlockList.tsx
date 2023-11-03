@@ -1,4 +1,5 @@
-import type { Block, Chain, ChainHasBlock } from '@ethgate/lib-solver';
+"use client";
+import type { Block, Chain, ChainHasBlock } from "@ethgate/lib-solver";
 import {
   Avatar,
   Collapse,
@@ -8,26 +9,27 @@ import {
   ListItemText,
   Stack,
   Typography,
-} from '@mui/material';
-import { DateTime } from 'luxon';
-import { useCallback, useEffect, useTransition } from 'react';
-import { FormattedRelativeTime } from 'react-intl';
-import { TransitionGroup } from 'react-transition-group';
+} from "@mui/material";
+import { DateTime } from "luxon";
+import { useCallback, useEffect, useTransition } from "react";
+import { FormattedRelativeTime } from "react-intl";
+import { TransitionGroup } from "react-transition-group";
 
-import InfiniteList from '../components/InfiniteList.js';
-import { FallbackBoundary } from '../components/ui.js';
-import { serverPromise, useConnection, useNode } from '../helpers/backend.js';
-import { useNow } from '../viewer/viewer.js';
+import InfiniteList from "../components/InfiniteList";
+import { FallbackBoundary } from "../components/ui";
+import { serverPromise } from "../helpers/backend";
+import { useConnection, useNode } from "../helpers/hooks";
+import { useNow } from "../viewer/viewer";
 
-export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
+export default function ChainBlockList({ chainId }: { chainId: Chain["id"] }) {
   const [, startTransition] = useTransition();
   const [blocks, hasNext, loadNext, refetch] = useConnection<ChainHasBlock>(
-    'ChainHasBlock',
+    "ChainHasBlock",
     chainId,
     {
       // TODO: Paginate
       first: 10,
-    },
+    }
   );
   const onLoadNext = useCallback(() => {
     startTransition(() => {
@@ -77,7 +79,7 @@ export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
   );
 }
 
-export function ChainBlockListItem({ blockId }: { blockId: Block['id'] }) {
+export function ChainBlockListItem({ blockId }: { blockId: Block["id"] }) {
   const node = useNode<Block>(blockId);
   const chain = useNode<Chain>(node.chainId);
 
@@ -85,16 +87,16 @@ export function ChainBlockListItem({ blockId }: { blockId: Block['id'] }) {
   const now = useNow();
 
   return (
-    <ListItemButton href={`block/${node.number}`}>
+    <ListItemButton href={`${node.data.chainId}/blocks/${node.number}`}>
       <ListItemAvatar>
         <Avatar
           alt={chain.meta.name}
           // src={`/static/images/avatar/${value + 1}.jpg`}
         >
           {chain.meta.name
-            .split(' ')
+            .split(" ")
             .map((word) => word[0])
-            .join('')}
+            .join("")}
         </Avatar>
       </ListItemAvatar>
       <ListItemText>
@@ -114,7 +116,7 @@ export function ChainBlockListItem({ blockId }: { blockId: Block['id'] }) {
             <Typography>123 txns</Typography>
             <Typography variant="caption">
               <FormattedRelativeTime
-                value={timestamp.diff(now).as('seconds')}
+                value={timestamp.diff(now).as("seconds")}
                 unit="second"
                 style="narrow"
               />

@@ -1,2 +1,2 @@
-export * from './abstract.js';
-export * from './graph.js';
+export * from "./abstract";
+export * from "./graph";

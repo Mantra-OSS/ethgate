@@ -1,3 +1,4 @@
-export * from './storage.js';
-export * from './viewer.js';
-export { default as ViewerProvider } from './ViewerProvider.js';
+"use client";
+export * from "./storage";
+export * from "./viewer";
+export { default as ViewerProvider } from "./ViewerProvider";

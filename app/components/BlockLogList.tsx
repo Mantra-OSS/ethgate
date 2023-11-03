@@ -1,4 +1,4 @@
-import type { Block, BlockHasLog, Log } from '@ethgate/lib-solver';
+import type { Block, BlockHasLog, Log } from "@ethgate/lib-solver";
 import {
   Avatar,
   Collapse,
@@ -8,20 +8,25 @@ import {
   ListItemText,
   Stack,
   Typography,
-} from '@mui/material';
-import { useCallback, useTransition } from 'react';
-import { TransitionGroup } from 'react-transition-group';
+} from "@mui/material";
+import { useCallback, useTransition } from "react";
+import { TransitionGroup } from "react-transition-group";
 
-import InfiniteList from '../components/InfiniteList.js';
-import { useConnection, useNode } from '../helpers/backend.js';
+import InfiniteList from "../components/InfiniteList";
+import { useNode } from "@/app/helpers/hooks";
+import { useConnection } from "../helpers/hooks";
 
 export default function BlockLogList({ block }: { block: Block }) {
   const [, startTransition] = useTransition();
 
-  const [logs, hasNext, loadNext] = useConnection<BlockHasLog>('BlockHasLog', block.id, {
-    // TODO: Paginate
-    first: 10,
-  });
+  const [logs, hasNext, loadNext] = useConnection<BlockHasLog>(
+    "BlockHasLog",
+    block.id,
+    {
+      // TODO: Paginate
+      first: 10,
+    }
+  );
 
   const onLoadNext = useCallback(() => {
     startTransition(() => {
@@ -49,11 +54,13 @@ export default function BlockLogList({ block }: { block: Block }) {
   );
 }
 
-export function BlockLogListItem({ logId }: { logId: Log['id'] }) {
+export function BlockLogListItem({ logId }: { logId: Log["id"] }) {
   const node = useNode<Log>(logId);
 
   return (
-    <ListItemButton href={`tx/${node.transactionIndex}/log/${node.logIndex}`}>
+    <ListItemButton
+      href={`${node.blockNumber}/transactions/${node.transactionIndex}/logs/${node.logIndex}`}
+    >
       <ListItemAvatar>
         <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar>
       </ListItemAvatar>
@@ -62,7 +69,8 @@ export function BlockLogListItem({ logId }: { logId: Log['id'] }) {
           <Stack direction="column">
             <Typography>Tx Index: {node.transactionIndex}</Typography>
             <Typography>
-              Tx Hash: {node.transactionHash.slice(0, 6)}...{node.transactionHash.slice(-6)}
+              Tx Hash: {node.transactionHash.slice(0, 6)}...
+              {node.transactionHash.slice(-6)}
             </Typography>
           </Stack>
           <Stack direction="column">

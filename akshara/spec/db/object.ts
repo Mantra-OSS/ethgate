@@ -1,22 +1,28 @@
-import type { Chain as EthgateChainDataExtra } from '@mantra-oss/chains';
-import type { FromSchema } from 'json-schema-to-ts';
+import type { Chain as EthgateChainDataExtra } from "@mantra-oss/chains";
+import type { FromSchema } from "json-schema-to-ts";
 
-import type { AksharaChainId } from './types.js';
-import { addressSchema, chainIdSchema, hashSchema, hexSchema, u64Schema } from './types.js';
+import type { AksharaChainId } from "./types";
+import {
+  addressSchema,
+  chainIdSchema,
+  hashSchema,
+  hexSchema,
+  u64Schema,
+} from "./types";
 
 export type AksharaObjectKey =
-  | ({ type: 'Chain' } & AksharaChainKey)
-  | ({ type: 'Block' } & AksharaBlockKey)
-  | ({ type: 'Transaction' } & AksharaTransactionKey)
-  | ({ type: 'Receipt' } & AksharaReceiptKey)
-  | ({ type: 'Log' } & AksharaLogKey);
+  | ({ type: "Chain" } & AksharaChainKey)
+  | ({ type: "Block" } & AksharaBlockKey)
+  | ({ type: "Transaction" } & AksharaTransactionKey)
+  | ({ type: "Receipt" } & AksharaReceiptKey)
+  | ({ type: "Log" } & AksharaLogKey);
 
 export type AksharaObjectPartialKey =
-  | ({ type: 'Chain' } & Partial<AksharaChainKey>)
-  | ({ type: 'Block' } & Partial<AksharaBlockKey>)
-  | ({ type: 'Transaction' } & Partial<AksharaTransactionKey>)
-  | ({ type: 'Receipt' } & Partial<AksharaReceiptKey>)
-  | ({ type: 'Log' } & Partial<AksharaLogKey>);
+  | ({ type: "Chain" } & Partial<AksharaChainKey>)
+  | ({ type: "Block" } & Partial<AksharaBlockKey>)
+  | ({ type: "Transaction" } & Partial<AksharaTransactionKey>)
+  | ({ type: "Receipt" } & Partial<AksharaReceiptKey>)
+  | ({ type: "Log" } & Partial<AksharaLogKey>);
 
 export type AksharaObjectId =
   | AksharaChainId
@@ -47,48 +53,51 @@ export type AksharaObjectSchemas = {
   Log: typeof logSchema;
 };
 
-export type AksharaChainKey = Pick<AksharaChainData, 'chainId'>;
+export type AksharaChainKey = Pick<AksharaChainData, "chainId">;
 export const chainSchema = {
-  aksharaType: 'Chain',
-  type: 'object',
+  aksharaType: "Chain",
+  type: "object",
   properties: {
     chainId: chainIdSchema,
-    name: { type: 'string' },
+    name: { type: "string" },
     rpcs: {
-      type: 'array',
+      type: "array",
       items: {
-        type: 'object',
+        type: "object",
         properties: {
-          url: { type: 'string' },
-          source: { type: 'string' },
+          url: { type: "string" },
+          source: { type: "string" },
         },
-        required: ['url', 'source'],
+        required: ["url", "source"],
       },
     },
     parentId: chainIdSchema,
     parent: {
-      type: 'object',
+      type: "object",
       properties: {
         chainId: chainIdSchema,
-        type: { type: 'string' },
+        type: { type: "string" },
         // bridges: { type: ['null', 'string', 'number', 'boolean', 'array', 'object'] },
       },
-      required: ['chainId', 'type', 'bridges'],
+      required: ["chainId", "type", "bridges"],
     },
-    extra: { type: 'object' },
+    extra: { type: "object" },
   },
-  required: ['chainId', 'name', 'rpcs', 'extra'],
+  required: ["chainId", "name", "rpcs", "extra"],
 } as const;
-export type AksharaChainData = FromSchema<typeof chainSchema> & { extra: EthgateChainDataExtra };
+export type AksharaChainData = FromSchema<typeof chainSchema> & {
+  extra: EthgateChainDataExtra;
+};
 
 export type AksharaBlockKey =
-  | Pick<AksharaBlockData, 'chainId' | 'hash'>
-  | Pick<AksharaBlockData, 'chainId' | 'number'>
-  | Pick<AksharaBlockData, 'chainId' | 'timestamp'>;
-export type AksharaBlockId = `${AksharaBlockData['chainId']}-${AksharaBlockData['number']}`;
+  | Pick<AksharaBlockData, "chainId" | "hash">
+  | Pick<AksharaBlockData, "chainId" | "number">
+  | Pick<AksharaBlockData, "chainId" | "timestamp">;
+export type AksharaBlockId =
+  `${AksharaBlockData["chainId"]}-${AksharaBlockData["number"]}`;
 export const blockSchema = {
-  aksharaType: 'Block',
-  type: 'object',
+  aksharaType: "Block",
+  type: "object",
   properties: {
     chainId: chainIdSchema,
     timestamp: u64Schema,
@@ -102,36 +111,39 @@ export const blockSchema = {
     miner: addressSchema,
     size: u64Schema,
     transactions: {
-      type: 'array',
+      type: "array",
       items: hashSchema,
     },
   },
   required: [
-    'chainId',
-    'timestamp',
-    'hash',
-    'number',
-    'parentHash',
-    'gasLimit',
-    'gasUsed',
-    'baseFeePerGas',
-    'logsBloom',
-    'miner',
-    'size',
-    'transactions',
+    "chainId",
+    "timestamp",
+    "hash",
+    "number",
+    "parentHash",
+    "gasLimit",
+    "gasUsed",
+    "baseFeePerGas",
+    "logsBloom",
+    "miner",
+    "size",
+    "transactions",
   ],
 } as const;
 export type AksharaBlockData = FromSchema<typeof blockSchema>;
 
 export type AksharaTransactionKey =
-  | Pick<AksharaTransactionData, 'chainId' | 'hash'>
-  | Pick<AksharaTransactionData, 'chainId' | 'blockHash' | 'transactionIndex'>
-  | Pick<AksharaTransactionData, 'chainId' | 'blockNumber' | 'transactionIndex'>;
+  | Pick<AksharaTransactionData, "chainId" | "hash">
+  | Pick<AksharaTransactionData, "chainId" | "blockHash" | "transactionIndex">
+  | Pick<
+      AksharaTransactionData,
+      "chainId" | "blockNumber" | "transactionIndex"
+    >;
 export type AksharaTransactionId =
-  `${AksharaTransactionData['chainId']}-${AksharaTransactionData['blockNumber']}-${AksharaTransactionData['transactionIndex']}`;
+  `${AksharaTransactionData["chainId"]}-${AksharaTransactionData["blockNumber"]}-${AksharaTransactionData["transactionIndex"]}`;
 export const transactionSchema = {
-  aksharaType: 'Transaction',
-  type: 'object',
+  aksharaType: "Transaction",
+  type: "object",
   properties: {
     chainId: chainIdSchema,
     blockHash: hashSchema,
@@ -150,39 +162,45 @@ export const transactionSchema = {
     s: hexSchema,
   },
   required: [
-    'chainId',
-    'blockHash',
-    'blockNumber',
-    'from',
-    'gas',
-    'gasPrice',
-    'hash',
-    'input',
-    'nonce',
-    'to',
-    'transactionIndex',
-    'value',
-    'v',
-    'r',
-    's',
+    "chainId",
+    "blockHash",
+    "blockNumber",
+    "from",
+    "gas",
+    "gasPrice",
+    "hash",
+    "input",
+    "nonce",
+    "to",
+    "transactionIndex",
+    "value",
+    "v",
+    "r",
+    "s",
   ],
 } as const;
 export type AksharaTransactionData = FromSchema<typeof transactionSchema>;
 
 export type AksharaLogKey =
-  | Pick<AksharaLogData, 'chainId' | 'transactionHash' | 'logIndex'>
-  | Pick<AksharaLogData, 'chainId' | 'blockHash' | 'transactionIndex' | 'logIndex'>
-  | Pick<AksharaLogData, 'chainId' | 'blockNumber' | 'transactionIndex' | 'logIndex'>;
+  | Pick<AksharaLogData, "chainId" | "transactionHash" | "logIndex">
+  | Pick<
+      AksharaLogData,
+      "chainId" | "blockHash" | "transactionIndex" | "logIndex"
+    >
+  | Pick<
+      AksharaLogData,
+      "chainId" | "blockNumber" | "transactionIndex" | "logIndex"
+    >;
 export type AksharaLogId =
-  `${AksharaLogData['chainId']}-${AksharaLogData['blockNumber']}-${AksharaLogData['transactionIndex']}-${AksharaLogData['logIndex']}`;
+  `${AksharaLogData["chainId"]}-${AksharaLogData["blockNumber"]}-${AksharaLogData["transactionIndex"]}-${AksharaLogData["logIndex"]}`;
 export const logSchema = {
-  aksharaType: 'Log',
-  type: 'object',
+  aksharaType: "Log",
+  type: "object",
   properties: {
     chainId: chainIdSchema,
     address: addressSchema,
     topics: {
-      type: 'array',
+      type: "array",
       items: hashSchema,
     },
     data: hexSchema,
@@ -191,42 +209,42 @@ export const logSchema = {
     transactionIndex: u64Schema,
     blockHash: hashSchema,
     logIndex: u64Schema,
-    removed: { type: 'boolean' },
+    removed: { type: "boolean" },
   },
   required: [
-    'chainId',
-    'address',
-    'topics',
-    'data',
-    'blockNumber',
-    'transactionHash',
-    'transactionIndex',
-    'blockHash',
-    'logIndex',
-    'removed',
+    "chainId",
+    "address",
+    "topics",
+    "data",
+    "blockNumber",
+    "transactionHash",
+    "transactionIndex",
+    "blockHash",
+    "logIndex",
+    "removed",
   ],
 } as const;
 export type AksharaLogData = FromSchema<typeof logSchema>;
 
 export type AksharaReceiptKey =
-  | Pick<AksharaReceiptData, 'chainId' | 'transactionHash'>
-  | Pick<AksharaReceiptData, 'chainId' | 'blockHash' | 'transactionIndex'>
-  | Pick<AksharaReceiptData, 'chainId' | 'blockNumber' | 'transactionIndex'>;
+  | Pick<AksharaReceiptData, "chainId" | "transactionHash">
+  | Pick<AksharaReceiptData, "chainId" | "blockHash" | "transactionIndex">
+  | Pick<AksharaReceiptData, "chainId" | "blockNumber" | "transactionIndex">;
 export type AksharaReceiptId =
-  `${AksharaReceiptData['chainId']}-${AksharaReceiptData['blockNumber']}-${AksharaReceiptData['transactionIndex']}r`;
+  `${AksharaReceiptData["chainId"]}-${AksharaReceiptData["blockNumber"]}-${AksharaReceiptData["transactionIndex"]}r`;
 export const receiptSchema = {
-  aksharaType: 'Receipt',
-  type: 'object',
+  aksharaType: "Receipt",
+  type: "object",
   properties: {
     chainId: chainIdSchema,
     blockHash: hashSchema,
     blockNumber: u64Schema,
-    contractAddress: { type: 'string' },
+    contractAddress: { type: "string" },
     cumulativeGasUsed: u64Schema,
     from: addressSchema,
     gasUsed: u64Schema,
     logs: {
-      type: 'array',
+      type: "array",
       items: logSchema,
     },
     logsBloom: hexSchema,
@@ -236,18 +254,18 @@ export const receiptSchema = {
     transactionIndex: u64Schema,
   },
   required: [
-    'chainId',
-    'blockHash',
-    'blockNumber',
-    'cumulativeGasUsed',
-    'from',
-    'gasUsed',
-    'logs',
-    'logsBloom',
-    'status',
-    'to',
-    'transactionHash',
-    'transactionIndex',
+    "chainId",
+    "blockHash",
+    "blockNumber",
+    "cumulativeGasUsed",
+    "from",
+    "gasUsed",
+    "logs",
+    "logsBloom",
+    "status",
+    "to",
+    "transactionHash",
+    "transactionIndex",
   ],
 } as const;
 export type AksharaReceiptData = FromSchema<typeof receiptSchema>;

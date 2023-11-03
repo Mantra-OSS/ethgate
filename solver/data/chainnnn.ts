@@ -1,10 +1,10 @@
-import type { EthgateSolverDatabase } from "../database/database.js";
-import type { ProperPageArgs } from "../graph/index.js";
+import type { EthgateSolverDatabase } from "../database/database";
+import type { ProperPageArgs } from "../graph";
 
-import { Chain } from "./akshara.js";
-import { Block } from "./akshara.js";
-import type { EdgeGenerator } from "./database/abstract.js";
-import { EdgeAbstract } from "./database/abstract.js";
+import { Chain } from "./akshara";
+import { Block } from "./akshara";
+import type { EdgeGenerator } from "./database/abstract";
+import { EdgeAbstract } from "./database/abstract";
 
 export class ChainHasDescendantBlock extends EdgeAbstract<
   "ChainHasDescendantBlock",
