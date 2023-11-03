@@ -3,15 +3,14 @@ import { formatChainId } from '@/akshara';
 import ChainView from '@/app/components/ChainView';
 import { readNode } from '@/app/helpers/backend';
 import type { Chain } from '@/solver';
+import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
 
-// export async function generateStaticParams() {
-//   const chains = ['1', '10'];
-
-//   return chains.map((chain) => ({
-//     chainId: chain.data.chainId,
-//   }))
-// }
+export async function generateStaticParams() {
+  return Object.values(chains).map((chain) => ({
+    chainId: chain.chainId,
+  }));
+}
 
 export async function generateMetadata({
   params,
