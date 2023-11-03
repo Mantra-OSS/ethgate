@@ -1,29 +1,28 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { EthgateSolverDatabase } from '../database/database.js';
-import type { ProperPageArgs } from '../graph/index.js';
+import type { EthgateSolverDatabase } from "../database/database.js";
+import type { ProperPageArgs } from "../graph/index.js";
 
-import { Chain } from './akshara.js';
-import { Block } from './akshara.js';
-import type { EdgeGenerator } from './database/abstract.js';
-import { EdgeAbstract } from './database/abstract.js';
+import { Chain } from "./akshara.js";
+import { Block } from "./akshara.js";
+import type { EdgeGenerator } from "./database/abstract.js";
+import { EdgeAbstract } from "./database/abstract.js";
 
 export class ChainHasDescendantBlock extends EdgeAbstract<
-  'ChainHasDescendantBlock',
-  Chain['id'],
-  Block['id'],
+  "ChainHasDescendantBlock",
+  Chain["id"],
+  Block["id"],
   {
     blockNumber: number;
   }
 > {
-  static name = 'ChainHasDescendantBlock' as const;
-  type = 'ChainHasDescendantBlock' as const;
+  static typeName = "ChainHasDescendantBlock" as const;
+  type = "ChainHasDescendantBlock" as const;
   static tail = Chain.type;
   static head = Block;
-  static connectionName = 'descendantBlocks';
+  static connectionName = "descendantBlocks";
   static async *get(
-    tailId: ChainHasDescendantBlock['tailId'],
+    tailId: ChainHasDescendantBlock["tailId"],
     args: ProperPageArgs<ChainHasDescendantBlock>,
-    ctx: EthgateSolverDatabase,
+    ctx: EthgateSolverDatabase
   ): EdgeGenerator<ChainHasDescendantBlock> {
     // let assocs;
     // // const tail = await ctx.readNode<Chain>(tailId);

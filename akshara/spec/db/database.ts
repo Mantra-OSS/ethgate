@@ -10,21 +10,23 @@ import type {
   AksharaReceiptKey,
   AksharaTransactionData,
   AksharaTransactionKey,
-} from './object.js';
+} from "./object.js";
 
 export abstract class AksharaDatabaseAbstract {
   abstract _get(key: AksharaObjectKey): Promise<AksharaObjectData | void>;
   abstract _getObjects(
     key: AksharaObjectPartialKey,
     timestamp: number | null,
-    limit: number,
+    limit: number
   ): Promise<AksharaObjectData[]>;
-  abstract _put(data: Pick<AksharaObjectKey, 'type'> & AksharaObjectData): Promise<void>;
+  abstract _put(
+    data: Pick<AksharaObjectKey, "type"> & AksharaObjectData
+  ): Promise<void>;
   // abstract _putMany(datas: (Pick<EthgateObjectKey, 'type'> & EthgateObjectData)[]): Promise<void>;
   abstract _delete(key: AksharaObjectKey): Promise<void>;
   abstract clear(): Promise<void>;
 
-  async #_get(key: AksharaObjectKey): Promise<AksharaObjectData | void> {
+  async __get(key: AksharaObjectKey): Promise<AksharaObjectData | void> {
     try {
       return this._get(key);
     } catch (error) {
@@ -33,7 +35,9 @@ export abstract class AksharaDatabaseAbstract {
       throw error;
     }
   }
-  async #_put(data: Pick<AksharaObjectKey, 'type'> & AksharaObjectData): Promise<void> {
+  async __put(
+    data: Pick<AksharaObjectKey, "type"> & AksharaObjectData
+  ): Promise<void> {
     try {
       return this._put(data);
     } catch (error) {
@@ -44,28 +48,30 @@ export abstract class AksharaDatabaseAbstract {
   }
 
   getBlock(key: AksharaBlockKey): Promise<AksharaBlockData | void> {
-    return this.#_get({ type: 'Block', ...key }) as any;
+    return this.__get({ type: "Block", ...key }) as any;
   }
-  getTransaction(key: AksharaTransactionKey): Promise<AksharaTransactionData | void> {
-    return this.#_get({ type: 'Transaction', ...key }) as any;
+  getTransaction(
+    key: AksharaTransactionKey
+  ): Promise<AksharaTransactionData | void> {
+    return this.__get({ type: "Transaction", ...key }) as any;
   }
   getReceipt(key: AksharaReceiptKey): Promise<AksharaReceiptData | void> {
-    return this.#_get({ type: 'Receipt', ...key }) as any;
+    return this.__get({ type: "Receipt", ...key }) as any;
   }
   getLog(key: AksharaLogKey): Promise<AksharaLogData | void> {
-    return this.#_get({ type: 'Log', ...key }) as any;
+    return this.__get({ type: "Log", ...key }) as any;
   }
   putBlock(data: AksharaBlockData): Promise<void> {
-    return this.#_put({ type: 'Block', ...data });
+    return this.__put({ type: "Block", ...data });
   }
   putTransaction(data: AksharaTransactionData): Promise<void> {
-    return this.#_put({ type: 'Transaction', ...data });
+    return this.__put({ type: "Transaction", ...data });
   }
   putReceipt(data: AksharaReceiptData): Promise<void> {
-    return this.#_put({ type: 'Receipt', ...data });
+    return this.__put({ type: "Receipt", ...data });
   }
   putLog(data: AksharaLogData): Promise<void> {
-    return this.#_put({ type: 'Log', ...data });
+    return this.__put({ type: "Log", ...data });
   }
   async putBlocks(datas: AksharaBlockData[]): Promise<void> {
     await Promise.all(datas.map((data) => this.putBlock(data)));
@@ -83,29 +89,37 @@ export abstract class AksharaDatabaseAbstract {
   getBlocks(
     key: Partial<AksharaBlockKey>,
     timestamp: number | null,
-    limit: number,
+    limit: number
   ): Promise<AksharaBlockData[]> {
-    return this._getObjects({ type: 'Block', ...key }, timestamp, limit) as any;
+    return this._getObjects({ type: "Block", ...key }, timestamp, limit) as any;
   }
   getTransactions(
     key: Partial<AksharaTransactionKey>,
     timestamp: number | null,
-    limit: number,
+    limit: number
   ): Promise<AksharaTransactionData[]> {
-    return this._getObjects({ type: 'Transaction', ...key }, timestamp, limit) as any;
+    return this._getObjects(
+      { type: "Transaction", ...key },
+      timestamp,
+      limit
+    ) as any;
   }
   getReceipts(
     key: Partial<AksharaReceiptKey>,
     timestamp: number | null,
-    limit: number,
+    limit: number
   ): Promise<AksharaReceiptData[]> {
-    return this._getObjects({ type: 'Receipt', ...key }, timestamp, limit) as any;
+    return this._getObjects(
+      { type: "Receipt", ...key },
+      timestamp,
+      limit
+    ) as any;
   }
   getLogs(
     key: Partial<AksharaLogKey>,
     timestamp: number | null,
-    limit: number,
+    limit: number
   ): Promise<AksharaLogData[]> {
-    return this._getObjects({ type: 'Log', ...key }, timestamp, limit) as any;
+    return this._getObjects({ type: "Log", ...key }, timestamp, limit) as any;
   }
 }

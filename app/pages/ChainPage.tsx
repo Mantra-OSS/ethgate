@@ -1,9 +1,9 @@
-import { formatChainId } from '@ethgate/lib-node';
-import type { Chain } from '@ethgate/lib-solver';
-import { useLoaderData } from 'react-router-dom';
+import { formatChainId } from "@ethgate/lib-node";
+import type { Chain } from "@ethgate/lib-solver";
+import { useLoaderData } from "react-router-dom";
 
-import { useNode } from '../helpers/backend.js';
-import ChainView from '../nodes/ChainView.js';
+import { useNode } from "../helpers/backend.js";
+import ChainView from "../components/ChainView.js";
 
 export default function ChainPage() {
   const variables: any = useLoaderData();

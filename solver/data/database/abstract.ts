@@ -66,10 +66,10 @@ export type ConnectionGenerator<Edge extends EdgeAbstract> = AsyncGenerator<
 export class Connection<Edge extends EdgeAbstract>
   implements ConnectionGenerator<Edge>
 {
-  readonly #generator: ConnectionGenerator<Edge>;
+  readonly _generator: ConnectionGenerator<Edge>;
 
   constructor(generator: ConnectionGenerator<Edge>) {
-    this.#generator = generator;
+    this._generator = generator;
   }
 
   async collect(): Promise<{ edges: Edge[]; pageInfo: PageInfo<Edge> }> {
@@ -85,16 +85,16 @@ export class Connection<Edge extends EdgeAbstract>
 
   // ConnectionGenerator implementation
   [Symbol.asyncIterator]() {
-    return this.#generator[Symbol.asyncIterator]();
+    return this._generator[Symbol.asyncIterator]();
   }
   next() {
-    return this.#generator.next();
+    return this._generator.next();
   }
   return(value: PageInfo<Edge>) {
-    return this.#generator.return(value);
+    return this._generator.return(value);
   }
   throw(error: any) {
-    return this.#generator.throw(error);
+    return this._generator.throw(error);
   }
 }
 

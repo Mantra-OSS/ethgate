@@ -1,4 +1,4 @@
-import type * as Ethgate from "@/akshara/index.js";
+import type * as Ethgate from "@ethgate/lib-node";
 import {
   formatBlockId,
   formatChainId,
@@ -8,7 +8,7 @@ import {
   maxTime,
   minTime,
   parseObjectId,
-} from "@/akshara/index.js";
+} from "@ethgate/lib-node";
 import {
   blockSchema,
   chainSchema,
@@ -18,7 +18,7 @@ import {
 } from "@ethgate/spec-node";
 import { parseGlobalId } from "@ethgate/spec-solver";
 
-import type { EdgeType, NodeType, ProperPageArgs } from "../graph/index.js";
+import type { NodeType, ProperPageArgs } from "../graph/index.js";
 
 import type { EdgeGenerator, ObjectId } from "./database/abstract.js";
 import { EdgeAbstract, NodeAbstract } from "./database/abstract.js";
@@ -50,18 +50,7 @@ export class AksharaNodeType<T extends AksharaNode> implements NodeType<T> {
   }
 }
 
-export class AksharaEdgeType<T extends AksharaEdge> {
-  //  implements EdgeType<T> {
-  // name: T["type"];
-  // tail: NodeType<any>;
-  // head: NodeType<any>;
-  // connectionName: string;
-  // get(
-  //   tailId: T["tailId"],
-  //   args: ProperPageArgs<T>,
-  //   ctx: AksharaTypeContext
-  // ): EdgeGenerator<T>;
-}
+export class AksharaEdgeType {}
 
 export abstract class AksharaNode<
   Name extends string = any,
@@ -82,7 +71,6 @@ export class Chain extends AksharaNode<
   `Chain:${Ethgate.AksharaChainId}`
 > {
   static type = new AksharaNodeType((data) => new Chain(data), chainSchema);
-  static get = Chain.type.get;
   type = "Chain" as const;
 
   constructor(data: Chain["data"]) {
@@ -94,6 +82,8 @@ export class Chain extends AksharaNode<
   parentId: Chain["id"] | undefined = this.data.parentId
     ? (`Chain:${this.data.parentId}` as const)
     : undefined;
+  name = this.data.name;
+  chainId = `Chain:${this.data.chainId}`;
 }
 
 export class Block extends AksharaNode<
@@ -101,9 +91,17 @@ export class Block extends AksharaNode<
   Ethgate.AksharaBlockData,
   `Block:${Ethgate.AksharaBlockId}`
 > {
-  static type = new AksharaNodeType((data) => new Block(data), blockSchema);
-  static get = Block.type.get;
+  static typeName = "Block" as const;
   type = "Block" as const;
+  static schema = blockSchema;
+  static async get(id: Block["id"], ctx: AksharaTypeContext): Promise<Block> {
+    const [, localId] = parseGlobalId(id);
+    const obj = await ctx.aks.getObject(localId);
+    if (!obj) {
+      throw new Error(`Not found ${id}`);
+    }
+    return new Block(obj as any);
+  }
 
   constructor(data: Block["data"]) {
     super(`Block:${formatBlockId(data)}`, data);
@@ -125,6 +123,18 @@ export class Block extends AksharaNode<
         `Receipt:${this.data.chainId}-${this.data.number}-${transactionIndex}r` satisfies Receipt["id"]
     )
     .reverse();
+  number = this.data.number;
+  // chainId = this.data.chainId;
+  gasUsed = this.data.gasUsed;
+  logsBloom = this.data.logsBloom;
+  timestamp = this.data.timestamp;
+  hash = this.data.hash;
+  parentHash = this.data.parentHash;
+  gasLimit = this.data.gasLimit;
+  baseFeePerGas = this.data.baseFeePerGas;
+  miner = this.data.miner;
+  size = this.data.size;
+  transactions = this.data.transactions;
 }
 
 export class Transaction extends AksharaNode<
@@ -132,12 +142,20 @@ export class Transaction extends AksharaNode<
   Ethgate.AksharaTransactionData,
   `Transaction:${Ethgate.AksharaTransactionId}`
 > {
-  static type = new AksharaNodeType(
-    (data) => new Transaction(data),
-    transactionSchema
-  );
-  static get = Transaction.type.get;
+  static typeName = "Transaction" as const;
   type = "Transaction" as const;
+  static schema = transactionSchema;
+  static async get(
+    id: Transaction["id"],
+    ctx: AksharaTypeContext
+  ): Promise<Transaction> {
+    const [, localId] = parseGlobalId(id);
+    const obj = await ctx.aks.getObject(localId);
+    if (!obj) {
+      throw new Error(`Not found ${id}`);
+    }
+    return new Transaction(obj as any);
+  }
 
   constructor(data: Transaction["data"]) {
     super(`Transaction:${formatTransactionId(data)}`, data);
@@ -148,6 +166,21 @@ export class Transaction extends AksharaNode<
   chainId: Chain["id"] = `Chain:${this.data.chainId}`;
   blockId: Block["id"] = `Block:${this.data.chainId}-${this.data.blockNumber}`;
   receiptId: Receipt["id"] = `Receipt:${this.data.chainId}-${this.data.blockNumber}-${this.data.transactionIndex}r`;
+  // chainId = this.data.chainId;
+  value = this.data.value;
+  hash = this.data.hash;
+  blockHash = this.data.blockHash;
+  blockNumber = this.data.blockNumber;
+  from = this.data.from;
+  gas = this.data.gas;
+  gasPrice = this.data.gasPrice;
+  input = this.data.input;
+  nonce = this.data.nonce;
+  to = this.data.to;
+  transactionIndex = this.data.transactionIndex;
+  v = this.data.v;
+  r = this.data.r;
+  s = this.data.s;
 }
 
 export class Receipt extends AksharaNode<
@@ -155,9 +188,21 @@ export class Receipt extends AksharaNode<
   Ethgate.AksharaReceiptData,
   `Receipt:${Ethgate.AksharaReceiptId}`
 > {
-  static type = new AksharaNodeType((data) => new Receipt(data), receiptSchema);
-  static get = Receipt.type.get;
+  static typeName = "Receipt" as const;
   type = "Receipt" as const;
+  static schema = receiptSchema;
+  static async get(
+    id: Receipt["id"],
+    ctx: AksharaTypeContext
+  ): Promise<Receipt> {
+    const [, localId] = parseGlobalId(id);
+    const obj = await ctx.aks.getObject(localId);
+    if (!obj) {
+      throw new Error(`Not found ${id}`);
+    }
+
+    return new Receipt(obj as any);
+  }
 
   constructor(data: Receipt["data"]) {
     super(`Receipt:${formatReceiptId(data)}`, data);
@@ -177,6 +222,19 @@ export class Receipt extends AksharaNode<
     )
     .reverse();
   logs: Log[] = this.data.logs.map((log) => new Log(log)).reverse();
+  contractAddress = this.data.contractAddress;
+  // chainId = this.data.chainId;
+  gasUsed = this.data.gasUsed;
+  logsBloom = this.data.logsBloom;
+  blockHash = this.data.blockHash;
+  blockNumber = this.data.blockNumber;
+  from = this.data.from;
+  to = this.data.to;
+  transactionIndex = this.data.transactionIndex;
+  transactionHash = this.data.transactionHash;
+  cumulativeGasUsed = this.data.cumulativeGasUsed;
+  // logs = this.data.logs;
+  status = this.data.status;
 }
 
 export class Log extends AksharaNode<
@@ -184,9 +242,17 @@ export class Log extends AksharaNode<
   Ethgate.AksharaLogData,
   `Log:${Ethgate.AksharaLogId}`
 > {
-  static type = new AksharaNodeType((data) => new Log(data), logSchema);
-  static get = Log.type.get;
+  static typeName = "Log" as const;
   type = "Log" as const;
+  static schema = logSchema;
+  static async get(id: Log["id"], ctx: AksharaTypeContext): Promise<Log> {
+    const [, localId] = parseGlobalId(id);
+    const obj = await ctx.aks.getObject(localId);
+    if (!obj) {
+      throw new Error(`Not found ${id}`);
+    }
+    return new Log(obj as any);
+  }
 
   constructor(data: Log["data"]) {
     //   `${data.chainId}-${data.blockNumber}-${data.transactionIndex}-${data.logIndex}` as const;
@@ -201,6 +267,16 @@ export class Log extends AksharaNode<
     this.data
   )}`;
   receiptId: Receipt["id"] = `Receipt:${formatReceiptId(this.data)}`;
+  // chainId = this.data.chainId;
+  blockHash = this.data.blockHash;
+  blockNumber = this.data.blockNumber;
+  transactionIndex = this.data.transactionIndex;
+  address = this.data.address;
+  topics = this.data.topics;
+  // data = this.data.data;
+  transactionHash = this.data.transactionHash;
+  logIndex = this.data.logIndex;
+  removed = this.data.removed;
 }
 
 export class ChainHasChain extends AksharaEdge<

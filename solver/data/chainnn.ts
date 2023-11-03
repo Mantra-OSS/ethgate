@@ -1,5 +1,5 @@
-import type { EthgateSolverDatabase } from '../database/database.js';
-import type { ProperPageArgs } from '../graph/index.js';
+import type { EthgateSolverDatabase } from "../database/database.js";
+import type { ProperPageArgs } from "../graph/index.js";
 
 import {
   Block,
@@ -10,29 +10,36 @@ import {
   Log,
   ReceiptHasLog,
   Transaction,
-} from './akshara.js';
-import type { EdgeGenerator } from './database/abstract.js';
-import { EdgeAbstract } from './database/abstract.js';
+} from "./akshara.js";
+import type { EdgeGenerator } from "./database/abstract.js";
+import { EdgeAbstract } from "./database/abstract.js";
 
-export class BlockHasLog extends EdgeAbstract<'BlockHasLog', Block['id'], Log['id'], object> {
-  static name = 'BlockHasLog' as const;
-  type = 'BlockHasLog' as const;
+export class BlockHasLog extends EdgeAbstract<
+  "BlockHasLog",
+  Block["id"],
+  Log["id"],
+  object
+> {
+  static typeName = "BlockHasLog" as const;
+  type = "BlockHasLog" as const;
   static tail = Block;
   static head = Log;
-  static connectionName = 'logs';
+  static connectionName = "logs";
   static async *get(
-    tailId: BlockHasLog['tailId'],
+    tailId: BlockHasLog["tailId"],
     args: ProperPageArgs<BlockHasLog>,
-    ctx: EthgateSolverDatabase,
+    ctx: EthgateSolverDatabase
   ): EdgeGenerator<BlockHasLog> {
     for await (const blockHasReceipt of BlockHasReceipt.get(
       tailId,
       {
         isForward: args.isForward,
-        after: args.after && (await ctx.readNode<Log>(args.after).then((node) => node.receiptId)),
+        after:
+          args.after &&
+          (await ctx.readNode<Log>(args.after).then((node) => node.receiptId)),
         limit: args.limit,
       },
-      ctx,
+      ctx
     )) {
       for await (const receiptHasLog of ReceiptHasLog.get(
         blockHasReceipt.headId,
@@ -41,13 +48,13 @@ export class BlockHasLog extends EdgeAbstract<'BlockHasLog', Block['id'], Log['i
           after: args.after,
           limit: args.limit,
         },
-        ctx,
+        ctx
       )) {
         const edge = new BlockHasLog(
           tailId,
           receiptHasLog.headId,
           receiptHasLog.data,
-          receiptHasLog.time,
+          receiptHasLog.time
         );
 
         yield edge;
@@ -57,30 +64,33 @@ export class BlockHasLog extends EdgeAbstract<'BlockHasLog', Block['id'], Log['i
 }
 
 export class ChainHasTransaction extends EdgeAbstract<
-  'ChainHasTransaction',
-  Chain['id'],
-  Transaction['id'],
+  "ChainHasTransaction",
+  Chain["id"],
+  Transaction["id"],
   Record<string, never>
 > {
-  static name = 'ChainHasTransaction' as const;
-  type = 'ChainHasTransaction' as const;
+  static typeName = "ChainHasTransaction" as const;
+  type = "ChainHasTransaction" as const;
   static tail = Chain.type;
   static head = Transaction;
-  static connectionName = 'transactions';
+  static connectionName = "transactions";
   static async *get(
-    tailId: ChainHasTransaction['tailId'],
+    tailId: ChainHasTransaction["tailId"],
     args: ProperPageArgs<ChainHasTransaction>,
-    ctx: EthgateSolverDatabase,
+    ctx: EthgateSolverDatabase
   ): EdgeGenerator<ChainHasTransaction> {
     for await (const chainHasBlock of ChainHasBlock.get(
       tailId,
       {
         isForward: args.isForward,
         after:
-          args.after && (await ctx.readNode<Transaction>(args.after).then((node) => node.blockId)),
+          args.after &&
+          (await ctx
+            .readNode<Transaction>(args.after)
+            .then((node) => node.blockId)),
         limit: args.limit,
       },
-      ctx,
+      ctx
     )) {
       for await (const blockHasTransaction of BlockHasTransaction.get(
         chainHasBlock.headId,
@@ -89,13 +99,13 @@ export class ChainHasTransaction extends EdgeAbstract<
           after: args.after,
           limit: args.limit,
         },
-        ctx,
+        ctx
       )) {
         const edge = new ChainHasTransaction(
           tailId,
           blockHasTransaction.headId,
           blockHasTransaction.data as any,
-          blockHasTransaction.time,
+          blockHasTransaction.time
         );
 
         yield edge;

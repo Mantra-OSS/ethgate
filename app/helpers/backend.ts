@@ -1,11 +1,9 @@
-import type {
-  Connection,
-  EdgeAbstract,
-  NodeAbstract,
-  PageArgs,
-  PageInfo,
-  QueryResponse,
-  Variables,
+import {
+  EthgateSolver,
+  type EdgeAbstract,
+  type NodeAbstract,
+  type PageArgs,
+  type PageInfo,
 } from "@ethgate/lib-solver";
 import { memoize } from "lodash";
 import { use, useCallback, useEffect, useState } from "react";
@@ -25,7 +23,21 @@ export class AksharaDom extends Akshara {
   }
 }
 
-export const serverPromise = new AksharaDom();
+export class EthgateSolverMainThread {
+  solver: EthgateSolver;
+
+  static async create() {
+    let node = new AksharaDom();
+    const solver = await EthgateSolver.create({ node });
+    return new EthgateSolverMainThread(solver);
+  }
+
+  private constructor(solver: EthgateSolver) {
+    this.solver = solver;
+  }
+}
+
+export const serverPromise = EthgateSolverMainThread.create();
 
 // export class PunkerBackendClient {
 //   #backend: EthgateSolverServer | Promise<EthgateSolverServer> = serverPromise;
