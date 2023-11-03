@@ -1,3 +1,4 @@
+'use client';
 import { useNode } from '@/app/helpers/hooks';
 import type { Log, Receipt, ReceiptHasLog } from '@ethgate/lib-solver';
 import {

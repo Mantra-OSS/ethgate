@@ -1,8 +1,6 @@
 import type { AksharaChainKey } from '@/akshara';
-import { formatChainId } from '@/akshara';
 import ChainView from '@/app/components/ChainView';
-import { readNode } from '@/app/helpers/backend';
-import type { Chain } from '@/solver';
+import { createAkshara } from '@/app/helpers/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
 
@@ -22,9 +20,10 @@ export async function generateMetadata({
   const key: AksharaChainKey = {
     chainId,
   };
-  const node = await readNode<Chain>(`Chain:${formatChainId(key)}`);
+  const akshara = await createAkshara();
+  const nodeData = await akshara.getChain(key);
   return {
-    title: node.meta.name,
+    title: nodeData?.name,
   };
 }
 
@@ -34,6 +33,8 @@ export default async function ChainPage({ params }: { params: { chainId: string 
   const key: AksharaChainKey = {
     chainId,
   };
-  const node = await readNode<Chain>(`Chain:${formatChainId(key)}`);
-  return <ChainView nodeId={node.id} />;
+  const akshara = await createAkshara();
+  const nodeData = await akshara.getChain(key);
+  if (!nodeData) throw new Error(`Chain not found: ${JSON.stringify(key)}`);
+  return <ChainView nodeData={nodeData} />;
 }

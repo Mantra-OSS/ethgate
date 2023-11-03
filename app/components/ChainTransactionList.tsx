@@ -72,7 +72,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
 
   return (
     <ListItemButton
-      href={`${node.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
+      href={`${node.data.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
     >
       <ListItemAvatar>
         <Avatar

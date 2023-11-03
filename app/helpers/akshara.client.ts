@@ -1,13 +1,19 @@
+'use client';
+import 'client-only';
+
 import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
 import { chains } from '@mantra-oss/chains';
 
-export class AksharaDom extends Akshara {
+class AksharaClient extends Akshara {
   constructor() {
     const database = new AksharaDatabase({
-      name: 'akshara-worker',
+      name: 'akshara',
       indexedDB: globalThis.indexedDB,
       IDBKeyRange: globalThis.IDBKeyRange,
     });
-    super({ chains, fetchFn: globalThis.fetch.bind(globalThis), database });
+    const fetchFn = globalThis.fetch.bind(globalThis);
+    super({ chains, fetchFn, database });
   }
 }
+
+export const createAkshara = async () => new AksharaClient();

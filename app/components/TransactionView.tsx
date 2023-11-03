@@ -1,3 +1,4 @@
+'use client';
 import { useNode } from '@/app/helpers/hooks';
 import type { Receipt, Transaction } from '@ethgate/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
@@ -9,7 +10,8 @@ import ReceiptLogList from './ReceiptLogList';
 import ReceiptOverview from './ReceiptOverview';
 import TransactionOverview from './TransactionOverview';
 
-export default function TransactionView({ node }: { node: Transaction }) {
+export default function TransactionView({ nodeId }: { nodeId: Transaction['id'] }) {
+  const node = useNode<Transaction>(nodeId);
   const receipt = useNode<Receipt>(node.receiptId);
 
   return (
