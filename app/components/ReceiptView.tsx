@@ -1,9 +1,10 @@
 import { useNode } from '@/app/helpers/hooks';
-import type { Receipt } from '@ethgate/lib-solver';
+import type { Receipt } from '@/lib-solver';
 import { Typography } from '@mui/material';
 import { Suspense } from 'react';
 
 import ReceiptLogList from './ReceiptLogList';
+
 //import ReceiptOverview from './ReceiptOverview';
 
 export default function ReceiptView({ nodeId }: { nodeId: Receipt['id'] }) {

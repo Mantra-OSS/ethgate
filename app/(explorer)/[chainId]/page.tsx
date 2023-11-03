@@ -5,6 +5,9 @@ import type { Metadata } from 'next';
 
 type Params = { chainId: string };
 
+// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
+export const dynamicParams = false;
+
 export async function generateStaticParams(): Promise<Params[]> {
   return Object.values(chains).map((chain) => ({
     chainId: chain.chainId,

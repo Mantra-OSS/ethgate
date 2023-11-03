@@ -1,5 +1,7 @@
+'use client';
+
 import { useNode } from '@/app/helpers/hooks';
-import type { Block, BlockHasTransaction, Transaction } from '@ethgate/lib-solver';
+import type { Block, BlockHasTransaction, Transaction } from '@/lib-solver';
 import {
   Avatar,
   Collapse,
@@ -17,6 +19,7 @@ import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 
 export default function BlockTransactionList({ block }: { block: Block }) {
+  console.log('BlockTransactionList', block);
   const [, startTransition] = useTransition();
 
   const [transactions, hasNext, loadNext] = useConnection<BlockHasTransaction>(
@@ -54,6 +57,7 @@ export default function BlockTransactionList({ block }: { block: Block }) {
 }
 
 export function BlockTransactionListItem({ transactionId }: { transactionId: Transaction['id'] }) {
+  console.log('BlockTransactionListItem', transactionId);
   const node = useNode<Transaction>(transactionId);
 
   return (

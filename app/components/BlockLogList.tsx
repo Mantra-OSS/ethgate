@@ -1,5 +1,5 @@
 import { useNode } from '@/app/helpers/hooks';
-import type { Block, BlockHasLog, Log } from '@ethgate/lib-solver';
+import type { Block, BlockHasLog, Log } from '@/lib-solver';
 import {
   Avatar,
   Collapse,

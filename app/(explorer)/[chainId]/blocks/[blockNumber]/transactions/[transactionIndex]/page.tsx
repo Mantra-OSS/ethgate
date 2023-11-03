@@ -1,21 +1,27 @@
-import type { AksharaTransactionKey } from '@/akshara';
-import { formatTransactionId } from '@/akshara';
 import TransactionView from '@/app/components/TransactionView';
-import { readNode } from '@/app/helpers/backend';
-import type { Transaction } from '@/solver';
+import { readObject } from '@/app/helpers/akshara.server';
+import type { Metadata } from 'next';
 
-export default async function TransactionPage({
-  params,
-}: {
-  params: { chainId: string; blockNumber: string; transactionIndex: string };
-}) {
-  const { chainId, blockNumber, transactionIndex } = params;
+type Params = { chainId: string; blockNumber: string; transactionIndex: string };
 
-  const key: AksharaTransactionKey = {
-    chainId,
-    blockNumber: parseInt(blockNumber, 10),
-    transactionIndex: Number(transactionIndex),
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const nodeData = await readObject({
+    type: 'Transaction',
+    chainId: params.chainId,
+    blockNumber: parseInt(params.blockNumber, 10),
+    transactionIndex: Number(params.transactionIndex),
+  });
+  return {
+    title: nodeData?.name,
   };
-  const node = await readNode<Transaction>(`Transaction:${formatTransactionId(key)}`);
-  return <TransactionView nodeId={node.id} />;
+}
+
+export default async function TransactionPage({ params }: { params: Params }) {
+  const nodeData = await readObject({
+    type: 'Transaction',
+    chainId: params.chainId,
+    blockNumber: parseInt(params.blockNumber, 10),
+    transactionIndex: Number(params.transactionIndex),
+  });
+  return <TransactionView nodeData={nodeData} />;
 }

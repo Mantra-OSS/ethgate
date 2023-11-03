@@ -16,11 +16,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 }
 
 export default async function BlockPage({ params }: { params: Params }) {
-  console.log(params);
   const nodeData = await readObject({
     type: 'Block',
     chainId: params.chainId,
     number: parseInt(params.blockNumber, 10),
   });
-  return <BlockView node={nodeData} />;
+  return <BlockView nodeData={nodeData} />;
 }

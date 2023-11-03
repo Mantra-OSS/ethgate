@@ -1,6 +1,6 @@
 'use client';
-import type { NodeAbstract } from '@ethgate/lib-solver';
-import { type EdgeAbstract, type PageArgs, type PageInfo } from '@ethgate/lib-solver';
+import type { NodeAbstract } from '@/lib-solver';
+import { type EdgeAbstract, type PageArgs, type PageInfo } from '@/lib-solver';
 import { use, useCallback, useState } from 'react';
 
 import { readConnection, readNode, serverPromise } from './backend';

@@ -1,5 +1,5 @@
 'use client';
-import type { Chain } from '@ethgate/lib-solver';
+import type { Chain } from '@/lib-solver';
 import { Divider, Stack, Typography } from '@mui/material';
 import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 

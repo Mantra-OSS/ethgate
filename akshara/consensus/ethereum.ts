@@ -8,7 +8,7 @@ import type {
   Hash,
   Hex,
   PeerTypes,
-} from '@ethgate/spec-node';
+} from '@/spec-node';
 
 export const blockFromEth = (chainId: AksharaChainId, obj: PeerTypes.Block): AksharaBlockData => ({
   chainId,

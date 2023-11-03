@@ -1,11 +1,12 @@
 'use server';
 import 'server-only';
 
-import type { AksharaObjectKey } from '@ethgate/lib-node';
-import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
+import { Akshara, AksharaDatabase } from '@/lib-node';
+import type { AksharaObjectKey } from '@/lib-node';
 import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { memoize } from 'lodash';
+
 
 const { ANKR_KEY } = process.env;
 

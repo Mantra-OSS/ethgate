@@ -1,4 +1,4 @@
-import type { Block } from '@ethgate/lib-solver';
+import type { Block } from '@/lib-solver';
 import { Divider, Link, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';

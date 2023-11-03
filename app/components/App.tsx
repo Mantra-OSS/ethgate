@@ -1,7 +1,7 @@
 'use client';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { mapValues } from 'lodash';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
 import { RecoilRoot } from 'recoil';
 

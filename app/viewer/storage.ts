@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-import { localStorageEffect } from '../helpers/recoil';
+// import { localStorageEffect } from '../helpers/recoil';
 
 export interface ViewerStorage {
   account: string | null;
@@ -18,5 +18,5 @@ export const viewerStorageState = atom<ViewerStorage>({
     now: 0,
     nowUpdateFrequency: 1000,
   },
-  effects: [localStorageEffect('viewer')],
+  // effects: [localStorageEffect('viewer')],
 });

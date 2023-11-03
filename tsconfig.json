@@ -19,12 +19,12 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "@ethgate/spec-node": ["./akshara/spec"],
-      "@ethgate/lib-node": ["./akshara"],
-      "@ethgate/spec-solver": ["./solver/spec"],
-      "@ethgate/lib-solver": ["./solver"],
-      "@ethgate/lib-utils": ["./utils"]
+      "@/app/*": ["./app/*"],
+      "@/spec-node": ["./akshara/spec"],
+      "@/lib-node": ["./akshara"],
+      "@/spec-solver": ["./solver/spec"],
+      "@/lib-solver": ["./solver"],
+      "@/lib-utils": ["./utils"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

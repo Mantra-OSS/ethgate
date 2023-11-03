@@ -1,6 +1,7 @@
-import type { Receipt } from '@ethgate/lib-solver';
+import type { Receipt } from '@/lib-solver';
 import { Divider, Stack, Typography } from '@mui/material';
 import { FormattedNumber } from 'react-intl';
+
 
 export default function ReceiptOverview({ receipt: node }: { receipt: Receipt }) {
   return (

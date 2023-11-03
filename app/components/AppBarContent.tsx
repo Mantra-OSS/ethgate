@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useNode } from '@/app/helpers/hooks';
 import { NavigateNext } from '@mui/icons-material';
 import { Box, Breadcrumbs, Link, Stack, Toolbar, Typography } from '@mui/material';

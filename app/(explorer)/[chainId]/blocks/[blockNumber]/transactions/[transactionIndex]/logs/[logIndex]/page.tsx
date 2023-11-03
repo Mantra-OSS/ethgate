@@ -1,24 +1,29 @@
-'use client';
-
-import type { AksharaLogKey } from '@/akshara';
-import { formatLogId } from '@/akshara';
 import LogView from '@/app/components/LogView';
-import { useNode } from '@/app/helpers/hooks';
-import type { Log } from '@/solver';
+import { readObject } from '@/app/helpers/akshara.server';
+import type { Metadata } from 'next';
 
-export default function LogPage({
-  params,
-}: {
-  params: { chainId: string; blockNumber: string; transactionIndex: string; logIndex: string };
-}) {
-  const { chainId, blockNumber, transactionIndex, logIndex } = params;
+type Params = { chainId: string; blockNumber: string; transactionIndex: string; logIndex: string };
 
-  const key: AksharaLogKey = {
-    chainId,
-    blockNumber: parseInt(blockNumber, 10),
-    transactionIndex: Number(transactionIndex),
-    logIndex: Number(logIndex),
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const nodeData = await readObject({
+    type: 'Log',
+    chainId: params.chainId,
+    blockNumber: parseInt(params.blockNumber, 10),
+    transactionIndex: Number(params.transactionIndex),
+    logIndex: Number(params.logIndex),
+  });
+  return {
+    title: nodeData?.name,
   };
-  const node = useNode<Log>(`Log:${formatLogId(key)}`);
-  return <LogView node={node} />;
+}
+
+export default async function LogPage({ params }: { params: Params }) {
+  const nodeData = await readObject({
+    type: 'Log',
+    chainId: params.chainId,
+    blockNumber: parseInt(params.blockNumber, 10),
+    transactionIndex: Number(params.transactionIndex),
+    logIndex: Number(params.logIndex),
+  });
+  return <LogView nodeData={nodeData} />;
 }

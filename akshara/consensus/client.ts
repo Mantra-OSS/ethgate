@@ -1,4 +1,4 @@
-import { Pool, Result } from '@ethgate/lib-utils';
+import { Pool, Result } from '@/lib-utils';
 import type {
   AksharaBlockData,
   AksharaChainData,
@@ -8,13 +8,14 @@ import type {
   AksharaDaResult,
   EthereumCall,
   PeerTypes,
-} from '@ethgate/spec-node';
-import { AksharaDaClientAbstract } from '@ethgate/spec-node';
+} from '@/spec-node';
+import { AksharaDaClientAbstract } from '@/spec-node';
 
 import { EthereumPeer, blockFromEth, logFromEth, receiptFromEth, transactionFromEth } from '..';
 
 import { type Fetch } from './peer';
 import { BatchLoader } from './utils';
+
 
 const ENABLE_CACHING = false;
 

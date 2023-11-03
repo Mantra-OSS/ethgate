@@ -1,4 +1,6 @@
-import type * as Ethgate from '@ethgate/lib-node';
+
+
+import type * as Ethgate from '@/lib-node';
 import {
   formatBlockId,
   formatChainId,
@@ -8,20 +10,14 @@ import {
   maxTime,
   minTime,
   parseObjectId,
-} from '@ethgate/lib-node';
-import {
-  blockSchema,
-  chainSchema,
-  logSchema,
-  receiptSchema,
-  transactionSchema,
-} from '@ethgate/spec-node';
-import { parseGlobalId } from '@ethgate/spec-solver';
+} from '@/lib-node';
+import { blockSchema, chainSchema, logSchema, receiptSchema, transactionSchema } from '@/spec-node';
+import { parseGlobalId } from '@/spec-solver';
 
 import type { NodeType, ProperPageArgs } from '../graph';
 
-import type { EdgeGenerator, ObjectId } from './database/abstract';
 import { EdgeAbstract, NodeAbstract } from './database/abstract';
+import type { EdgeGenerator, ObjectId } from './database/abstract';
 
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;

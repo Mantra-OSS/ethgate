@@ -1,4 +1,4 @@
-import { RpcClient } from '@ethgate/lib-utils';
+import { RpcClient } from '@/lib-utils';
 
 import type { AksharaChainData } from '../db';
 

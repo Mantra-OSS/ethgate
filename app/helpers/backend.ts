@@ -5,8 +5,8 @@ import {
   type NodeAbstract,
   type PageArgs,
   type PageInfo,
-} from '@ethgate/lib-solver';
-import { cache } from 'react';
+} from '@/lib-solver';
+import { memoize } from 'lodash';
 
 import { createAkshara } from './akshara.client';
 
@@ -39,13 +39,13 @@ export const serverPromise = EthgateSolverMainThread.create();
 //   }
 // }
 
-export const readNode = cache(async function readNode<T extends NodeAbstract>(id: T['id']) {
+export const readNode = memoize(async function readNode<T extends NodeAbstract>(id: T['id']) {
   const database = (await serverPromise).solver.database;
   const node = await database.readNode(id);
   return node;
 });
 
-export const readConnection = cache(async function readConnection<Edge extends EdgeAbstract>(
+export const readConnection = memoize(async function readConnection<Edge extends EdgeAbstract>(
   type: Edge['type'],
   tailId: Edge['tailId'],
   args: PageArgs<Edge>,

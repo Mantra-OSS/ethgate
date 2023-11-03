@@ -1,4 +1,4 @@
-import type { Transaction } from '@ethgate/lib-solver';
+import type { Transaction } from '@/lib-solver';
 import { Divider, Link, Stack, Typography } from '@mui/material';
 import { FormattedNumber } from 'react-intl';
 

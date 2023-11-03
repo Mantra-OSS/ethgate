@@ -1,4 +1,4 @@
-import { RpcClient } from '@ethgate/lib-utils';
+import { RpcClient } from '@/lib-utils';
 
 // import type { EthgatePeerCallError } from './error';
 import type { EthereumMethod } from './methods';

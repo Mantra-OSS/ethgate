@@ -1,4 +1,4 @@
-import { Result } from '@ethgate/lib-utils';
+import { Result } from '@/lib-utils';
 import type {
   AksharaBlockData,
   AksharaBlockId,
@@ -15,8 +15,8 @@ import type {
   AksharaResult,
   AksharaTransactionId,
   AksharaTransactionKey,
-} from '@ethgate/spec-node';
-import { AksharaAbstract, type AksharaChainId } from '@ethgate/spec-node';
+} from '@/spec-node';
+import { AksharaAbstract, type AksharaChainId } from '@/spec-node';
 import type { Chain } from '@mantra-oss/chains';
 
 import type { AksharaDatabase } from '..';

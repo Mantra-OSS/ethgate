@@ -1,4 +1,4 @@
-import type { AksharaBlockData, AksharaChainId } from '@ethgate/spec-node';
+import type { AksharaBlockData, AksharaChainId } from '@/spec-node';
 import { beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { type Mock } from 'jest-mock';
@@ -7,6 +7,7 @@ import { AksharaDatabase } from '../database';
 import { ETHGATE_NODE_TEST_CHAINS } from '../testing';
 
 import { Akshara } from '.';
+
 
 describe('Akshara', () => {
   let fetchFn: Mock<typeof fetch>;

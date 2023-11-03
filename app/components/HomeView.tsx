@@ -1,6 +1,6 @@
 'use client';
 import { useNode } from '@/app/helpers/hooks';
-import type { Chain } from '@ethgate/lib-solver';
+import type { Chain } from '@/lib-solver';
 import { Container, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 // import ChainBlockList from './ChainBlockList';

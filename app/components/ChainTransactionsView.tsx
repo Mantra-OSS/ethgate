@@ -3,12 +3,9 @@
 import { Chain } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
-//import NodePageBarContent from '../components/NodePage';
+import ChainTransactionList from '../components/ChainTransactionList';
 import { FallbackBoundary } from '../components/ui';
-
-import ChainBlockList from './ChainBlockList';
-
-export default function ChainBlocksView({ nodeData }: { nodeData: Chain['data'] }) {
+export default function ChainTransactionsView({ nodeData }: { nodeData: Chain['data'] }) {
   const node = new Chain(nodeData);
   return (
     <Grid container spacing={1} padding={1}>
@@ -23,12 +20,12 @@ export default function ChainBlocksView({ nodeData }: { nodeData: Chain['data'] 
         <Paper>
           <Stack direction="row">
             <Typography variant="h3" padding={1} textAlign="center">
-              Blocks
+              Transactions
             </Typography>
           </Stack>
           <Divider />
           <FallbackBoundary>
-            <ChainBlockList chainId={node.id} />
+            <ChainTransactionList chainId={node.id} />
           </FallbackBoundary>
         </Paper>
       </Grid>

@@ -1,4 +1,4 @@
-import type { AksharaAbstract, AksharaConfig } from '@/akshara';
+import type { AksharaAbstract, AksharaConfig } from '@/lib-node';
 import { chains } from '@mantra-oss/chains';
 
 import { EthgateSolverDatabase } from '../database';

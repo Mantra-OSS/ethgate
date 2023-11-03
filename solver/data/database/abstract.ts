@@ -1,4 +1,4 @@
-import type { Time } from '@/akshara';
+import type { Time } from '@/lib-node';
 
 export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
 

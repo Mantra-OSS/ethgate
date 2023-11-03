@@ -1,6 +1,6 @@
 'use client';
 
-import { Chain } from '@ethgate/lib-solver';
+import { Chain } from '@/lib-solver';
 import { Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 
 //import NodePageBarContent from '../components/NodePage';
@@ -9,6 +9,7 @@ import { FallbackBoundary } from '../components/ui';
 import ChainBlockList from './ChainBlockList';
 import ChainOverview from './ChainOverview';
 import ChainTransactionList from './ChainTransactionList';
+
 
 export default function ChainView({ nodeData: nodeData }: { nodeData: Chain['data'] }) {
   const node = new Chain(nodeData);

@@ -1,17 +1,20 @@
 'use client';
-import { useNode } from '@/app/helpers/hooks';
-import type { Receipt, Transaction } from '@ethgate/lib-solver';
+
+import { Transaction } from '@/lib-solver';
+import type { Receipt } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
 
-// import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
+import { useNode } from '../helpers/hooks';
+
+// import NodePageBarContent from '../components/NodePage';
 
 import ReceiptLogList from './ReceiptLogList';
 import ReceiptOverview from './ReceiptOverview';
 import TransactionOverview from './TransactionOverview';
 
-export default function TransactionView({ nodeId }: { nodeId: Transaction['id'] }) {
-  const node = useNode<Transaction>(nodeId);
+export default function TransactionView({ nodeData }: { nodeData: Transaction['data'] }) {
+  const node = new Transaction(nodeData);
   const receipt = useNode<Receipt>(node.receiptId);
 
   return (

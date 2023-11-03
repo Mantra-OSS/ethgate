@@ -1,6 +1,6 @@
 import { chains } from '@mantra-oss/chains';
 
-const ANKR_KEY = 'e479ecca5da1c09f4449a93676abfdb38325bcbd2b03adfa295cf6689a6384b2';
+const { ANKR_KEY } = process.env;
 
 export const ETHGATE_NODE_TEST_CHAINS = {
   '1': {

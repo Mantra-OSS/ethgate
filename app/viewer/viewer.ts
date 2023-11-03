@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import { useCallback, useMemo } from 'react';
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { localStorageEffect } from '../helpers/recoil';
+// import { localStorageEffect } from '../helpers/recoil';
 
 import { viewerStorageState } from './storage';
 
@@ -55,7 +55,7 @@ export const useOnError = (): ((error: Error) => void) => {
 export const isDeveloperState = atom<boolean>({
   key: 'isDeveloper',
   default: false,
-  effects: [localStorageEffect('isDeveloper')],
+  // effects: [localStorageEffect('isDeveloper')],
 });
 
 export const useViewer = (): Viewer => {

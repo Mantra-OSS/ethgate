@@ -1,7 +1,7 @@
 'use client';
 
 import { useNode } from '@/app/helpers/hooks';
-import type { Block, Chain, ChainHasTransaction, Transaction } from '@ethgate/lib-solver';
+import type { Block, Chain, ChainHasTransaction, Transaction } from '@/lib-solver';
 import {
   Avatar,
   Collapse,
@@ -21,6 +21,7 @@ import { TransitionGroup } from 'react-transition-group';
 import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
+
 
 export default function ChainTransactionList({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
@@ -72,7 +73,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
 
   return (
     <ListItemButton
-      href={`${node.data.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
+      href={`${node.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
     >
       <ListItemAvatar>
         <Avatar

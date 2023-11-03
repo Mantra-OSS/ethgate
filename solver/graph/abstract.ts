@@ -1,4 +1,4 @@
-import type { AksharaObjectSchema } from '@/akshara';
+import type { AksharaObjectSchema } from '@/lib-node';
 
 import type { AksharaTypeContext, EdgeAbstract, EdgeGenerator, NodeAbstract } from '../data';
 

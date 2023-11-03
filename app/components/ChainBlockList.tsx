@@ -1,5 +1,5 @@
 'use client';
-import type { Block, Chain, ChainHasBlock } from '@ethgate/lib-solver';
+import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import {
   Avatar,
   Collapse,

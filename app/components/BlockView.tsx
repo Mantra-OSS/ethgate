@@ -1,6 +1,6 @@
 'use client';
 
-import type { Block } from '@ethgate/lib-solver';
+import { Block } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 //import NodePageBarContent from '../components/NodePage';
@@ -10,7 +10,8 @@ import BlockLogList from './BlockLogList';
 import BlockOverview from './BlockOverview';
 import BlockTransactionList from './BlockTransactionList';
 
-export default function BlockView({ node }: { node: Block }) {
+export default function BlockView({ nodeData }: { nodeData: Block['data'] }) {
+  const node = new Block(nodeData);
   return (
     <>
       <Grid container spacing={1} padding={1}>

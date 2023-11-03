@@ -1,6 +1,6 @@
-import { Result } from '@ethgate/lib-utils';
-import type { EthereumCall, EthereumResult } from '@ethgate/spec-node';
-import { EthereumPeerAbstract, EthereumPeerExecuteError } from '@ethgate/spec-node';
+import { Result } from '@/lib-utils';
+import type { EthereumCall, EthereumResult } from '@/spec-node';
+import { EthereumPeerAbstract, EthereumPeerExecuteError } from '@/spec-node';
 
 import {
   EthereumPeerFetchError,

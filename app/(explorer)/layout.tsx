@@ -41,7 +41,8 @@ export default function ExplorerLayout({ children }: { children: React.ReactNode
   );
 }
 
-export function AppFrameNotifications() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function AppFrameNotifications() {
   const notifications = useRecoilValue(notificationsState);
   // const [open, setOpen] = useState(initialState)<boolean>(false);
 

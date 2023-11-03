@@ -1,5 +1,5 @@
-import type { Akshara, AksharaAbstract, AksharaBlockData, AksharaChainId } from '@/akshara';
-import { parseGlobalId } from '@ethgate/spec-solver';
+import type { Akshara, AksharaAbstract, AksharaBlockData, AksharaChainId } from '@/lib-node';
+import { parseGlobalId } from '@/spec-solver';
 
 import type {
   Chain,

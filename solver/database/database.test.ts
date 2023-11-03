@@ -1,9 +1,11 @@
-import { ETHGATE_NODE_TEST_CHAINS } from '@/akshara/testing';
-import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
+import { Akshara, AksharaDatabase } from '@/lib-node';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 
+import { ETHGATE_NODE_TEST_CHAINS } from '../../akshara/testing';
+
 import { EthgateSolverDatabase } from '.';
+
 
 describe('EthgateSolverDatabase', () => {
   let node: Akshara;
