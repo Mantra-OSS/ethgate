@@ -28,6 +28,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@badrap/result@npm:^0.2.13":
+  version: 0.2.13
+  resolution: "@badrap/result@npm:0.2.13"
+  checksum: 337949b0961e9ae6f9149bb75660c39277b4a2559c0ace106d49b58e10baf62befa1c76739a8921c63b3678dd829ebe917b4dd707c2cfd0a523db24b752d2eb8
+  languageName: node
+  linkType: hard
+
 "@emotion/cache@npm:^11.11.0":
   version: 11.11.0
   resolution: "@emotion/cache@npm:11.11.0"
@@ -321,10 +328,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mantra-oss/chains@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "@mantra-oss/chains@npm:0.1.5"
+  checksum: 1bb58ee96c834c9f9ecf0d17c51ccfa815cef87e9d2fbe774fb9eff82938d9f3c57f56c049d8efd7731af5ba84811a33d2abd03cfbfdfa9f684f9be945d174cb
+  languageName: node
+  linkType: hard
+
 "@mantra-oss/ethgate@workspace:.":
   version: 0.0.0-use.local
   resolution: "@mantra-oss/ethgate@workspace:."
   dependencies:
+    "@badrap/result": "npm:^0.2.13"
+    "@mantra-oss/chains": "npm:^0.1.5"
     "@mdx-js/loader": "npm:^3.0.0"
     "@mdx-js/react": "npm:^3.0.0"
     "@mui/material": "npm:^5.14.16"
@@ -338,6 +354,7 @@ __metadata:
     client-only: "npm:^0.0.1"
     eslint: "npm:^8.52.0"
     eslint-config-next: "npm:14.0.1"
+    fp-ts: "npm:^2.16.1"
     lodash: "npm:^4.17.21"
     next: "npm:14.0.1"
     postcss: "npm:^8.4.31"
@@ -2284,6 +2301,13 @@ __metadata:
     cross-spawn: "npm:^7.0.0"
     signal-exit: "npm:^4.0.1"
   checksum: 9700a0285628abaeb37007c9a4d92bd49f67210f09067638774338e146c8e9c825c5c877f072b2f75f41dc6a2d0be8664f79ffc03f6576649f54a84fb9b47de0
+  languageName: node
+  linkType: hard
+
+"fp-ts@npm:^2.16.1":
+  version: 2.16.1
+  resolution: "fp-ts@npm:2.16.1"
+  checksum: 16fcc7dc8a612ed8a2a339153bcc8745095eebf34ce7980507a9e3690b2c2aa2023c0caede48fd3d79068e271a6203d64416fa9db05613327f7c1a7546ba196d
   languageName: node
   linkType: hard
 

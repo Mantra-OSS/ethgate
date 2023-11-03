@@ -32,28 +32,28 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
   NodeAbstract,
   EdgeAbstract
 > {
-  #node: AksharaAbstract;
+  node: AksharaAbstract;
 
   /**
    * @deprecated
    */
   get provider(): AksharaAbstract {
-    return this.#node;
+    return this.node;
   }
   get aks(): Akshara {
-    return this.#node as any;
+    return this.node as any;
   }
 
   constructor(config: EthgateSolverDatabaseConfig) {
     super();
-    this.#node = config.node;
+    this.node = config.node;
   }
 
   async *getBlocksByTag(
     chainId: AksharaChainId
   ): AsyncGenerator<AksharaBlockData, never, void> {
     while (true) {
-      const block = await this.#node.execute("GetLatestBlock", [{ chainId }]);
+      const block = await this.node.execute("GetLatestBlock", [{ chainId }]);
       if (!block) continue;
       yield block;
     }
@@ -86,7 +86,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
     )!;
     return nodeType.get(id, this);
   }
-  async *#getConnection<Edge extends EdgeAbstract>(
+  async *_getConnection<Edge extends EdgeAbstract>(
     type: Edge["type"],
     tailId: Edge["tailId"],
     args: PageArgs<Edge>
@@ -149,7 +149,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
     args_: PageArgs<Edge>
   ): Connection<Edge> {
     const connection = new Connection<Edge>(
-      this.#getConnection(type, tailId_, args_)
+      this._getConnection(type, tailId_, args_)
     );
     return connection;
   }
