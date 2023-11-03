@@ -1,9 +1,11 @@
 'use server';
 import 'server-only';
 
+import type { AksharaObjectKey } from '@ethgate/lib-node';
 import { Akshara, AksharaDatabase } from '@ethgate/lib-node';
 import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
+import { memoize } from 'lodash';
 
 const { ANKR_KEY } = process.env;
 
@@ -19,7 +21,16 @@ class AksharaServer extends Akshara {
   }
 }
 
-export const createAkshara = async () => new AksharaServer();
+export const createAkshara = memoize(async () => new AksharaServer());
+
+export async function readObject(key: AksharaObjectKey): Promise<any> {
+  const akshara = await createAkshara();
+  const object = await akshara.getObject(key);
+  if (!object) {
+    throw new Error(`Object not found: ${JSON.stringify(key)}`);
+  }
+  return object;
+}
 
 const serverChains = {
   '1': {

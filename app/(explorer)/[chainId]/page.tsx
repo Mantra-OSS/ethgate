@@ -1,40 +1,30 @@
-import type { AksharaChainKey } from '@/akshara';
 import ChainView from '@/app/components/ChainView';
-import { createAkshara } from '@/app/helpers/akshara.server';
+import { readObject } from '@/app/helpers/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
 
-export async function generateStaticParams() {
+type Params = { chainId: string };
+
+export async function generateStaticParams(): Promise<Params[]> {
   return Object.values(chains).map((chain) => ({
     chainId: chain.chainId,
   }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { chainId: string };
-}): Promise<Metadata> {
-  const { chainId } = params;
-
-  const key: AksharaChainKey = {
-    chainId,
-  };
-  const akshara = await createAkshara();
-  const nodeData = await akshara.getChain(key);
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const nodeData = await readObject({
+    type: 'Chain',
+    ...params,
+  });
   return {
     title: nodeData?.name,
   };
 }
 
-export default async function ChainPage({ params }: { params: { chainId: string } }) {
-  const { chainId } = params;
-
-  const key: AksharaChainKey = {
-    chainId,
-  };
-  const akshara = await createAkshara();
-  const nodeData = await akshara.getChain(key);
-  if (!nodeData) throw new Error(`Chain not found: ${JSON.stringify(key)}`);
+export default async function ChainPage({ params }: { params: Params }) {
+  const nodeData = await readObject({
+    type: 'Chain',
+    ...params,
+  });
   return <ChainView nodeData={nodeData} />;
 }
