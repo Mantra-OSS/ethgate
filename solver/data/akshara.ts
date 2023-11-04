@@ -1,5 +1,3 @@
-
-
 import type * as Ethgate from '@/lib-node';
 import {
   formatBlockId,
@@ -69,13 +67,10 @@ export class Chain extends AksharaNode<
   constructor(data: Chain['data']) {
     super(`Chain:${formatChainId(data)}`, data);
   }
-  readonly meta = {
-    name: this.data.name,
-  };
+  meta = this.data.meta;
   parentId: Chain['id'] | undefined = this.data.parentId
     ? (`Chain:${this.data.parentId}` as const)
     : undefined;
-  name = this.data.name;
   chainId = `Chain:${this.data.chainId}`;
 }
 
@@ -99,7 +94,7 @@ export class Block extends AksharaNode<
   constructor(data: Block['data']) {
     super(`Block:${formatBlockId(data)}`, data);
   }
-  readonly meta = {
+  meta = {
     name: this.data.number.toString(),
   };
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
@@ -150,7 +145,7 @@ export class Transaction extends AksharaNode<
   constructor(data: Transaction['data']) {
     super(`Transaction:${formatTransactionId(data)}`, data);
   }
-  readonly meta = {
+  meta = {
     name: this.data.transactionIndex.toString(),
   };
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
@@ -194,7 +189,7 @@ export class Receipt extends AksharaNode<
   constructor(data: Receipt['data']) {
     super(`Receipt:${formatReceiptId(data)}`, data);
   }
-  readonly meta = {
+  meta = {
     name: this.data.transactionIndex.toString(),
   };
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
@@ -239,7 +234,7 @@ export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethga
     //   `${data.chainId}-${data.blockNumber}-${data.transactionIndex}-${data.logIndex}` as const;
     super(`Log:${formatLogId(data)}`, data);
   }
-  readonly meta = {
+  meta = {
     name: this.data.logIndex.toString(),
   };
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;

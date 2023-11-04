@@ -26,7 +26,7 @@ export default function ChainOverview({ node }: { node: Chain }) {
       <Stack direction="column" padding={2} spacing={2} divider={<Divider />}>
         <Stack direction="row" justifyContent="space-between">
           <Typography>Chain Name</Typography>
-          <Typography>{node.name}</Typography>
+          <Typography>{node.meta.name}</Typography>
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Typography>Chain ID</Typography>

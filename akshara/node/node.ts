@@ -64,11 +64,10 @@ export class Akshara extends AksharaAbstract {
     if (!chain) throw new Error(`No chain for chain ${chainId}`);
     return {
       chainId: chain.chainId,
-      name: chain.name,
+      meta: chain.meta,
       parentId: chain.parent?.chainId,
       parent: chain.parent && {
         chainId: chain.parent.chainId,
-        type: chain.parent.type,
         bridges: chain.parent.bridges ?? [],
       },
       rpcs: chain.rpcs,

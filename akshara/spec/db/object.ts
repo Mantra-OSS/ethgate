@@ -53,7 +53,13 @@ export const chainSchema = {
   type: 'object',
   properties: {
     chainId: chainIdSchema,
-    name: { type: 'string' },
+    meta: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+      required: ['name'],
+    },
     rpcs: {
       type: 'array',
       items: {
@@ -70,14 +76,22 @@ export const chainSchema = {
       type: 'object',
       properties: {
         chainId: chainIdSchema,
-        type: { type: 'string' },
-        // bridges: { type: ['null', 'string', 'number', 'boolean', 'array', 'object'] },
+        bridges: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              url: { type: 'string' },
+            },
+            required: ['url'],
+          },
+        },
       },
-      required: ['chainId', 'type', 'bridges'],
+      required: ['chainId', 'bridges'],
     },
     extra: { type: 'object' },
   },
-  required: ['chainId', 'name', 'rpcs', 'extra'],
+  required: ['chainId', 'meta', 'rpcs', 'extra'],
 } as const;
 export type AksharaChainData = FromSchema<typeof chainSchema> & {
   extra: EthgateChainDataExtra;

@@ -8,7 +8,6 @@ import { ETHGATE_NODE_TEST_CHAINS } from '../testing';
 
 import { Akshara } from '.';
 
-
 describe('Akshara', () => {
   let fetchFn: Mock<typeof fetch>;
   let node: Akshara;

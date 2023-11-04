@@ -7,9 +7,10 @@ export abstract class NodeAbstract<
   Data extends object = any,
   Id extends ObjectId<Name> = ObjectId<Name>,
 > {
-  abstract readonly type: Name;
-  readonly id: Id;
-  readonly data: Data;
+  abstract type: Name;
+  abstract meta: { name: string };
+  id: Id;
+  data: Data;
   constructor(id: Id, data: Data) {
     this.id = id;
     this.data = data;
@@ -22,11 +23,11 @@ export abstract class EdgeAbstract<
   HeadId extends string = any,
   Data extends object = any,
 > {
-  abstract readonly type: Name;
-  readonly tailId: TailId;
-  readonly headId: HeadId;
-  readonly data: Data;
-  readonly time: Time;
+  abstract type: Name;
+  tailId: TailId;
+  headId: HeadId;
+  data: Data;
+  time: Time;
   constructor(tailId: TailId, headId: HeadId, data: Data, time: Time) {
     this.tailId = tailId;
     this.headId = headId;

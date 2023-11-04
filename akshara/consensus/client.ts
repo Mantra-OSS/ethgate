@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Pool, Result } from '@/lib-utils';
 import type {
   AksharaBlockData,
@@ -15,7 +16,6 @@ import { EthereumPeer, blockFromEth, logFromEth, receiptFromEth, transactionFrom
 
 import { type Fetch } from './peer';
 import { BatchLoader } from './utils';
-
 
 const ENABLE_CACHING = false;
 

@@ -13,7 +13,7 @@ describe('AksharaDaClient', () => {
     client = new AksharaDaClient(
       {
         chainId: ETHGATE_NODE_TEST_CHAINS['1'].chainId,
-        name: ETHGATE_NODE_TEST_CHAINS['1'].name,
+        meta: ETHGATE_NODE_TEST_CHAINS['1'].meta,
         parent: undefined,
         parentId: undefined,
         rpcs: ETHGATE_NODE_TEST_CHAINS['1'].rpcs,

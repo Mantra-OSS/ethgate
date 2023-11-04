@@ -63,16 +63,16 @@ export function ChainChainListItem({ chainId }: { chainId: Chain['id'] }) {
       <CardContent>
         <Stack direction="row" gap={1}>
           <Avatar
-            alt={node.name}
+            alt={node.meta.name}
             // src={`/static/images/avatar/${value + 1}.jpg`}
           >
-            {node.name
+            {node.meta.name
               .split(' ')
               .map((word) => word[0])
               .join('')}
           </Avatar>
           <Link href={`/${node.data.chainId}`}>
-            <Typography>{node.name}</Typography>
+            <Typography>{node.meta.name}</Typography>
           </Link>
         </Stack>
         <Stack direction="column">
@@ -80,15 +80,15 @@ export function ChainChainListItem({ chainId }: { chainId: Chain['id'] }) {
             <Typography textAlign={'left'} fontWeight={'bold'}>
               Info Url :
             </Typography>
-            <Link href={node.data.extra.infoURL}>
-              <Typography textAlign={'right'}>{node.data.extra.infoURL}</Typography>
+            <Link href={node.data.extra.meta.url}>
+              <Typography textAlign={'right'}>{node.data.extra.meta.url}</Typography>
             </Link>
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Typography textAlign={'left'} fontWeight={'bold'}>
               Native Coin :
             </Typography>
-            <Typography textAlign={'right'}>{node.data.extra.nativeCurrency.symbol}</Typography>
+            <Typography textAlign={'right'}>{node.data.extra.currency.symbol}</Typography>
           </Stack>
         </Stack>
       </CardContent>

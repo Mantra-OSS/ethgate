@@ -3,7 +3,9 @@ import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-export default function NodePageBarContent({ node }: { node: any }) {
+import type { NodeAbstract } from '../../solver/data';
+
+export default function NodePageBarContent({ node }: { node: NodeAbstract }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
