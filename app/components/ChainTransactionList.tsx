@@ -22,7 +22,6 @@ import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
 
-
 export default function ChainTransactionList({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
 
@@ -73,7 +72,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
 
   return (
     <ListItemButton
-      href={`${node.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
+      href={`${node.data.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
     >
       <ListItemAvatar>
         <Avatar

@@ -10,7 +10,6 @@ import ChainBlockList from './ChainBlockList';
 import ChainOverview from './ChainOverview';
 import ChainTransactionList from './ChainTransactionList';
 
-
 export default function ChainView({ nodeData: nodeData }: { nodeData: Chain['data'] }) {
   const node = new Chain(nodeData);
   return (
@@ -32,7 +31,7 @@ export default function ChainView({ nodeData: nodeData }: { nodeData: Chain['dat
             <Typography variant="h3" padding={1} textAlign="center">
               Blocks
             </Typography>
-            <Link href="blocks">View</Link>
+            <Link href={`${node.data.chainId}/blocks`}>View</Link>
           </Stack>
           <Divider />
           <FallbackBoundary>
@@ -42,9 +41,12 @@ export default function ChainView({ nodeData: nodeData }: { nodeData: Chain['dat
       </Grid>
       <Grid item xs={12} md={6}>
         <Paper>
-          <Typography variant="h3" padding={1} textAlign="center">
-            Transactions
-          </Typography>
+          <Stack direction="row">
+            <Typography variant="h3" padding={1} textAlign="center">
+              Transactions
+            </Typography>
+            <Link href={`${node.data.chainId}/transactions`}>View</Link>
+          </Stack>
           <Divider />
           <FallbackBoundary>
             <ChainTransactionList chainId={node.id} />
