@@ -1098,10 +1098,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantra-oss/chains@npm:^0.1.5":
-  version: 0.1.5
-  resolution: "@mantra-oss/chains@npm:0.1.5"
-  checksum: 1bb58ee96c834c9f9ecf0d17c51ccfa815cef87e9d2fbe774fb9eff82938d9f3c57f56c049d8efd7731af5ba84811a33d2abd03cfbfdfa9f684f9be945d174cb
+"@mantra-oss/chains@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@mantra-oss/chains@npm:0.2.1"
+  checksum: aa608805185297526d29e43d3e8087afda71f9adcd057ffc28080f8d48dbe1c3e1ccda100f7bb59e7a8d3538e16175515f67213f7f35ebb594cedfea668cb7b7
   languageName: node
   linkType: hard
 
@@ -1113,7 +1113,7 @@ __metadata:
     "@emotion/react": "npm:^11.11.1"
     "@emotion/styled": "npm:^11.11.0"
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.1.0"
-    "@mantra-oss/chains": "npm:^0.1.5"
+    "@mantra-oss/chains": "npm:^0.2.1"
     "@mdx-js/loader": "npm:^3.0.0"
     "@mdx-js/react": "npm:^3.0.0"
     "@mui/icons-material": "npm:^5.14.16"
