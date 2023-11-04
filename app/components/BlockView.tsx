@@ -3,7 +3,7 @@
 import { Block } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
-//import NodePageBarContent from '../components/NodePage';
+import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
 
 import BlockLogList from './BlockLogList';
@@ -18,7 +18,7 @@ export default function BlockView({ nodeData }: { nodeData: Block['data'] }) {
         <Grid item xs={12}>
           <Paper>
             <Stack direction="row" padding={2} spacing={2}>
-              {/* <NodePageBarContent node={node} /> */}
+              <NodePageBarContent node={node} />
             </Stack>
             <Divider />
             <FallbackBoundary>

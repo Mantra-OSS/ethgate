@@ -5,6 +5,8 @@ import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 import ChainTransactionList from '../components/ChainTransactionList';
 import { FallbackBoundary } from '../components/ui';
+
+import NodePageBarContent from './NodePage';
 export default function ChainTransactionsView({ nodeData }: { nodeData: Chain['data'] }) {
   const node = new Chain(nodeData);
   return (
@@ -12,7 +14,7 @@ export default function ChainTransactionsView({ nodeData }: { nodeData: Chain['d
       <Grid item xs={12}>
         <Paper>
           <Stack direction="row" padding={2} spacing={2}>
-            {/* <NodePageBarContent node={node} /> */}
+            <NodePageBarContent node={node} />
           </Stack>
         </Paper>
       </Grid>

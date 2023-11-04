@@ -24,6 +24,7 @@ export const useConnection = function useConnection<Edge extends EdgeAbstract>(
   const [connection, setConnection] = useState(initialPage);
   const loadNext = useCallback(
     async (count: number) => {
+      return;
       console.log('loadNext', {
         first: count,
         after: connection.pageInfo.endCursor,
@@ -45,6 +46,7 @@ export const useConnection = function useConnection<Edge extends EdgeAbstract>(
     [type, tailId, connection.pageInfo.endCursor],
   );
   const refetch = useCallback(async () => {
+    return;
     console.log('refetch');
     // const nextPage = await readConnection(type, tailId, args);
     const database = (await serverPromise).solver.database;

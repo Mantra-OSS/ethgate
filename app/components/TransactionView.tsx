@@ -4,10 +4,9 @@ import { Transaction } from '@/lib-solver';
 import type { Receipt } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
 
+import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
 import { useNode } from '../helpers/hooks';
-
-// import NodePageBarContent from '../components/NodePage';
 
 import ReceiptLogList from './ReceiptLogList';
 import ReceiptOverview from './ReceiptOverview';
@@ -22,7 +21,7 @@ export default function TransactionView({ nodeData }: { nodeData: Transaction['d
       <Grid item xs={12}>
         <Paper>
           <Stack direction="row" padding={2} spacing={2}>
-            {/* <NodePageBarContent node={node} /> */}
+            <NodePageBarContent node={node} />
           </Stack>
           <Divider />
           <FallbackBoundary>
