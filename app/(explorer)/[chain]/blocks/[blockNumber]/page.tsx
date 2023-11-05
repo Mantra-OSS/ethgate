@@ -1,10 +1,17 @@
 import BlockView from '@/app/components/BlockView';
 import { readObject } from '@/app/helpers/akshara.server';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 
-type Params = { chainId: string; blockNumber: string };
+type Props = {
+  params: { chainId: string; blockNumber: string };
+  searchParams: object;
+};
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  console.log('generateMetadata', params, await parent);
   const nodeData = await readObject({
     type: 'Block',
     chainId: params.chainId,
@@ -15,7 +22,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   };
 }
 
-export default async function BlockPage({ params }: { params: Params }) {
+export default async function BlockPage({ params }: Props) {
   const nodeData = await readObject({
     type: 'Block',
     chainId: params.chainId,

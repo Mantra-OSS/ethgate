@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     ...paramToKey[params.chain],
   });
   return {
-    title: nodeData?.name,
+    title: nodeData?.meta.name,
   };
 }
 
