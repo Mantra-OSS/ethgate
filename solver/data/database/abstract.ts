@@ -2,7 +2,7 @@ import type { Time } from '@/lib-node';
 
 export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
 
-export abstract class NodeAbstract<
+export abstract class SolverNode<
   Name extends string = any,
   Data extends object = any,
   Id extends ObjectId<Name> = ObjectId<Name>,
@@ -17,7 +17,7 @@ export abstract class NodeAbstract<
   }
 }
 
-export abstract class EdgeAbstract<
+export abstract class SolverEdge<
   Name extends string = any,
   TailId extends string = any,
   HeadId extends string = any,
@@ -39,25 +39,25 @@ export abstract class EdgeAbstract<
   }
 }
 
-export type PageArgs<Edge extends EdgeAbstract> = {
+export type PageArgs<Edge extends SolverEdge> = {
   before?: Edge['cursor'];
   after?: Edge['cursor'];
   last?: number;
   first?: number;
 };
-export type PageInfo<Edge extends EdgeAbstract> = {
+export type PageInfo<Edge extends SolverEdge> = {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
   startCursor?: Edge['cursor'];
   endCursor?: Edge['cursor'];
 };
-export type EdgeGenerator<Edge extends EdgeAbstract> = AsyncGenerator<Edge, undefined, undefined>;
-export type ConnectionGenerator<Edge extends EdgeAbstract> = AsyncGenerator<
+export type EdgeGenerator<Edge extends SolverEdge> = AsyncGenerator<Edge, undefined, undefined>;
+export type ConnectionGenerator<Edge extends SolverEdge> = AsyncGenerator<
   Edge,
   PageInfo<Edge>,
   undefined
 >;
-export class Connection<Edge extends EdgeAbstract> implements ConnectionGenerator<Edge> {
+export class Connection<Edge extends SolverEdge> implements ConnectionGenerator<Edge> {
   readonly _generator: ConnectionGenerator<Edge>;
 
   constructor(generator: ConnectionGenerator<Edge>) {
@@ -105,8 +105,8 @@ export class DatabaseNodeNotFoundError extends DatabaseError {
 }
 
 export abstract class DatabaseAbstract<
-  DatabaseNode extends NodeAbstract,
-  DatabaseEdge extends EdgeAbstract,
+  DatabaseNode extends SolverNode,
+  DatabaseEdge extends SolverEdge,
 > {
   abstract getNode<Node extends DatabaseNode>(id: Node['id']): Promise<Node | undefined>;
   abstract getConnection<Edge extends DatabaseEdge>(

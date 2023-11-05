@@ -1,8 +1,8 @@
 'use client';
 import {
-  type EdgeAbstract,
+  type SolverEdge,
   EthgateSolver,
-  type NodeAbstract,
+  type SolverNode,
   type PageArgs,
   type PageInfo,
 } from '@/lib-solver';
@@ -39,13 +39,13 @@ export const serverPromise = EthgateSolverMainThread.create();
 //   }
 // }
 
-export const readNode = memoize(async function readNode<T extends NodeAbstract>(id: T['id']) {
+export const readNode = memoize(async function readNode<T extends SolverNode>(id: T['id']) {
   const database = (await serverPromise).solver.database;
   const node = await database.readNode(id);
   return node;
 });
 
-export const readConnection = memoize(async function readConnection<Edge extends EdgeAbstract>(
+export const readConnection = memoize(async function readConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
   args: PageArgs<Edge>,

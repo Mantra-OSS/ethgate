@@ -4,10 +4,10 @@ import { parseGlobalId } from '@/spec-solver';
 import type {
   Chain,
   ConnectionGenerator,
-  EdgeAbstract,
-  NodeAbstract,
   PageArgs,
   PageInfo,
+  SolverEdge,
+  SolverNode,
 } from '../data';
 import { Block, ChainHasBlock, Connection, DatabaseAbstract } from '../data';
 import { SolverGraph } from '../graph';
@@ -18,7 +18,7 @@ export type EthgateSolverDatabaseConfig = {
   node: AksharaAbstract;
 };
 
-export class EthgateSolverDatabase extends DatabaseAbstract<NodeAbstract, EdgeAbstract> {
+export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEdge> {
   node: AksharaAbstract;
 
   /**
@@ -57,12 +57,12 @@ export class EthgateSolverDatabase extends DatabaseAbstract<NodeAbstract, EdgeAb
     }
   }
 
-  async getNode<Node extends NodeAbstract>(id: Node['id']): Promise<Node | undefined> {
+  async getNode<Node extends SolverNode>(id: Node['id']): Promise<Node | undefined> {
     const [type] = parseGlobalId(id);
     const nodeType = graph.nodeTypes.find((nodeType) => nodeType.schema.aksharaType === type)!;
     return nodeType.get(id, this);
   }
-  async *_getConnection<Edge extends EdgeAbstract>(
+  async *_getConnection<Edge extends SolverEdge>(
     type: Edge['type'],
     tailId: Edge['tailId'],
     args: PageArgs<Edge>,
@@ -117,7 +117,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<NodeAbstract, EdgeAb
 
     return pageInfo;
   }
-  getConnection<Edge extends EdgeAbstract>(
+  getConnection<Edge extends SolverEdge>(
     type: Edge['type'],
     tailId_: Edge['tailId'],
     args_: PageArgs<Edge>,

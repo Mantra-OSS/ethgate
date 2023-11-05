@@ -12,9 +12,9 @@ import {
   Transaction,
 } from './akshara';
 import type { EdgeGenerator } from './database/abstract';
-import { EdgeAbstract } from './database/abstract';
+import { SolverEdge } from './database/abstract';
 
-export class BlockHasLog extends EdgeAbstract<'BlockHasLog', Block['id'], Log['id'], object> {
+export class BlockHasLog extends SolverEdge<'BlockHasLog', Block['id'], Log['id'], object> {
   static typeName = 'BlockHasLog' as const;
   type = 'BlockHasLog' as const;
   static tail = Block;
@@ -56,7 +56,7 @@ export class BlockHasLog extends EdgeAbstract<'BlockHasLog', Block['id'], Log['i
   }
 }
 
-export class ChainHasTransaction extends EdgeAbstract<
+export class ChainHasTransaction extends SolverEdge<
   'ChainHasTransaction',
   Chain['id'],
   Transaction['id'],

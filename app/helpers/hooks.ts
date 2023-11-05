@@ -1,16 +1,16 @@
 'use client';
-import type { NodeAbstract } from '@/lib-solver';
-import { type EdgeAbstract, type PageArgs, type PageInfo } from '@/lib-solver';
+import type { SolverNode } from '@/lib-solver';
+import { type SolverEdge, type PageArgs, type PageInfo } from '@/lib-solver';
 import { use, useCallback, useState } from 'react';
 
 import { readConnection, readNode, serverPromise } from './backend';
 
-export const useNode = function useNode<T extends NodeAbstract>(id: T['id']): T {
+export const useNode = function useNode<T extends SolverNode>(id: T['id']): T {
   const node = use(readNode(id));
   return node;
 };
 
-export const useConnection = function useConnection<Edge extends EdgeAbstract>(
+export const useConnection = function useConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
   args: PageArgs<Edge>,

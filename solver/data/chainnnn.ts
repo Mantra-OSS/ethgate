@@ -5,9 +5,9 @@ import type { ProperPageArgs } from '../graph';
 import { Chain } from './akshara';
 import { Block } from './akshara';
 import type { EdgeGenerator } from './database/abstract';
-import { EdgeAbstract } from './database/abstract';
+import { SolverEdge } from './database/abstract';
 
-export class ChainHasDescendantBlock extends EdgeAbstract<
+export class ChainHasDescendantBlock extends SolverEdge<
   'ChainHasDescendantBlock',
   Chain['id'],
   Block['id'],

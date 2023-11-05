@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
 
-import type { NodeAbstract } from '../../solver/data';
+import type { SolverNode } from '../../solver/data';
 
-export function NodeBreadcrumb({ node }: { node: NodeAbstract }) {
+export function NodeBreadcrumb({ node }: { node: SolverNode }) {
   return (
     <Typography variant="h5" textAlign="center">
       {node.meta.name}

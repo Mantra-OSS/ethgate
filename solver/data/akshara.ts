@@ -14,7 +14,7 @@ import { parseGlobalId } from '@/spec-solver';
 
 import type { NodeType, ProperPageArgs } from '../graph';
 
-import { EdgeAbstract, NodeAbstract } from './database/abstract';
+import { SolverEdge, SolverNode } from './database/abstract';
 import type { EdgeGenerator, ObjectId } from './database/abstract';
 
 export type AksharaTypeContext = {
@@ -47,14 +47,14 @@ export abstract class AksharaNode<
   Name extends string = any,
   Data extends object = any,
   Id extends ObjectId<Name> = ObjectId<Name>,
-> extends NodeAbstract<Name, Data, Id> {}
+> extends SolverNode<Name, Data, Id> {}
 
 export abstract class AksharaEdge<
   Name extends string = any,
   TailId extends string = any,
   HeadId extends string = any,
   Data extends object = any,
-> extends EdgeAbstract<Name, TailId, HeadId, Data> {}
+> extends SolverEdge<Name, TailId, HeadId, Data> {}
 
 export class Chain extends AksharaNode<
   'Chain',

@@ -7,7 +7,7 @@ import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { memoize } from 'lodash';
 
-import type { NodeAbstract } from '../../solver/data';
+import type { SolverNode } from '../../solver/data';
 import { Block, Chain, Log, Receipt, Transaction } from '../../solver/data';
 
 const { ANKR_KEY } = process.env;
@@ -37,9 +37,7 @@ export async function readObject<Key extends AksharaObjectKey>(
   return object;
 }
 
-export async function readAksharaNode<Key extends AksharaObjectKey>(
-  key: Key,
-): Promise<NodeAbstract> {
+export async function readAksharaNode<Key extends AksharaObjectKey>(key: Key): Promise<SolverNode> {
   const akshara = await createAkshara();
   const object = await akshara.getObject(key);
   if (!object) {
