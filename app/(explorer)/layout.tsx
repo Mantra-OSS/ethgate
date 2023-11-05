@@ -7,6 +7,7 @@ import {
   CircularProgress,
   Container,
   IconButton,
+  Link,
   Snackbar,
   Stack,
   Typography,
@@ -29,7 +30,10 @@ export default function ExplorerLayout({ children }: { children: React.ReactNode
         <AppBar position="sticky">
           <AppBarContent />
           <Alert severity="warning">
-            This is a beta! Send feedback here: [insert google forms link here]
+            This is a beta! Send feedback here:{' '}
+            <Link href="https://forms.gle/RweA6zGf6LE1hjN49">
+              https://forms.gle/RweA6zGf6LE1hjN49
+            </Link>
           </Alert>
         </AppBar>
         <ErrorBoundary FallbackComponent={ErrorFallbackView}>
