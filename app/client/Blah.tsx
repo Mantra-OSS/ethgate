@@ -17,10 +17,11 @@ import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
-import AppProvider from '../components/App';
-import AppBarContent from '../components/AppBarContent';
-import AppFooter from '../components/AppFooter';
 import { notificationsState } from '../viewer';
+
+import AppBarContent from './AppBarContent';
+import AppFooter from './AppFooter';
+import AppProvider from './AppProvider';
 
 export default function Blah({ children }: { children: React.ReactNode }) {
   return (

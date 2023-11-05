@@ -1,7 +1,7 @@
 'use server';
 import type { Metadata, Viewport } from 'next';
 
-import Blah from './Blah';
+import Blah from '../client/Blah';
 
 // https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 export async function generateMetadata(): Promise<Metadata> {
