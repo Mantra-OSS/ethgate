@@ -1,29 +1,41 @@
 import LogView from '@/app/components/LogView';
-import { readObject } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/helpers/akshara.server';
+import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
-type Params = { chainId: string; blockNumber: string; transactionIndex: string; logIndex: string };
+import type { AksharaLogKey } from '../../../../../../../../../akshara/spec/db';
+
+export type Params = {
+  chain: string;
+  blockNumber: string;
+  transactionIndex: string;
+  logIndex: string;
+};
+export type Props = { params: Params; searchParams: object };
+
+export async function keyFromParams(params: Params): Promise<AksharaLogKey & { type: 'Log' }> {
+  const chain = Object.values(chains).find(
+    (chain) => chain.chainId === params.chain || chain.meta.slug === params.chain,
+  );
+  if (!chain) notFound();
+  return {
+    type: 'Log',
+    chainId: chain.chainId,
+    blockNumber: parseInt(params.blockNumber, 10),
+    transactionIndex: parseInt(params.transactionIndex, 10),
+    logIndex: parseInt(params.logIndex, 10),
+  };
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const nodeData = await readObject({
-    type: 'Log',
-    chainId: params.chainId,
-    blockNumber: parseInt(params.blockNumber, 10),
-    transactionIndex: Number(params.transactionIndex),
-    logIndex: Number(params.logIndex),
-  });
+  const node = await readAksharaNode(await keyFromParams(params));
   return {
-    title: nodeData?.name,
+    title: node.meta.name,
   };
 }
 
 export default async function LogPage({ params }: { params: Params }) {
-  const nodeData = await readObject({
-    type: 'Log',
-    chainId: params.chainId,
-    blockNumber: parseInt(params.blockNumber, 10),
-    transactionIndex: Number(params.transactionIndex),
-    logIndex: Number(params.logIndex),
-  });
-  return <LogView nodeData={nodeData} />;
+  const node = await readAksharaNode(await keyFromParams(params));
+  return <LogView nodeData={node.data} />;
 }

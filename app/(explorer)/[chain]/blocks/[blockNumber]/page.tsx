@@ -1,32 +1,37 @@
 import BlockView from '@/app/components/BlockView';
-import { readObject } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/helpers/akshara.server';
+import { chains } from '@mantra-oss/chains';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { notFound } from 'next/navigation';
 
-type Props = {
-  params: { chainId: string; blockNumber: string };
-  searchParams: object;
-};
+import type { AksharaBlockKey } from '../../../../../akshara/spec/db';
+
+export type Params = { chain: string; blockNumber: string };
+export type Props = { params: Params; searchParams: object };
+
+export async function keyFromParams(params: Params): Promise<AksharaBlockKey & { type: 'Block' }> {
+  const chain = Object.values(chains).find(
+    (chain) => chain.chainId === params.chain || chain.meta.slug === params.chain,
+  );
+  if (!chain) notFound();
+  return { type: 'Block', chainId: chain.chainId, number: parseInt(params.blockNumber, 10) };
+}
+
+// export async function generateStaticParams(): Promise<Params[]> {
+//   return Object.keys(paramToKey).map((param) => ({ chain: param }));
+// }
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  console.log('generateMetadata', params, await parent);
-  const nodeData = await readObject({
-    type: 'Block',
-    chainId: params.chainId,
-    number: parseInt(params.blockNumber, 10),
-  });
+  const node = await readAksharaNode(await keyFromParams(params));
   return {
-    title: nodeData?.name,
+    title: node.meta.name,
   };
 }
 
 export default async function BlockPage({ params }: Props) {
-  const nodeData = await readObject({
-    type: 'Block',
-    chainId: params.chainId,
-    number: parseInt(params.blockNumber, 10),
-  });
-  return <BlockView nodeData={nodeData} />;
+  const node = await readAksharaNode(await keyFromParams(params));
+  return <BlockView nodeData={node.data} />;
 }

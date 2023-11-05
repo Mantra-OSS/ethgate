@@ -1,38 +1,41 @@
 import ChainView from '@/app/components/ChainView';
-import { readObject } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/helpers/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
-const paramToKey = Object.fromEntries(
-  Object.values(chains).flatMap((chain) => [
-    [chain.chainId, { chainId: chain.chainId }],
-    [chain.meta.slug, { chainId: chain.chainId }],
-  ]),
-);
+import type { AksharaChainKey } from '../../../akshara/spec/db';
 
-type Params = { chain: string };
+export type Params = { chain: string };
+export type Props = { params: Params; searchParams: object };
+
+export async function keyFromParams(params: Params): Promise<AksharaChainKey & { type: 'Chain' }> {
+  const chain = Object.values(chains).find(
+    (chain) => chain.chainId === params.chain || chain.meta.slug === params.chain,
+  );
+  if (!chain) notFound();
+  return { type: 'Chain', chainId: chain.chainId };
+}
 
 // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
+export const dynamic = false;
 export const dynamicParams = false;
 
 export async function generateStaticParams(): Promise<Params[]> {
-  return Object.keys(paramToKey).map((param) => ({ chain: param }));
+  return Object.values(chains).flatMap((chain) => [
+    { chain: chain.chainId },
+    { chain: chain.meta.slug },
+  ]);
 }
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const nodeData = await readObject({
-    type: 'Chain',
-    ...paramToKey[params.chain],
-  });
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const node = await readAksharaNode(await keyFromParams(params));
   return {
-    title: nodeData?.meta.name,
+    title: node.meta.name,
   };
 }
 
-export default async function ChainPage({ params }: { params: Params }) {
-  const nodeData = await readObject({
-    type: 'Chain',
-    ...paramToKey[params.chain],
-  });
-  return <ChainView nodeData={nodeData} />;
+export default async function ChainPage({ params }: Props) {
+  const node = await readAksharaNode(await keyFromParams(params));
+  return <ChainView nodeData={node.data} />;
 }

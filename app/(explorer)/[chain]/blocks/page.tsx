@@ -1,12 +1,10 @@
 import ChainBlocksView from '@/app/components/ChainBlocksView';
-import { readObject } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/helpers/akshara.server';
 
-type Params = { chainId: string };
+import type { Props } from '../page';
+import { keyFromParams } from '../page';
 
-export default async function ChainHasBlocksPage({ params }: { params: Params }) {
-  const nodeData = await readObject({
-    type: 'Chain',
-    ...params,
-  });
-  return <ChainBlocksView nodeData={nodeData} />;
+export default async function ChainHasBlocksPage({ params }: Props) {
+  const node = await readAksharaNode(await keyFromParams(params));
+  return <ChainBlocksView nodeData={node.data} />;
 }
