@@ -1,14 +1,10 @@
-// 'use client';
-// import AboutView from './AboutView.mdx';
-
-import { QRCodeSVG } from 'qrcode.react';
+import Image from 'next/image';
 
 export default function AboutPage() {
   return (
     <div>
       About ethgate.io
-      <QRCodeSVG value="https://twitter.com/ethgate_io" includeMargin />
+      <Image src="/qr" width={128} height={128} alt="QR code for ethgate.io" />
     </div>
   );
-  // return <AboutView />;
 }
