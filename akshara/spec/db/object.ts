@@ -4,6 +4,14 @@ import type { FromSchema } from 'json-schema-to-ts';
 import type { AksharaChainId } from './types';
 import { addressSchema, chainIdSchema, hashSchema, hexSchema, u64Schema } from './types';
 
+export type AksharaObjects = {
+  Chain: { Data: AksharaChainData };
+  Block: { Data: AksharaBlockData };
+  Transaction: { Data: AksharaTransactionData };
+  Receipt: { Data: AksharaReceiptData };
+  Log: { Data: AksharaLogData };
+};
+
 export type AksharaObjectKey =
   | ({ type: 'Chain' } & AksharaChainKey)
   | ({ type: 'Block' } & AksharaBlockKey)

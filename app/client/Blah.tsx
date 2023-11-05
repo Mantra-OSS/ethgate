@@ -21,11 +21,11 @@ import { notificationsState } from '../viewer';
 
 import AppBarContent from './AppBarContent';
 import AppFooter from './AppFooter';
-import AppProvider from './AppProvider';
+import ClientProvider from './AppProvider';
 
 export default function Blah({ children }: { children: React.ReactNode }) {
   return (
-    <AppProvider>
+    <ClientProvider>
       <Stack style={{ minHeight: '100vh' }}>
         {/* <AppFrameNotifications /> */}
         <AppBar position="sticky">
@@ -42,7 +42,7 @@ export default function Blah({ children }: { children: React.ReactNode }) {
         </ErrorBoundary>
       </Stack>
       <AppFooter />
-    </AppProvider>
+    </ClientProvider>
   );
 }
 

@@ -67,7 +67,7 @@ export class Chain extends AksharaNode<
   constructor(data: Chain['data']) {
     super(`Chain:${formatChainId(data)}`, data);
   }
-  meta = this.data.meta;
+  meta = { ...this.data.meta, path: [this.id] };
   parentId: Chain['id'] | undefined = this.data.parentId
     ? (`Chain:${this.data.parentId}` as const)
     : undefined;
@@ -94,10 +94,11 @@ export class Block extends AksharaNode<
   constructor(data: Block['data']) {
     super(`Block:${formatBlockId(data)}`, data);
   }
+  chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   meta = {
     name: this.data.number.toString(),
+    path: [this.chainId, this.id],
   };
-  chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   parentId: Block['id'] = `Block:${this.data.chainId}-${this.data.number - 1}`;
   transactionIds: Transaction['id'][] = this.data.transactions
     .map(
@@ -145,11 +146,12 @@ export class Transaction extends AksharaNode<
   constructor(data: Transaction['data']) {
     super(`Transaction:${formatTransactionId(data)}`, data);
   }
-  meta = {
-    name: this.data.transactionIndex.toString(),
-  };
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   blockId: Block['id'] = `Block:${this.data.chainId}-${this.data.blockNumber}`;
+  meta = {
+    name: this.data.transactionIndex.toString(),
+    path: [this.chainId, this.blockId, this.id],
+  };
   receiptId: Receipt['id'] = `Receipt:${this.data.chainId}-${this.data.blockNumber}-${this.data.transactionIndex}r`;
   // chainId = this.data.chainId;
   value = this.data.value;
@@ -189,12 +191,13 @@ export class Receipt extends AksharaNode<
   constructor(data: Receipt['data']) {
     super(`Receipt:${formatReceiptId(data)}`, data);
   }
-  meta = {
-    name: this.data.transactionIndex.toString(),
-  };
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   blockId: Block['id'] = `Block:${this.data.chainId}-${this.data.blockNumber}`;
   transactionId: Transaction['id'] = `Transaction:${formatTransactionId(this.data)}`;
+  meta = {
+    name: this.data.transactionIndex.toString(),
+    path: [this.chainId, this.blockId, this.transactionId, this.id],
+  };
   logIds: Log['id'][] = this.data.logs
     .map(
       (log) =>
@@ -234,13 +237,14 @@ export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethga
     //   `${data.chainId}-${data.blockNumber}-${data.transactionIndex}-${data.logIndex}` as const;
     super(`Log:${formatLogId(data)}`, data);
   }
-  meta = {
-    name: this.data.logIndex.toString(),
-  };
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   blockId: Block['id'] = `Block:${this.data.chainId}-${this.data.blockNumber}`;
   transactionId: Transaction['id'] = `Transaction:${formatTransactionId(this.data)}`;
   receiptId: Receipt['id'] = `Receipt:${formatReceiptId(this.data)}`;
+  meta = {
+    name: this.data.logIndex.toString(),
+    path: [this.chainId, this.blockId, this.transactionId, this.receiptId, this.id],
+  };
   // chainId = this.data.chainId;
   blockHash = this.data.blockHash;
   blockNumber = this.data.blockNumber;

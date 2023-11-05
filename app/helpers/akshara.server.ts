@@ -2,11 +2,13 @@
 import 'server-only';
 
 import { Akshara, AksharaDatabase } from '@/lib-node';
-import type { AksharaObjectKey } from '@/lib-node';
+import type { AksharaObjectKey, AksharaObjects } from '@/lib-node';
 import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { memoize } from 'lodash';
 
+import type { NodeAbstract } from '../../solver/data';
+import { Block, Chain, Log, Receipt, Transaction } from '../../solver/data';
 
 const { ANKR_KEY } = process.env;
 
@@ -24,13 +26,37 @@ class AksharaServer extends Akshara {
 
 export const createAkshara = memoize(async () => new AksharaServer());
 
-export async function readObject(key: AksharaObjectKey): Promise<any> {
+export async function readObject<Key extends AksharaObjectKey>(
+  key: Key,
+): Promise<AksharaObjects[Key['type']]['Data']> {
   const akshara = await createAkshara();
   const object = await akshara.getObject(key);
   if (!object) {
     throw new Error(`Object not found: ${JSON.stringify(key)}`);
   }
   return object;
+}
+
+export async function readAksharaNode<Key extends AksharaObjectKey>(
+  key: Key,
+): Promise<NodeAbstract> {
+  const akshara = await createAkshara();
+  const object = await akshara.getObject(key);
+  if (!object) {
+    throw new Error(`Object not found: ${JSON.stringify(key)}`);
+  }
+  switch (key.type) {
+    case 'Chain':
+      return new Chain(object);
+    case 'Block':
+      return new Block(object);
+    case 'Transaction':
+      return new Transaction(object);
+    case 'Receipt':
+      return new Receipt(object);
+    case 'Log':
+      return new Log(object);
+  }
 }
 
 const serverChains = {

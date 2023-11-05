@@ -29,7 +29,7 @@ function AppIntlProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function AppProvider({ children }: { children: React.ReactNode }) {
+export default function ClientProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
       <RecoilRoot>

@@ -8,7 +8,7 @@ export abstract class NodeAbstract<
   Id extends ObjectId<Name> = ObjectId<Name>,
 > {
   abstract type: Name;
-  abstract meta: { name: string };
+  abstract meta: { name: string; path: ObjectId<any>[] };
   id: Id;
   data: Data;
   constructor(id: Id, data: Data) {

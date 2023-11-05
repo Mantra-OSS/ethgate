@@ -12,3 +12,7 @@ export const parseGlobalId = (id: string): [type: NodeType, localId: string] => 
   const [, type, localId] = match;
   return [type, localId];
 };
+
+export const formatGlobalId = (type: NodeType, localId: string): string => {
+  return `${type}:${localId}`;
+};
