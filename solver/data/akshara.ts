@@ -80,9 +80,9 @@ export class Block extends AksharaNode<
   `Block:${Ethgate.AksharaBlockId}`
 > {
   static type = new AksharaNodeType((data) => new Block(data), blockSchema);
-  static typeName = Block.type.name;
+
   type = 'Block' as const;
-  static schema = Block.type.schema;
+
   static async get(id: Block['id'], ctx: AksharaTypeContext): Promise<Block> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
@@ -292,7 +292,7 @@ export class ChainHasBlock extends AksharaEdge<
   static typeName = 'ChainHasBlock' as const;
   type = 'ChainHasBlock' as const;
   static tail = Chain.type;
-  static head = Block;
+  static head = Block.type;
   static connectionName = 'blocks';
   static async *get(
     tailId: ChainHasBlock['tailId'],
@@ -334,8 +334,8 @@ export class BlockHasTransaction extends AksharaEdge<
 > {
   static typeName = 'BlockHasTransaction' as const;
   type = 'BlockHasTransaction' as const;
-  static tail = Block;
-  static head = Transaction;
+  static tail = Block.type;
+  static head = Transaction.type;
   static connectionName = 'transactions';
   static async *get(
     tailId: BlockHasTransaction['tailId'],
@@ -358,8 +358,8 @@ export class BlockHasReceipt extends AksharaEdge<
 > {
   static typeName = 'BlockHasReceipt' as const;
   type = 'BlockHasReceipt' as const;
-  static tail = Block;
-  static head = Receipt;
+  static tail = Block.type;
+  static head = Receipt.type;
   static connectionName = 'receipts';
   static async *get(
     tailId: BlockHasReceipt['tailId'],
@@ -384,8 +384,8 @@ export class BlockHasReceipt extends AksharaEdge<
 export class ReceiptHasLog extends AksharaEdge<'ReceiptHasLog', Receipt['id'], Log['id'], object> {
   static typeName = 'ReceiptHasLog' as const;
   type = 'ReceiptHasLog' as const;
-  static tail = Receipt;
-  static head = Log;
+  static tail = Receipt.type;
+  static head = Log.type;
   static connectionName = 'logs';
   static async *get(
     tailId: ReceiptHasLog['tailId'],

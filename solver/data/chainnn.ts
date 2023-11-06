@@ -17,8 +17,8 @@ import { SolverEdge } from './database/abstract';
 export class BlockHasLog extends SolverEdge<'BlockHasLog', Block['id'], Log['id'], object> {
   static typeName = 'BlockHasLog' as const;
   type = 'BlockHasLog' as const;
-  static tail = Block;
-  static head = Log;
+  static tail = Block.type;
+  static head = Log.type;
   static connectionName = 'logs';
   static async *get(
     tailId: BlockHasLog['tailId'],
@@ -65,7 +65,7 @@ export class ChainHasTransaction extends SolverEdge<
   static typeName = 'ChainHasTransaction' as const;
   type = 'ChainHasTransaction' as const;
   static tail = Chain.type;
-  static head = Transaction;
+  static head = Transaction.type;
   static connectionName = 'transactions';
   static async *get(
     tailId: ChainHasTransaction['tailId'],

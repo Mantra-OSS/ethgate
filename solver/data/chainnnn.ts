@@ -18,7 +18,7 @@ export class ChainHasDescendantBlock extends SolverEdge<
   static typeName = 'ChainHasDescendantBlock' as const;
   type = 'ChainHasDescendantBlock' as const;
   static tail = Chain.type;
-  static head = Block;
+  static head = Block.type;
   static connectionName = 'descendantBlocks';
   static async *get(
     tailId: ChainHasDescendantBlock['tailId'],
