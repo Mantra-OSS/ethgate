@@ -32,7 +32,7 @@ export default async function ExplorerLayout({
 }) {
   return (
     <ClientProvider>
-      <Stack style={{ minHeight: '100vh' }}>
+      <Stack role="banner" style={{ minHeight: '100vh' }}>
         <AppBar position="sticky">
           <Toolbar>
             <Image src={logo} alt="ethgate.io logo" width={32} height={32} />

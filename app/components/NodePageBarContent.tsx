@@ -18,14 +18,14 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  console.log(pathname);
   return (
     <>
       <NodeAvatar
         avatarType={
           pathname.includes('logs')
             ? 'chain-log'
-            : 'transactions'
+            : pathname.includes('transactions')
             ? 'chain-transaction'
             : pathname.includes('blocks')
             ? 'chain-block'

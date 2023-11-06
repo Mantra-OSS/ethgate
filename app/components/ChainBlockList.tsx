@@ -1,7 +1,6 @@
 'use client';
 import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import {
-  Avatar,
   Collapse,
   ListItemAvatar,
   ListItemButton,
@@ -19,6 +18,7 @@ import { useConnection, useNode } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
 
 import { NodeList, NodeListItem } from './NodeList';
+import { NodeAvatar } from './ui';
 
 export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
@@ -88,12 +88,7 @@ export function ChainBlockListItem({ blockId }: { blockId: Block['id'] }) {
   return (
     <ListItemButton href={`${node.data.chainId}/blocks/${node.number}`}>
       <ListItemAvatar>
-        <Avatar alt={chain.meta.name} src={`/statics/${node.data.chainId}.svg`}>
-          {chain.meta.name
-            .split(' ')
-            .map((word) => word[0])
-            .join('')}
-        </Avatar>
+        <NodeAvatar avatarType="block" />
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">

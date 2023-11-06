@@ -72,12 +72,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
       href={`${node.data.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
     >
       <ListItemAvatar>
-        <NodeAvatar avatarType="chain" chainId={chain.data.chainId}>
-          {chain.meta.name
-            .split(' ')
-            .map((word: any) => word[0])
-            .join('')}
-        </NodeAvatar>
+        <NodeAvatar avatarType="transaction" />
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">

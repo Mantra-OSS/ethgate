@@ -4,6 +4,7 @@ import { Divider, Stack, Typography } from '@mui/material';
 import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 
 export default function ChainOverview({ node }: { node: Chain }) {
+  console.log(node);
   const data1 = [
     { x: '2020-01-01', y: 50 },
     { x: '2020-01-02', y: 10 },
@@ -35,7 +36,7 @@ export default function ChainOverview({ node }: { node: Chain }) {
       </Stack>
       <XYChart height={300} xScale={{ type: 'band' }} yScale={{ type: 'linear' }}>
         <AnimatedAxis orientation="bottom" />
-        <AnimatedGrid columns={false} numTicks={4} />
+        <AnimatedGrid columns={false} numTicks={0} />
         <AnimatedLineSeries dataKey="Line 1" data={data1} {...accessors} />
         <AnimatedLineSeries dataKey="Line 2" data={data2} {...accessors} />
         <Tooltip

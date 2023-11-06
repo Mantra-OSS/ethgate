@@ -10,12 +10,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Suspense } from 'react';
-import type { FallbackProps } from 'react-error-boundary';
-import { ErrorBoundary } from 'react-error-boundary';
 
 import type { SolverNode } from '../../solver/data';
 
 import AppBarContent from './AppBarContent';
+import { FallbackBoundary } from '../components/ui';
 
 export default function Blah({ node, children }: { node: SolverNode; children: React.ReactNode }) {
   return (
@@ -30,34 +29,7 @@ export default function Blah({ node, children }: { node: SolverNode; children: R
           </Link>
         </Alert>
       </AppBar>
-      <ErrorBoundary FallbackComponent={ErrorFallbackView}>
-        <Suspense fallback={<SuspenseFallbackView />}>{children}</Suspense>
-      </ErrorBoundary>
+      <FallbackBoundary>{children}</FallbackBoundary>
     </>
-  );
-}
-
-function ErrorFallbackView({ error, resetErrorBoundary }: FallbackProps) {
-  return (
-    <AppFrameFallbackContainer>
-      <Typography>Error: {error.message}</Typography>
-      <Button onClick={resetErrorBoundary}>Try again</Button>
-    </AppFrameFallbackContainer>
-  );
-}
-
-function SuspenseFallbackView() {
-  return (
-    <AppFrameFallbackContainer>
-      <CircularProgress />
-    </AppFrameFallbackContainer>
-  );
-}
-
-function AppFrameFallbackContainer({ children }: { children: React.ReactNode }) {
-  return (
-    <Container style={{ textAlign: 'center', marginTop: 'auto', marginBottom: 'auto' }}>
-      {children}
-    </Container>
   );
 }
