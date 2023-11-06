@@ -67,17 +67,12 @@ export default function ChainOverview({ node }: { node: Chain }) {
 
 function ChainChart({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
-  const [blocks, hasNext, loadNext, refetch] = useConnection<ChainHasBlock>(
-    'ChainHasBlock',
-    chainId,
-    {
-      // TODO: Paginate
-      first: 10,
-    },
-  );
+  const [blocks, loadNext, refetch] = useConnection<ChainHasBlock>('ChainHasBlock', chainId, {
+    first: 10,
+  });
   const onLoadNext = useCallback(() => {
     startTransition(() => {
-      loadNext(3);
+      loadNext();
     });
   }, [loadNext]);
 
@@ -117,7 +112,7 @@ function ChainChart({ chainId }: { chainId: Chain['id'] }) {
       <InfiniteList
         // startSubscriptionConfig={subscriptionConfig}
         // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={hasNext && onLoadNext}
+        loadNext={blocks?.pageInfo.hasNextPage && onLoadNext}
       >
         <Chart data={data} />
       </InfiniteList>

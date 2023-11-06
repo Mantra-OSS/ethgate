@@ -21,13 +21,11 @@ import { NodeAvatar } from './ui';
 
 export default function ReceiptLogList({ receipt }: { receipt: Receipt }) {
   const [, startTransition] = useTransition();
-  const [logs, loadNext] = useConnection<ReceiptHasLog>('ReceiptHasLog', receipt.id, {
-    first: 10,
-  });
+  const [logs, loadNext] = useConnection<ReceiptHasLog>('ReceiptHasLog', receipt.id, {});
 
   const onLoadNext = useCallback(() => {
     startTransition(() => {
-      loadNext(3);
+      loadNext();
     });
   }, [loadNext]);
 

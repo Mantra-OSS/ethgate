@@ -5,6 +5,7 @@ import { useNode } from '../helpers/hooks';
 
 export default function TransactionOverview({ node }: { node: Transaction }) {
   const chain = useNode<Chain>(node.chainId);
+
   return (
     <Stack divider={<Divider />}>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
