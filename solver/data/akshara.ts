@@ -82,22 +82,13 @@ export class Chain extends AksharaNode<
   chainId = `Chain:${this.data.chainId}`;
 }
 
-export const blockType = new AksharaNodeType((data) => new Block(data), blockSchema);
+export const blockType = new AksharaNodeType<Block>((data) => new Block(data), blockSchema);
 export class Block extends AksharaNode<
   'Block',
   Ethgate.AksharaBlockData,
   `Block:${Ethgate.AksharaBlockId}`
 > {
   type = 'Block' as const;
-
-  static async get(id: Block['id'], ctx: AksharaTypeContext): Promise<Block> {
-    const [, localId] = parseGlobalId(id);
-    const obj = await ctx.aks.getObject(localId);
-    if (!obj) {
-      throw new Error(`Not found ${id}`);
-    }
-    return new Block(obj as any);
-  }
 
   constructor(data: Block['data']) {
     super(`Block:${formatBlockId(data)}`, data);
@@ -345,7 +336,7 @@ export class BlockHasTransaction extends AksharaEdge<
     args: ProperPageArgs<BlockHasTransaction>,
     ctx: AksharaTypeContext,
   ): EdgeGenerator<BlockHasTransaction> {
-    const tail = await Block.get(tailId, ctx);
+    const tail = await blockType.read(tailId, ctx);
     for (const transactionId of tail.transactionIds) {
       const edge = new BlockHasTransaction(tailId, transactionId, {}, tail.data.timestamp);
       yield edge;
@@ -369,7 +360,7 @@ export class BlockHasReceipt extends AksharaEdge<
     args: ProperPageArgs<BlockHasReceipt>,
     ctx: AksharaTypeContext,
   ): EdgeGenerator<BlockHasReceipt> {
-    const tail = await Block.get(tailId, ctx);
+    const tail = await blockType.read(tailId, ctx);
     for (const receiptId of tail.receiptIds) {
       const edge = new BlockHasReceipt(
         tailId,
@@ -396,7 +387,7 @@ export class ReceiptHasLog extends AksharaEdge<'ReceiptHasLog', Receipt['id'], L
     ctx: AksharaTypeContext,
   ): EdgeGenerator<ReceiptHasLog> {
     const tail = await Receipt.get(tailId, ctx);
-    const block = await Block.get(tail.blockId, ctx);
+    const block = await blockType.read(tail.blockId, ctx);
     for (const logId of tail.logIds) {
       const edge = new ReceiptHasLog(tailId, logId, {}, block.data.timestamp);
       yield edge;
