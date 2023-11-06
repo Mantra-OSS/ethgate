@@ -91,10 +91,7 @@ export function ChainBlockListItem({ blockId }: { blockId: Block['id'] }) {
   return (
     <ListItemButton href={`${node.data.chainId}/blocks/${node.number}`}>
       <ListItemAvatar>
-        <Avatar
-          alt={chain.meta.name}
-          // src={`/static/images/avatar/${value + 1}.jpg`}
-        >
+        <Avatar alt={chain.meta.name} src={`/statics/${node.data.chainId}.svg`}>
           {chain.meta.name
             .split(' ')
             .map((word) => word[0])

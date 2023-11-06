@@ -17,10 +17,7 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
 
   return (
     <>
-      <Avatar
-        alt={node.meta.name}
-        // src={`/static/images/avatar/${value + 1}.jpg`}
-      >
+      <Avatar alt={node.meta.name} src={`/statics/${node.data.chainId}.svg`}>
         {node.meta.name
           .split(' ')
           .map((word: any) => word[0])
