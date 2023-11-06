@@ -4,12 +4,12 @@ import { ArrowOutward } from '@mui/icons-material';
 import { Divider, Grid, IconButton, Link, Paper, Stack, Tooltip, Typography } from '@mui/material';
 
 import type { Chain } from '../../solver/data';
-import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
 
 import ChainBlockList from './ChainBlockList';
 import ChainOverview from './ChainOverview';
 import ChainTransactionList from './ChainTransactionList';
+import NodePageBarContent from './NodePageBarContent';
 
 export default function ChainView({ node }: { node: Chain }) {
   return (

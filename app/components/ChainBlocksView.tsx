@@ -3,7 +3,7 @@
 import { Chain } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
-import NodePageBarContent from '../components/NodePage';
+import NodePageBarContent from './NodePageBarContent';
 import { FallbackBoundary } from '../components/ui';
 
 import ChainBlockList from './ChainBlockList';

@@ -3,10 +3,10 @@
 import { Log } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
 
-import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
 
 import LogOverview from './LogOverview';
+import NodePageBarContent from './NodePageBarContent';
 
 export default function LogView({ nodeData }: { nodeData: Log['data'] }) {
   const node = new Log(nodeData);

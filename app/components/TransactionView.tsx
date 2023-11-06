@@ -5,10 +5,10 @@ import type { Receipt } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
 import { usePathname, useRouter, useSelectedLayoutSegments } from 'next/navigation';
 
-import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
 import { useNode } from '../helpers/hooks';
 
+import NodePageBarContent from './NodePageBarContent';
 import ReceiptLogList from './ReceiptLogList';
 import ReceiptOverview from './ReceiptOverview';
 import TransactionOverview from './TransactionOverview';

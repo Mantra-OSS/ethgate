@@ -1,8 +1,12 @@
 'use server';
-import { Stack } from '@mui/material';
+import { GitHub, Twitter } from '@mui/icons-material';
+import { Alert, AppBar, Box, Button, IconButton, Stack, Toolbar } from '@mui/material';
 import type { Metadata, Viewport } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 
 import ClientProvider from '../client/AppProvider';
+import logo from '../client/logo.svg';
 
 import AppFooter from './AppFooter';
 
@@ -31,7 +35,31 @@ export default async function ExplorerLayout({
   return (
     <ClientProvider>
       <Stack style={{ minHeight: '100vh' }}>
-        {nav}
+        <AppBar position="sticky">
+          <Toolbar>
+            <Image src={logo} alt="ethgate.io logo" width={32} height={32} />
+            {nav}
+            <Box flex={1} />
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Button href="/about" color={'primary'}>
+                About
+              </Button>
+              <IconButton href="https://github.com/mantra-oss/" target="_blank" color={'primary'}>
+                <GitHub />
+              </IconButton>
+              <IconButton href="https://twitter.com/ethgate_io" target="_blank" color={'primary'}>
+                <Twitter />
+              </IconButton>
+              {/* <ChangeLanguage /> */}
+            </Stack>
+          </Toolbar>
+          <Alert severity="warning">
+            This is a beta! Send feedback here:{' '}
+            <Link href="https://forms.gle/RweA6zGf6LE1hjN49">
+              https://forms.gle/RweA6zGf6LE1hjN49
+            </Link>
+          </Alert>
+        </AppBar>
         {children}
       </Stack>
       <AppFooter />
