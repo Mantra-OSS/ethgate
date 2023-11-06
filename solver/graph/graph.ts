@@ -9,6 +9,7 @@ import {
   Receipt,
   ReceiptHasLog,
   Transaction,
+  chainType,
 } from '../data/akshara';
 import { BlockHasLog, ChainHasTransaction } from '../data/chainnn';
 import { ChainHasDescendantBlock } from '../data/chainnnn';
@@ -18,7 +19,7 @@ import type { EdgeType } from './abstract';
 import { SolverGraphAbstract } from './abstract';
 
 export class SolverGraph extends SolverGraphAbstract {
-  nodeTypes: NodeType<any>[] = [Chain.type, Block.type, Transaction.type, Receipt.type, Log.type];
+  nodeTypes: NodeType<any>[] = [chainType, Block.type, Transaction.type, Receipt.type, Log.type];
   edgeTypes: EdgeType<any>[] = [
     ChainHasChain,
     ChainHasBlock,

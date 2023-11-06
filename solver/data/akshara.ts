@@ -65,12 +65,12 @@ export abstract class AksharaEdge<
   Data extends object = any,
 > extends SolverEdge<Name, TailId, HeadId, Data> {}
 
+export const chainType = new AksharaNodeType((data) => new Chain(data), chainSchema);
 export class Chain extends AksharaNode<
   'Chain',
   Ethgate.AksharaChainData,
   `Chain:${Ethgate.AksharaChainId}`
 > {
-  static type = new AksharaNodeType((data) => new Chain(data), chainSchema);
   type = 'Chain' as const;
 
   constructor(data: Chain['data']) {
@@ -269,8 +269,8 @@ export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethga
 export class ChainHasChain extends AksharaEdge<'ChainHasChain', Chain['id'], Chain['id'], object> {
   static typeName = 'ChainHasChain' as const;
   type = 'ChainHasChain' as const;
-  static tail = Chain.type;
-  static head = Chain.type;
+  static tail = chainType;
+  static head = chainType;
   static connectionName = 'chains';
   static async *get(
     tailId: ChainHasChain['tailId'],
@@ -296,7 +296,7 @@ export class ChainHasBlock extends AksharaEdge<
 > {
   static typeName = 'ChainHasBlock' as const;
   type = 'ChainHasBlock' as const;
-  static tail = Chain.type;
+  static tail = chainType;
   static head = Block.type;
   static connectionName = 'blocks';
   static async *get(
