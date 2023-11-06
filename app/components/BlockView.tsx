@@ -1,17 +1,16 @@
 'use client';
 
-import { Block } from '@/lib-solver';
+import type { Block } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
-import NodePageBarContent from './NodePageBarContent';
 import { FallbackBoundary } from '../components/ui';
 
 import BlockLogList from './BlockLogList';
 import BlockOverview from './BlockOverview';
 import BlockTransactionList from './BlockTransactionList';
+import NodePageBarContent from './NodePageBarContent';
 
-export default function BlockView({ nodeData }: { nodeData: Block['data'] }) {
-  const node = new Block(nodeData);
+export default function BlockView({ node }: { node: Block }) {
   return (
     <>
       <Grid container spacing={1} padding={1}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Transaction } from '@/lib-solver';
+import type { Transaction } from '@/lib-solver';
 import type { Receipt } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
 import { usePathname, useRouter, useSelectedLayoutSegments } from 'next/navigation';
@@ -13,8 +13,7 @@ import ReceiptLogList from './ReceiptLogList';
 import ReceiptOverview from './ReceiptOverview';
 import TransactionOverview from './TransactionOverview';
 
-export default function TransactionView({ nodeData }: { nodeData: Transaction['data'] }) {
-  const node = new Transaction(nodeData);
+export default function TransactionView({ node }: { node: Transaction }) {
   const receipt = useNode<Receipt>(node.receiptId);
   const router = useRouter();
   const segments = useSelectedLayoutSegments();

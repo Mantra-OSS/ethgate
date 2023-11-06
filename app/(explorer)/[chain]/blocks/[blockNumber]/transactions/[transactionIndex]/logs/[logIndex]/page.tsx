@@ -37,5 +37,5 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function LogPage({ params }: { params: Params }) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return <LogView nodeData={node.data} />;
+  return <LogView node={node.toObject()} />;
 }

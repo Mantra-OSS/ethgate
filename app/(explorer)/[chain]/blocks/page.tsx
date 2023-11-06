@@ -6,5 +6,5 @@ import { keyFromParams } from '../page';
 
 export default async function ChainHasBlocksPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return <ChainBlocksView nodeData={node.data} />;
+  return <ChainBlocksView node={node.toObject()} />;
 }

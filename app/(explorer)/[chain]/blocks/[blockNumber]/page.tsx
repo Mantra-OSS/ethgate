@@ -36,7 +36,7 @@ export default async function BlockPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
   return (
     <Blah node={node.toObject()}>
-      <BlockView nodeData={node.data} />
+      <BlockView node={node.toObject()} />
     </Blah>
   );
 }

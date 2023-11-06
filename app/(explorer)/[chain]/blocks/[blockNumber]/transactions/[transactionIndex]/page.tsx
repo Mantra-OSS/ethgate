@@ -36,7 +36,7 @@ export default async function TransactionPage({ params }: { params: Params }) {
   const node = await readAksharaNode(await keyFromParams(params));
   return (
     <Blah node={node.toObject()}>
-      <TransactionView nodeData={node.data} />
+      <TransactionView node={node.toObject()} />
     </Blah>
   );
 }

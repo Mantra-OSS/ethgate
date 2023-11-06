@@ -1,6 +1,6 @@
 'use client';
 
-import { Log } from '@/lib-solver';
+import type { Log } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
 
 import { FallbackBoundary } from '../components/ui';
@@ -8,8 +8,7 @@ import { FallbackBoundary } from '../components/ui';
 import LogOverview from './LogOverview';
 import NodePageBarContent from './NodePageBarContent';
 
-export default function LogView({ nodeData }: { nodeData: Log['data'] }) {
-  const node = new Log(nodeData);
+export default function LogView({ node }: { node: Log }) {
   return (
     <Grid container spacing={1} padding={1}>
       <Grid item xs={12}>
