@@ -71,7 +71,7 @@ export function ChainChainListItem({ chainId }: { chainId: Chain['id'] }) {
               .map((word) => word[0])
               .join('')}
           </Avatar>
-          <Link href={`/${node.data.chainId}`}>
+          <Link href={`/${node.data.extra.meta.slug}`}>
             <Typography>{node.meta.name}</Typography>
           </Link>
         </Stack>

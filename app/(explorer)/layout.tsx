@@ -18,6 +18,17 @@ export async function generateViewport(): Promise<Viewport> {
   };
 }
 
-export default async function ExplorerLayout({ children }: { children: React.ReactNode }) {
-  return <ClientProvider>{children}</ClientProvider>;
+export default async function ExplorerLayout({
+  children,
+  nav,
+}: {
+  children: React.ReactNode;
+  nav: React.ReactNode;
+}) {
+  return (
+    <ClientProvider>
+      {nav}
+      {children}
+    </ClientProvider>
+  );
 }
