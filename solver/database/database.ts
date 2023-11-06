@@ -10,16 +10,16 @@ import type {
   SolverNode,
 } from '../data';
 import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../data';
-import { SolverGraph } from '../graph';
-
-const graph = new SolverGraph();
+import type { SolverGraph } from '../graph';
 
 export type EthgateSolverDatabaseConfig = {
   node: AksharaAbstract;
+  graph: SolverGraph;
 };
 
 export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEdge> {
   node: AksharaAbstract;
+  graph: SolverGraph;
 
   /**
    * @deprecated
@@ -34,6 +34,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
   constructor(config: EthgateSolverDatabaseConfig) {
     super();
     this.node = config.node;
+    this.graph = config.graph;
   }
 
   async *getBlocksByTag(chainId: AksharaChainId): AsyncGenerator<AksharaBlockData, never, void> {
@@ -59,7 +60,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
 
   async getNode<Node extends SolverNode>(id: Node['id']): Promise<Node | undefined> {
     const [type] = parseGlobalId(id);
-    const nodeType = graph.nodeTypes.find((nodeType) => nodeType.schema.aksharaType === type)!;
+    const nodeType = this.graph.nodeTypes.find((nodeType) => nodeType.schema.aksharaType === type)!;
     return nodeType.get(id, this);
   }
   async *_getConnection<Edge extends SolverEdge>(
@@ -73,7 +74,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
     const isForward = !args.last;
     const limit = isForward ? args.first! : args.last!;
 
-    const edgeType = graph.edgeTypes.find((edgeType) => edgeType.name === type)!;
+    const edgeType = this.graph.edgeTypes.find((edgeType) => edgeType.name === type)!;
     const edges = edgeType.get(
       tailId,
       {

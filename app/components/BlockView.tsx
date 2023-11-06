@@ -12,6 +12,7 @@ import { NodePageConnectionSection, NodePageSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
 
 export default function BlockView({ node }: { node: Block }) {
+  console.log('block node', node);
   return (
     <>
       <Grid container spacing={1} padding={1}>

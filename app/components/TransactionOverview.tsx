@@ -3,6 +3,7 @@ import { Divider, Link, Stack, Typography } from '@mui/material';
 import { FormattedNumber } from 'react-intl';
 
 export default function TransactionOverview({ node }: { node: Transaction }) {
+  //console.log('TransactionOverview', node);
   return (
     <Stack divider={<Divider />}>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">

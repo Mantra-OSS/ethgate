@@ -5,7 +5,9 @@ import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { ETHGATE_NODE_TEST_CHAINS } from '../../akshara/testing';
 
 import { EthgateSolverDatabase } from '.';
+import { SolverGraph } from '../graph';
 
+const graph = new SolverGraph();
 
 describe('EthgateSolverDatabase', () => {
   let node: Akshara;
@@ -21,7 +23,7 @@ describe('EthgateSolverDatabase', () => {
   });
 
   it('can read "Chain:1"', async () => {
-    const db = new EthgateSolverDatabase({ node });
+    const db = new EthgateSolverDatabase({ node, graph });
     await expect(db.readNode('Chain:1')).resolves.toMatchObject({
       id: 'Chain:1',
       data: {
@@ -31,7 +33,7 @@ describe('EthgateSolverDatabase', () => {
   });
 
   it('can read ChainHasBlock with no blocks in cache', async () => {
-    const db = new EthgateSolverDatabase({ node });
+    const db = new EthgateSolverDatabase({ node, graph });
     const eth = await db.readNode('Chain:1');
     const { edges, pageInfo } = await db
       .getConnection('ChainHasBlock', eth.id, {
@@ -46,7 +48,7 @@ describe('EthgateSolverDatabase', () => {
   });
 
   it('can read ChainHasBlock', async () => {
-    const db = new EthgateSolverDatabase({ node });
+    const db = new EthgateSolverDatabase({ node, graph });
     const eth = await db.readNode('Chain:1');
     const latestBlock = await db
       .networkUpdates('Chain:1')
@@ -70,7 +72,7 @@ describe('EthgateSolverDatabase', () => {
   });
 
   it('can read ChainHasBlock after cursor', async () => {
-    const db = new EthgateSolverDatabase({ node });
+    const db = new EthgateSolverDatabase({ node, graph });
     const eth = await db.readNode('Chain:1');
     const latestBlock = await db
       .networkUpdates('Chain:1')
@@ -101,7 +103,7 @@ describe('EthgateSolverDatabase', () => {
   });
 
   it('can read ChainHasBlock with after and before', async () => {
-    const db = new EthgateSolverDatabase({ node });
+    const db = new EthgateSolverDatabase({ node, graph });
     const eth = await db.readNode('Chain:1');
     const latestBlock = await db
       .networkUpdates('Chain:1')
