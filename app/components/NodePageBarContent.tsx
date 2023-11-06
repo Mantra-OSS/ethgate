@@ -1,5 +1,6 @@
 import { MoreVert } from '@mui/icons-material';
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -9,6 +10,7 @@ import { NodeAvatar } from './ui';
 
 export default function NodePageBarContent({ node }: { node: SolverNode }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const pathname = usePathname();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -19,13 +21,16 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
 
   return (
     <>
-      {/*       <Avatar alt={node.meta.name} src={`/statics/${node.data.chainId}.svg`}>
-              {node.meta.name
-                .split(' ')
-                .map((word: any) => word[0])
-                .join('')}
-            </Avatar> */}
-      <NodeAvatar avatarType="chain" data={node.data.chainId}>
+      <NodeAvatar
+        avatarType={
+          pathname.includes('transactions')
+            ? 'transaction'
+            : pathname.includes('blocks')
+            ? 'block'
+            : 'chain'
+        }
+        chainId={node.data.chainId}
+      >
         {node.meta.name
           .split(' ')
           .map((word: any) => word[0])

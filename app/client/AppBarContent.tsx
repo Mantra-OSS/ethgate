@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
-import { useSelectedLayoutSegments } from 'next/navigation';
+import { useRouter, useSelectedLayoutSegments } from 'next/navigation';
 import { Suspense } from 'react';
 
 import type { SolverNode } from '../../solver/data';
@@ -36,7 +36,8 @@ function AppBarContentBreadcrumbNode({ id }: { id: string }) {
 
 function AppBreadcrumbs({ node }: { node: SolverNode }) {
   const asd = useSelectedLayoutSegments();
-  console.log(asd);
+  const router = useRouter();
+  console.log({ asd, router });
   // const matches = useMatches() as RouteMatch[];
   const matches = [] as any[];
   const crumbs = matches

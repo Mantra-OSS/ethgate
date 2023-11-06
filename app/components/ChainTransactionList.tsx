@@ -81,7 +81,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
             .map((word) => word[0])
             .join('')}
         </Avatar> */}
-        <NodeAvatar avatarType="chain" data={chain.data.chainId}>
+        <NodeAvatar avatarType="chain" chainId={chain.data.chainId}>
           {chain.meta.name
             .split(' ')
             .map((word: any) => word[0])
