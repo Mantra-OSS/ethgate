@@ -3,7 +3,6 @@
 import { useNode } from '@/app/helpers/hooks';
 import type { Block, Chain, ChainHasTransaction, Transaction } from '@/lib-solver';
 import {
-  Avatar,
   Collapse,
   ListItem,
   ListItemAvatar,
@@ -21,6 +20,8 @@ import { TransitionGroup } from 'react-transition-group';
 import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
+
+import { NodeAvatar } from './ui';
 
 export default function ChainTransactionList({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
@@ -75,7 +76,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
       href={`${node.data.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
     >
       <ListItemAvatar>
-        <Avatar
+        {/* <Avatar
           alt={chain.meta.name}
           // src={`/static/images/avatar/${value + 1}.jpg`}
         >
@@ -83,7 +84,13 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
             .split(' ')
             .map((word) => word[0])
             .join('')}
-        </Avatar>
+        </Avatar> */}
+        <NodeAvatar chainId={chain.data.chainId} chainName={chain.meta.name}>
+          {chain.meta.name
+            .split(' ')
+            .map((word: any) => word[0])
+            .join('')}
+        </NodeAvatar>
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">

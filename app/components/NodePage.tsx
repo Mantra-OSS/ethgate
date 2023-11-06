@@ -1,9 +1,11 @@
 import { MoreVert } from '@mui/icons-material';
-import { Avatar, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import type { SolverNode } from '../../solver/data';
+
+import { NodeAvatar } from './ui';
 
 export default function NodePageBarContent({ node }: { node: SolverNode }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -17,12 +19,18 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
 
   return (
     <>
-      <Avatar alt={node.meta.name} src={`/statics/${node.data.chainId}.svg`}>
+      {/*       <Avatar alt={node.meta.name} src={`/statics/${node.data.chainId}.svg`}>
         {node.meta.name
           .split(' ')
           .map((word: any) => word[0])
           .join('')}
-      </Avatar>
+      </Avatar> */}
+      <NodeAvatar chainId={node.data.chainId} chainName={node.meta.name}>
+        {node.meta.name
+          .split(' ')
+          .map((word: any) => word[0])
+          .join('')}
+      </NodeAvatar>
       <Typography variant="h4" flex={1}>
         {node.meta.name}
       </Typography>

@@ -21,27 +21,23 @@ import type { SolverNode } from '../../solver/data';
 import { notificationsState } from '../viewer';
 
 import AppBarContent from './AppBarContent';
-import AppFooter from './AppFooter';
 
 export default function Blah({ node, children }: { node: SolverNode; children: React.ReactNode }) {
   return (
     <>
-      <Stack style={{ minHeight: '100vh' }}>
-        {/* <AppFrameNotifications /> */}
-        <AppBar position="sticky">
-          <AppBarContent node={node} />
-          <Alert severity="warning">
-            This is a beta! Send feedback here:{' '}
-            <Link href="https://forms.gle/RweA6zGf6LE1hjN49">
-              https://forms.gle/RweA6zGf6LE1hjN49
-            </Link>
-          </Alert>
-        </AppBar>
-        <ErrorBoundary FallbackComponent={ErrorFallbackView}>
-          <Suspense fallback={<SuspenseFallbackView />}>{children}</Suspense>
-        </ErrorBoundary>
-      </Stack>
-      <AppFooter />
+      {/* <AppFrameNotifications /> */}
+      <AppBar position="sticky">
+        <AppBarContent node={node} />
+        <Alert severity="warning">
+          This is a beta! Send feedback here:{' '}
+          <Link href="https://forms.gle/RweA6zGf6LE1hjN49">
+            https://forms.gle/RweA6zGf6LE1hjN49
+          </Link>
+        </Alert>
+      </AppBar>
+      <ErrorBoundary FallbackComponent={ErrorFallbackView}>
+        <Suspense fallback={<SuspenseFallbackView />}>{children}</Suspense>
+      </ErrorBoundary>
     </>
   );
 }

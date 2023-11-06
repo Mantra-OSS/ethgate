@@ -1,7 +1,10 @@
 'use server';
+import { Stack } from '@mui/material';
 import type { Metadata, Viewport } from 'next';
 
 import ClientProvider from '../client/AppProvider';
+
+import AppFooter from './AppFooter';
 
 // https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,8 +30,11 @@ export default async function ExplorerLayout({
 }) {
   return (
     <ClientProvider>
-      {nav}
-      {children}
+      <Stack style={{ minHeight: '100vh' }}>
+        {nav}
+        {children}
+      </Stack>
+      <AppFooter />
     </ClientProvider>
   );
 }
