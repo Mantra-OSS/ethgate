@@ -79,9 +79,10 @@ export class Block extends AksharaNode<
   Ethgate.AksharaBlockData,
   `Block:${Ethgate.AksharaBlockId}`
 > {
-  static typeName = 'Block' as const;
+  static type = new AksharaNodeType((data) => new Block(data), blockSchema);
+  static typeName = Block.type.name;
   type = 'Block' as const;
-  static schema = blockSchema;
+  static schema = Block.type.schema;
   static async get(id: Block['id'], ctx: AksharaTypeContext): Promise<Block> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
@@ -131,9 +132,10 @@ export class Transaction extends AksharaNode<
   Ethgate.AksharaTransactionData,
   `Transaction:${Ethgate.AksharaTransactionId}`
 > {
-  static typeName = 'Transaction' as const;
+  static type = new AksharaNodeType((data) => new Transaction(data), transactionSchema);
+  static typeName = Transaction.type.name;
   type = 'Transaction' as const;
-  static schema = transactionSchema;
+  static schema = Transaction.type.schema;
   static async get(id: Transaction['id'], ctx: AksharaTypeContext): Promise<Transaction> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
@@ -175,9 +177,10 @@ export class Receipt extends AksharaNode<
   Ethgate.AksharaReceiptData,
   `Receipt:${Ethgate.AksharaReceiptId}`
 > {
-  static typeName = 'Receipt' as const;
+  static type = new AksharaNodeType((data) => new Receipt(data), receiptSchema);
+  static typeName = Receipt.type.name;
   type = 'Receipt' as const;
-  static schema = receiptSchema;
+  static schema = Receipt.type.schema;
   static async get(id: Receipt['id'], ctx: AksharaTypeContext): Promise<Receipt> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
@@ -221,9 +224,10 @@ export class Receipt extends AksharaNode<
 }
 
 export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethgate.AksharaLogId}`> {
-  static typeName = 'Log' as const;
+  static type = new AksharaNodeType((data) => new Log(data), logSchema);
+  static typeName = Log.type.name;
   type = 'Log' as const;
-  static schema = logSchema;
+  static schema = Log.type.schema;
   static async get(id: Log['id'], ctx: AksharaTypeContext): Promise<Log> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
