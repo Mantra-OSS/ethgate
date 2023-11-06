@@ -4,7 +4,7 @@ import { Divider, Stack, Typography, Collapse } from '@mui/material';
 import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 import { useCallback, useEffect, useTransition } from 'react';
 import { useConnection, useNode } from '../helpers/hooks';
-import { serverPromise } from '../helpers/backend';
+import { solverPromise } from '../client/backend';
 import InfiniteList from '../components/InfiniteList';
 import { NodeList, NodeListItem } from './NodeList';
 
@@ -80,7 +80,7 @@ function ChainChart({ chainId }: { chainId: Chain['id'] }) {
     let abort = false;
 
     (async () => {
-      const database = (await serverPromise).solver.database;
+      const database = (await solverPromise).solver.database;
       const update = await database.networkUpdates(chainId).next();
       if (update.done) return;
       if (abort) return;

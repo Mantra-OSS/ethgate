@@ -58,7 +58,7 @@ export default function InfiniteList<T extends OperationType>({
   }, [onEntries]);
 
   const shouldSubscribe = startSubscriptionConfig && isStartIntersecting;
-  console.log({ shouldSubscribe });
+  // console.log({ shouldSubscribe });
 
   return (
     <>

@@ -10,8 +10,13 @@ import BlockOverview from './BlockOverview';
 import BlockTransactionList from './BlockTransactionList';
 import { NodePageConnectionSection, NodePageSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
+import { useSolver } from '../client/backend';
 
 export default function BlockView({ node }: { node: Block }) {
+  const solver = useSolver();
+  const edgeTypes = solver.solver.graph
+    .getEdgeTypesForNode(node.type)
+    .filter((edgeType) => !['receipts'].includes(edgeType.connectionName));
   return (
     <>
       <Grid container spacing={1} padding={1}>
@@ -26,16 +31,17 @@ export default function BlockView({ node }: { node: Block }) {
             <BlockOverview node={node} />
           </NodePageSection>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <NodePageConnectionSection title="Transactions" href="#">
-            <BlockTransactionList block={node} />
-          </NodePageConnectionSection>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <NodePageConnectionSection title="Logs" href="#">
-            <BlockLogList block={node} />
-          </NodePageConnectionSection>
-        </Grid>
+        {edgeTypes.map((edgeType) => (
+          <Grid key={edgeType.connectionName} item xs={12} md={6}>
+            <NodePageConnectionSection
+              title={edgeType.connectionName}
+              href={`/${node.meta.slug}/${edgeType.connectionName}`}
+            >
+              {edgeType.connectionName === 'transactions' && <BlockTransactionList block={node} />}
+              {edgeType.connectionName === 'logs' && <BlockLogList block={node} />}
+            </NodePageConnectionSection>
+          </Grid>
+        ))}
       </Grid>
     </>
   );

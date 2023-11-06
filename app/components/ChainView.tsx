@@ -10,8 +10,12 @@ import ChainOverview from './ChainOverview';
 import ChainTransactionList from './ChainTransactionList';
 import { NodePageConnectionSection, NodePageSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
+import { useSolver } from '../client/backend';
 
 export default function ChainView({ node }: { node: Chain }) {
+  const solver = useSolver();
+  const edgeTypes = solver.solver.graph.getEdgeTypesForNode('Chain');
+  console.log({ edgeTypes });
   return (
     <Grid container spacing={1} padding={1}>
       <Grid item xs={12}>

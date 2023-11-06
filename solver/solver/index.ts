@@ -1,34 +1,34 @@
 import type { AksharaAbstract, AksharaConfig } from '@/lib-node';
 import { chains } from '@mantra-oss/chains';
 
-import { EthgateSolverDatabase } from '../database';
+import { EthgateSolverDatabase as SolverDatabase } from '../database';
 import { SolverGraph } from '../graph';
 
-export type PunkerBackendConfig = {
+export type SolverConfig = {
   node: AksharaAbstract;
-  database?: EthgateSolverDatabase;
+  database?: SolverDatabase;
 };
 
-export class EthgateSolver {
+export class Solver {
   chains: AksharaConfig['chains'];
   graph: SolverGraph;
-  database: EthgateSolverDatabase;
+  database: SolverDatabase;
 
-  static async create(config: PunkerBackendConfig): Promise<EthgateSolver> {
+  static async create(config: SolverConfig): Promise<Solver> {
     const networks = chains as any;
     const graph = new SolverGraph();
     const database =
       config.database ??
-      new EthgateSolverDatabase({
+      new SolverDatabase({
         node: config.node,
         graph,
       });
-    return new EthgateSolver(graph, database, networks);
+    return new Solver(graph, database, networks);
   }
 
   private constructor(
     graph: SolverGraph,
-    database: EthgateSolverDatabase,
+    database: SolverDatabase,
     chains: AksharaConfig['chains'],
   ) {
     this.graph = graph;

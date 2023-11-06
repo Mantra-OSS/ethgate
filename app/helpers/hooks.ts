@@ -3,8 +3,8 @@ import type { SolverNode } from '@/lib-solver';
 import { type PageArgs, type PageInfo, type SolverEdge } from '@/lib-solver';
 import { use, useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { Connection } from './backend';
-import { readConnection, readNode, serverPromise } from './backend';
+import type { Connection } from '../client/backend';
+import { readConnection, readNode, solverPromise } from '../client/backend';
 
 export const useNode = function useNode<T extends SolverNode>(id: T['id']): T {
   const node = use(readNode(id));
@@ -15,13 +15,11 @@ export const useConnection = function useConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
   initialArgs: PageArgs<Edge>,
-): [
-    Connection<Edge> | undefined,
-    loadNext: () => Promise<void>,
-    refetch: () => Promise<void>,
-  ] {
+): [Connection<Edge> | undefined, loadNext: () => Promise<void>, refetch: () => Promise<void>] {
   const [connection, setConnection] = useState<Connection<Edge> | undefined>(undefined);
-  const [aggregatedConnection, setAggregatedConnection] = useState<Connection<Edge> | undefined>(undefined);
+  const [aggregatedConnection, setAggregatedConnection] = useState<Connection<Edge> | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     (async () => {
@@ -30,27 +28,41 @@ export const useConnection = function useConnection<Edge extends SolverEdge>(
   }, [type, tailId, initialArgs]);
 
   useEffect(() => {
-    if (!connection) {
+    const startCursor = connection?.pageInfo.startCursor;
+    const endCursor = connection?.pageInfo.endCursor;
+
+    if (!startCursor || !endCursor) {
       return;
     }
-    setAggregatedConnection({
-      edges: [...(aggregatedConnection?.edges ?? []), ...connection.edges],
-      pageInfo: {
-        ...aggregatedConnection?.pageInfo,
-        ...connection.pageInfo,
-      },
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connection]);
+
+    if (
+      aggregatedConnection?.pageInfo.startCursor === startCursor &&
+      aggregatedConnection?.pageInfo.endCursor === endCursor
+    ) {
+      return;
+    }
+
+    console.debug('aggregating connections', connection);
+
+    // setAggregatedConnection({
+    //   edges: [...(aggregatedConnection?.edges ?? []), ...connection.edges],
+    //   pageInfo: {
+    //     ...aggregatedConnection?.pageInfo,
+    //     ...connection.pageInfo,
+    //   },
+    // });
+  }, [connection?.pageInfo.startCursor, connection?.pageInfo.endCursor]);
 
   const loadNext = useCallback(async () => {
     if (!connection) {
       return;
     }
-    setConnection(await readConnection(type, tailId, {
-      ...connection.pageInfo,
+    const newConnectionPageArgs = {
       after: connection.pageInfo.endCursor,
-    }));
+      first: initialArgs.first,
+    };
+    console.debug('loading next page', newConnectionPageArgs);
+    setConnection(await readConnection(type, tailId, newConnectionPageArgs));
   }, [connection, type, tailId]);
 
   const refetch = useCallback(async () => {

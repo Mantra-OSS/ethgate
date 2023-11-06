@@ -1,4 +1,4 @@
-export { EthgateSolver } from './solver';
+export * from './solver';
 export * from './data/akshara';
 export * from './data/chainnn';
 export * from './data/chainnnn';

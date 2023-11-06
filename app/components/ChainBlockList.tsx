@@ -13,7 +13,7 @@ import { useCallback, useEffect, useTransition } from 'react';
 import { FormattedRelativeTime } from 'react-intl';
 
 import InfiniteList from '../components/InfiniteList';
-import { serverPromise } from '../helpers/backend';
+import { solverPromise } from '../client/backend';
 import { useConnection, useNode } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
 
@@ -22,14 +22,10 @@ import { NodeAvatar } from './ui';
 
 export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
-  
-  const [blocks, loadNext, refetch] = useConnection<ChainHasBlock>(
-    'ChainHasBlock',
-    chainId,
-    {
-      first: 10,
-    },
-  );
+
+  const [blocks, loadNext, refetch] = useConnection<ChainHasBlock>('ChainHasBlock', chainId, {
+    first: 10,
+  });
 
   const onLoadNext = useCallback(() => {
     startTransition(() => {
@@ -41,7 +37,7 @@ export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
     let abort = false;
 
     (async () => {
-      const database = (await serverPromise).solver.database;
+      const database = (await solverPromise).solver.database;
       const update = await database.networkUpdates(chainId).next();
       if (update.done) return;
       if (abort) return;
