@@ -42,4 +42,12 @@ export abstract class SolverGraphAbstract {
   // registerEdgeType(edgeType: EdgeConstructor<any>) {
   //   this.edgeTypes.push(edgeType);
   // }
+
+  getNodeType(type: string): NodeType<any> {
+    return this.nodeTypes.find((nodeType) => nodeType.name === type)!;
+  }
+
+  getEdgeType<T extends EdgeType<any>>(type: string): T {
+    return this.edgeTypes.find((edgeType) => edgeType.name === type)! as T;
+  }
 }
