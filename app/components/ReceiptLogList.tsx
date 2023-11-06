@@ -21,8 +21,7 @@ import { NodeAvatar } from './ui';
 
 export default function ReceiptLogList({ receipt }: { receipt: Receipt }) {
   const [, startTransition] = useTransition();
-  const [logs, hasNext, loadNext] = useConnection<ReceiptHasLog>('ReceiptHasLog', receipt.id, {
-    // TODO: Paginate
+  const [logs, loadNext] = useConnection<ReceiptHasLog>('ReceiptHasLog', receipt.id, {
     first: 10,
   });
 
@@ -33,9 +32,9 @@ export default function ReceiptLogList({ receipt }: { receipt: Receipt }) {
   }, [loadNext]);
 
   return (
-    <InfiniteList loadNext={hasNext && onLoadNext}>
+    <InfiniteList loadNext={logs?.pageInfo.hasNextPage && onLoadNext}>
       <TransitionGroup component={Stack} direction="row" sx={{ overflowX: 'auto' }}>
-        {logs.edges.map(({ headId }) => (
+        {logs?.edges.map(({ headId }) => (
           <Collapse key={headId}>
             <ListItem>
               <ReceiptLogListItem logId={headId} />

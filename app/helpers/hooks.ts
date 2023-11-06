@@ -1,8 +1,9 @@
 'use client';
 import type { SolverNode } from '@/lib-solver';
-import { type SolverEdge, type PageArgs, type PageInfo } from '@/lib-solver';
-import { use, useCallback, useState } from 'react';
+import { type PageArgs, type PageInfo, type SolverEdge } from '@/lib-solver';
+import { use, useCallback, useEffect, useMemo, useState } from 'react';
 
+import type { Connection } from './backend';
 import { readConnection, readNode, serverPromise } from './backend';
 
 export const useNode = function useNode<T extends SolverNode>(id: T['id']): T {
@@ -13,53 +14,48 @@ export const useNode = function useNode<T extends SolverNode>(id: T['id']): T {
 export const useConnection = function useConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
-  args: PageArgs<Edge>,
+  initialArgs: PageArgs<Edge>,
 ): [
-  { edges: Edge[]; pageInfo: PageInfo<Edge> },
-  hasNextPage: boolean,
-  loadNext: (count: number) => void,
-  refetch: () => void,
-] {
-  const initialPage = use(readConnection(type, tailId, args));
-  const [connection, setConnection] = useState(initialPage);
-  const loadNext = useCallback(
-    async (count: number) => {
+    Connection<Edge> | undefined,
+    loadNext: () => Promise<void>,
+    refetch: () => Promise<void>,
+  ] {
+  const [connection, setConnection] = useState<Connection<Edge> | undefined>(undefined);
+  const [aggregatedConnection, setAggregatedConnection] = useState<Connection<Edge> | undefined>(undefined);
+
+  useEffect(() => {
+    (async () => {
+      setConnection(await readConnection(type, tailId, initialArgs));
+    })();
+  }, [type, tailId, initialArgs]);
+
+  useEffect(() => {
+    if (!connection) {
       return;
-      console.log('loadNext', {
-        first: count,
-        after: connection.pageInfo.endCursor,
-      });
-      const nextPage = await readConnection(type, tailId, {
-        first: count,
-        after: connection.pageInfo.endCursor,
-      });
-      console.log('nextPage', nextPage);
-      setConnection((connection) => ({
-        edges: [...connection.edges, ...nextPage.edges],
-        pageInfo: {
-          ...nextPage.pageInfo,
-          hasNextPage: nextPage.pageInfo.hasNextPage,
-          endCursor: nextPage.pageInfo.endCursor,
-        },
-      }));
-    },
-    [type, tailId, connection.pageInfo.endCursor],
-  );
+    }
+    setAggregatedConnection({
+      edges: [...(aggregatedConnection?.edges ?? []), ...connection.edges],
+      pageInfo: {
+        ...aggregatedConnection?.pageInfo,
+        ...connection.pageInfo,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connection]);
+
+  const loadNext = useCallback(async () => {
+    if (!connection) {
+      return;
+    }
+    setConnection(await readConnection(type, tailId, {
+      ...connection.pageInfo,
+      after: connection.pageInfo.endCursor,
+    }));
+  }, [connection, type, tailId]);
+
   const refetch = useCallback(async () => {
-    return;
-    console.log('refetch');
-    // const nextPage = await readConnection(type, tailId, args);
-    const database = (await serverPromise).solver.database;
-    const nextPage = await database.getConnection(type, tailId, args).collect();
-    setConnection(nextPage);
-    // setConnection((connection) => ({
-    //   edges: [...connection.edges, ...nextPage.edges],
-    //   pageInfo: {
-    //     ...nextPage.pageInfo,
-    //     hasNextPage: nextPage.pageInfo.hasNextPage,
-    //     endCursor: nextPage.pageInfo.endCursor,
-    //   },
-    // }));
-  }, [type, tailId, args]);
-  return [connection, connection.pageInfo.hasNextPage, loadNext, refetch];
+    setConnection(await readConnection(type, tailId, initialArgs));
+  }, [type, tailId, initialArgs]);
+
+  return [aggregatedConnection, loadNext, refetch];
 };

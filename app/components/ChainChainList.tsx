@@ -19,13 +19,14 @@ import { useConnection } from '../helpers/hooks';
 
 export default function ChainChainList({ chain }: { chain: Chain }) {
   const [, startTransition] = useTransition();
-  const [chains, hasNext, loadNext] = useConnection<ChainHasChain>('ChainHasChain', chain.id, {
-    // TODO: Paginate
+
+  const [chains, loadNext] = useConnection<ChainHasChain>('ChainHasChain', chain.id, {
     first: 10,
   });
+
   const onLoadNext = useCallback(() => {
     startTransition(() => {
-      loadNext(3);
+      loadNext();
     });
   }, [loadNext]);
 
@@ -33,10 +34,10 @@ export default function ChainChainList({ chain }: { chain: Chain }) {
     <>
       <InfiniteList
         //loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={hasNext && onLoadNext}
+        loadNext={chains?.pageInfo.hasNextPage && onLoadNext}
       >
         <TransitionGroup component={Stack} direction="row">
-          {chains.edges.map(({ headId }) => (
+          {chains?.edges.map(({ headId }) => (
             <Collapse key={headId}>
               <ListItem>
                 <ChainChainListItem chainId={headId} />

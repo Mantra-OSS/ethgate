@@ -23,14 +23,13 @@ import { NodeAvatar } from './ui';
 export default function BlockLogList({ block }: { block: Block }) {
   const [, startTransition] = useTransition();
 
-  const [logs, hasNext, loadNext] = useConnection<BlockHasLog>('BlockHasLog', block.id, {
-    // TODO: Paginate
+  const [logs, loadNext] = useConnection<BlockHasLog>('BlockHasLog', block.id, {
     first: 10,
   });
 
   const onLoadNext = useCallback(() => {
     startTransition(() => {
-      loadNext(3);
+      loadNext();
     });
   }, [loadNext]);
 
@@ -38,10 +37,10 @@ export default function BlockLogList({ block }: { block: Block }) {
     <>
       <InfiniteList
         // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={hasNext && onLoadNext}
+        loadNext={logs?.pageInfo.hasNextPage && onLoadNext}
       >
         <NodeList>
-          {logs.edges.map(({ headId }) => (
+          {logs?.edges.map(({ headId }) => (
             <Collapse key={headId}>
               <NodeListItem>
                 <BlockLogListItem logId={headId} />

@@ -1,10 +1,10 @@
 'use client';
 import {
-  type SolverEdge,
   EthgateSolver,
-  type SolverNode,
   type PageArgs,
   type PageInfo,
+  type SolverEdge,
+  type SolverNode,
 } from '@/lib-solver';
 import { memoize } from 'lodash';
 
@@ -45,12 +45,19 @@ export const readNode = memoize(async function readNode<T extends SolverNode>(id
   return node;
 });
 
+export interface Connection<Edge extends SolverEdge> {
+  edges: Edge[];
+  pageInfo: PageInfo<Edge>;
+}
+
 export const readConnection = memoize(async function readConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
   args: PageArgs<Edge>,
-): Promise<{ edges: Edge[]; pageInfo: PageInfo<Edge> }> {
+): Promise<Connection<Edge>> {
+  console.debug(`[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)})`);
   const database = (await serverPromise).solver.database;
   const connection = database.getConnection(type, tailId, args).collect();
+  console.debug(`[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)}) -> ${JSON.stringify(connection)}`);
   return connection;
 });

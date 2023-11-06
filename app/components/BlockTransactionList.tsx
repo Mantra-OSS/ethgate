@@ -26,17 +26,16 @@ export default function BlockTransactionList({ block }: { block: Block }) {
   console.log('BlockTransactionList', block);
   const [, startTransition] = useTransition();
 
-  const [transactions, hasNext, loadNext] = useConnection<BlockHasTransaction>(
+  const [transactions, loadNext] = useConnection<BlockHasTransaction>(
     'BlockHasTransaction',
     block.id,
     {
-      // TODO: Paginate
       first: 10,
     },
   );
   const onLoadNext = useCallback(() => {
     startTransition(() => {
-      loadNext(3);
+      loadNext();
     });
   }, [loadNext]);
 
@@ -44,10 +43,10 @@ export default function BlockTransactionList({ block }: { block: Block }) {
     <>
       <InfiniteList
         // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={hasNext && onLoadNext}
+        loadNext={transactions?.pageInfo.hasNextPage && onLoadNext}
       >
         <NodeList>
-          {transactions.edges.map(({ headId }) => (
+          {transactions?.edges.map(({ headId }) => (
             <Collapse key={headId}>
               <NodeListItem>
                 <BlockTransactionListItem transactionId={headId} />

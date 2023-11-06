@@ -24,17 +24,17 @@ import { NodeAvatar } from './ui';
 export default function ChainTransactionList({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
 
-  const [transactions, hasNext, loadNext] = useConnection<ChainHasTransaction>(
+  const [transactions, loadNext] = useConnection<ChainHasTransaction>(
     'ChainHasTransaction',
     chainId,
     {
-      // TODO: Paginate
       first: 10,
     },
   );
+
   const onLoadNext = useCallback(() => {
     startTransition(() => {
-      loadNext(3);
+      loadNext();
     });
   }, [loadNext]);
 
@@ -43,10 +43,10 @@ export default function ChainTransactionList({ chainId }: { chainId: Chain['id']
       <InfiniteList
         // startSubscriptionConfig={subscriptionConfig}
         // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={hasNext && onLoadNext}
+        loadNext={transactions?.pageInfo.hasNextPage && onLoadNext}
       >
         <NodeList>
-          {transactions.edges.map(({ headId }) => (
+          {transactions?.edges.map(({ headId }) => (
             <Collapse key={headId}>
               <NodeListItem>
                 <ChainTransactionListItem transactionId={headId} />
