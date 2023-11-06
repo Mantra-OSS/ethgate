@@ -65,17 +65,16 @@ export abstract class AksharaEdge<
   Data extends object = any,
 > extends SolverEdge<Name, TailId, HeadId, Data> {}
 
-export const chainType = new AksharaNodeType((data) => new Chain(data), chainSchema);
+export const chainType = new AksharaNodeType(
+  (data) => new Chain(`Chain:${formatChainId(data)}`, data),
+  chainSchema,
+);
 export class Chain extends AksharaNode<
   'Chain',
   Ethgate.AksharaChainData,
   `Chain:${Ethgate.AksharaChainId}`
 > {
   type = 'Chain' as const;
-
-  constructor(data: Chain['data']) {
-    super(`Chain:${formatChainId(data)}`, data);
-  }
   meta = { ...this.data.meta, path: [this.id] };
   parentId: Chain['id'] | undefined = this.data.parentId
     ? (`Chain:${this.data.parentId}` as const)
@@ -83,13 +82,12 @@ export class Chain extends AksharaNode<
   chainId = `Chain:${this.data.chainId}`;
 }
 
+export const blockType = new AksharaNodeType((data) => new Block(data), blockSchema);
 export class Block extends AksharaNode<
   'Block',
   Ethgate.AksharaBlockData,
   `Block:${Ethgate.AksharaBlockId}`
 > {
-  static type = new AksharaNodeType((data) => new Block(data), blockSchema);
-
   type = 'Block' as const;
 
   static async get(id: Block['id'], ctx: AksharaTypeContext): Promise<Block> {
@@ -297,7 +295,7 @@ export class ChainHasBlock extends AksharaEdge<
   static typeName = 'ChainHasBlock' as const;
   type = 'ChainHasBlock' as const;
   static tail = chainType;
-  static head = Block.type;
+  static head = blockType;
   static connectionName = 'blocks';
   static async *get(
     tailId: ChainHasBlock['tailId'],
@@ -339,7 +337,7 @@ export class BlockHasTransaction extends AksharaEdge<
 > {
   static typeName = 'BlockHasTransaction' as const;
   type = 'BlockHasTransaction' as const;
-  static tail = Block.type;
+  static tail = blockType;
   static head = Transaction.type;
   static connectionName = 'transactions';
   static async *get(
@@ -363,7 +361,7 @@ export class BlockHasReceipt extends AksharaEdge<
 > {
   static typeName = 'BlockHasReceipt' as const;
   type = 'BlockHasReceipt' as const;
-  static tail = Block.type;
+  static tail = blockType;
   static head = Receipt.type;
   static connectionName = 'receipts';
   static async *get(

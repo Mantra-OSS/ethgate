@@ -8,7 +8,7 @@ import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { memoize } from 'lodash';
 
 import type { SolverNode } from '../../solver/data';
-import { Block, Chain, Log, Receipt, Transaction } from '../../solver/data';
+import { Block, Chain, Log, Receipt, Transaction, chainType } from '../../solver/data';
 
 const { ANKR_KEY } = process.env;
 
@@ -45,7 +45,7 @@ export async function readAksharaNode<Key extends AksharaObjectKey>(key: Key): P
   }
   switch (key.type) {
     case 'Chain':
-      return new Chain(object);
+      return chainType.create(object);
     case 'Block':
       return new Block(object);
     case 'Transaction':

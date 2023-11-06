@@ -1,15 +1,15 @@
 import type { EthgateSolverDatabase } from '../database/database';
 import type { ProperPageArgs } from '../graph';
 
-import type { Chain } from './akshara';
+import type { Block, Chain } from './akshara';
 import {
-  Block,
   BlockHasReceipt,
   BlockHasTransaction,
   ChainHasBlock,
   Log,
   ReceiptHasLog,
   Transaction,
+  blockType,
   chainType,
 } from './akshara';
 import type { EdgeGenerator } from './database/abstract';
@@ -18,7 +18,7 @@ import { SolverEdge } from './database/abstract';
 export class BlockHasLog extends SolverEdge<'BlockHasLog', Block['id'], Log['id'], object> {
   static typeName = 'BlockHasLog' as const;
   type = 'BlockHasLog' as const;
-  static tail = Block.type;
+  static tail = blockType;
   static head = Log.type;
   static connectionName = 'logs';
   static async *get(

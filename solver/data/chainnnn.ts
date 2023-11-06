@@ -2,9 +2,9 @@
 import type { EthgateSolverDatabase } from '../database/database';
 import type { ProperPageArgs } from '../graph';
 
+import { blockType, chainType } from './akshara';
 import type { Chain } from './akshara';
-import { chainType } from './akshara';
-import { Block } from './akshara';
+import type { Block } from './akshara';
 import type { EdgeGenerator } from './database/abstract';
 import { SolverEdge } from './database/abstract';
 
@@ -19,7 +19,7 @@ export class ChainHasDescendantBlock extends SolverEdge<
   static typeName = 'ChainHasDescendantBlock' as const;
   type = 'ChainHasDescendantBlock' as const;
   static tail = chainType;
-  static head = Block.type;
+  static head = blockType;
   static connectionName = 'descendantBlocks';
   static async *get(
     tailId: ChainHasDescendantBlock['tailId'],
