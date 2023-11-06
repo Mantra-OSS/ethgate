@@ -39,6 +39,13 @@ export class AksharaNodeType<T extends AksharaNode> implements NodeType<T> {
       return create(obj);
     };
   }
+  async read(id: T['id'], ctx: AksharaTypeContext): Promise<T> {
+    const node = await this.get(id, ctx);
+    if (!node) {
+      throw new Error(`Not found ${id}`);
+    }
+    return node;
+  }
 }
 
 export class AksharaEdgeType {}
@@ -133,9 +140,9 @@ export class Transaction extends AksharaNode<
   `Transaction:${Ethgate.AksharaTransactionId}`
 > {
   static type = new AksharaNodeType((data) => new Transaction(data), transactionSchema);
-  static typeName = Transaction.type.name;
+
   type = 'Transaction' as const;
-  static schema = Transaction.type.schema;
+
   static async get(id: Transaction['id'], ctx: AksharaTypeContext): Promise<Transaction> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
@@ -178,9 +185,7 @@ export class Receipt extends AksharaNode<
   `Receipt:${Ethgate.AksharaReceiptId}`
 > {
   static type = new AksharaNodeType((data) => new Receipt(data), receiptSchema);
-  static typeName = Receipt.type.name;
   type = 'Receipt' as const;
-  static schema = Receipt.type.schema;
   static async get(id: Receipt['id'], ctx: AksharaTypeContext): Promise<Receipt> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
@@ -225,9 +230,7 @@ export class Receipt extends AksharaNode<
 
 export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethgate.AksharaLogId}`> {
   static type = new AksharaNodeType((data) => new Log(data), logSchema);
-  static typeName = Log.type.name;
   type = 'Log' as const;
-  static schema = Log.type.schema;
   static async get(id: Log['id'], ctx: AksharaTypeContext): Promise<Log> {
     const [, localId] = parseGlobalId(id);
     const obj = await ctx.aks.getObject(localId);
