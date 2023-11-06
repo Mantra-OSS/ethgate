@@ -1,3 +1,4 @@
+import Blah from '@/app/client/Blah';
 import TransactionView from '@/app/components/TransactionView';
 import { readAksharaNode } from '@/app/helpers/akshara.server';
 import { chains } from '@mantra-oss/chains';
@@ -33,5 +34,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function TransactionPage({ params }: { params: Params }) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return <TransactionView nodeData={node.data} />;
+  return (
+    <Blah node={node.toObject()}>
+      <TransactionView nodeData={node.data} />
+    </Blah>
+  );
 }

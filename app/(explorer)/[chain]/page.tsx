@@ -1,3 +1,4 @@
+import Blah from '@/app/client/Blah';
 import ChainView from '@/app/components/ChainView';
 import { readAksharaNode } from '@/app/helpers/akshara.server';
 import { chains } from '@mantra-oss/chains';
@@ -37,5 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ChainPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return <ChainView nodeData={node.data} />;
+  return (
+    <Blah node={node.toObject()}>
+      <ChainView node={node.toObject()} />
+    </Blah>
+  );
 }

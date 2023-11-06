@@ -5,6 +5,8 @@ import { Box, Breadcrumbs, Link, Stack, Toolbar, Typography } from '@mui/materia
 import Image from 'next/image';
 import { Suspense } from 'react';
 
+import type { SolverNode } from '../../solver/data';
+
 import ChangeLanguage from './ChangeLanguage';
 import logo from './logo.svg';
 
@@ -16,13 +18,13 @@ export type RouteCrumb = {
   nodeId?: string;
 };
 
-function AppBarContentBreadcrumbNode({ id, crumb }: { id: string; crumb: RouteCrumb }) {
+function AppBarContentBreadcrumbNode({ id }: { id: string }) {
   const node = useNode(id as any);
 
-  return <>{(node as any).meta.name}</>;
+  return <>{node.meta.name}</>;
 }
 
-function AppBreadcrumbs() {
+function AppBreadcrumbs({ node }: { node: SolverNode }) {
   // const matches = useMatches() as RouteMatch[];
   const matches = [] as any[];
   const crumbs = matches
@@ -39,16 +41,19 @@ function AppBreadcrumbs() {
 
   return (
     <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
-      {crumbs.map((crumb) => (
-        <Link key={crumb.id} href={crumb.pathname}>
+      <Link href={'asd'}>
+        <Suspense>
+          <Typography variant="h5" textAlign="center">
+            ethgate.io
+          </Typography>
+        </Suspense>
+      </Link>
+      {node.meta.path.map((nodeId) => (
+        <Link key={nodeId} href={'asd'}>
           <Suspense>
-            {crumb.nodeId ? (
-              <AppBarContentBreadcrumbNode id={crumb.nodeId} crumb={crumb} />
-            ) : (
-              <Typography variant="h5" textAlign="center">
-                {crumb.title}
-              </Typography>
-            )}
+            <Typography variant="h5" textAlign="center">
+              <AppBarContentBreadcrumbNode id={nodeId} />
+            </Typography>
           </Suspense>
         </Link>
       ))}
@@ -56,11 +61,11 @@ function AppBreadcrumbs() {
   );
 }
 
-export default function AppBarContent() {
+export default function AppBarContent({ node }: { node: SolverNode }) {
   return (
     <Toolbar>
       <Image src={logo} alt="ethgate.io logo" width={32} height={32} />
-      <AppBreadcrumbs />
+      <AppBreadcrumbs node={node} />
       <Box flex={1} />
       <Stack direction="row" spacing={2}>
         <Link href="https://github.com/mantra-oss/" target="_blank">

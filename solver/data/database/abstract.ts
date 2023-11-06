@@ -15,6 +15,10 @@ export abstract class SolverNode<
     this.id = id;
     this.data = data;
   }
+  /** @deprecated */
+  toObject(): any {
+    return { ...this };
+  }
 }
 
 export abstract class SolverEdge<

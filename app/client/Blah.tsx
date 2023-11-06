@@ -17,18 +17,19 @@ import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
+import type { SolverNode } from '../../solver/data';
 import { notificationsState } from '../viewer';
 
 import AppBarContent from './AppBarContent';
 import AppFooter from './AppFooter';
 
-export default function Blah({ children }: { children: React.ReactNode }) {
+export default function Blah({ node, children }: { node: SolverNode; children: React.ReactNode }) {
   return (
     <>
       <Stack style={{ minHeight: '100vh' }}>
         {/* <AppFrameNotifications /> */}
         <AppBar position="sticky">
-          <AppBarContent />
+          <AppBarContent node={node} />
           <Alert severity="warning">
             This is a beta! Send feedback here:{' '}
             <Link href="https://forms.gle/RweA6zGf6LE1hjN49">

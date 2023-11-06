@@ -1,8 +1,8 @@
 'use client';
 
-import { Chain } from '@/lib-solver';
 import { Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 
+import type { Chain } from '../../solver/data';
 import NodePageBarContent from '../components/NodePage';
 import { FallbackBoundary } from '../components/ui';
 
@@ -10,8 +10,7 @@ import ChainBlockList from './ChainBlockList';
 import ChainOverview from './ChainOverview';
 import ChainTransactionList from './ChainTransactionList';
 
-export default function ChainView({ nodeData: nodeData }: { nodeData: Chain['data'] }) {
-  const node = new Chain(nodeData);
+export default function ChainView({ node }: { node: Chain }) {
   return (
     <Grid container spacing={1} padding={1}>
       <Grid item xs={12}>
