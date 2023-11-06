@@ -4,6 +4,7 @@ import { Divider, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/mat
 import type { SolverNode } from '../../solver/data';
 
 import { FallbackBoundary } from './ui';
+import { FormattedMessage } from 'react-intl';
 
 export function NodePage({ node, children }: { node: SolverNode; children: React.ReactNode }) {
   return <>{children}</>;
@@ -46,8 +47,8 @@ export function NodePageConnectionSection({
       title={title}
       actions={
         <>
-          <Tooltip title="View All">
-            <IconButton href={href} size="small" aria-label="view all" color="primary">
+          <Tooltip title={<FormattedMessage id="73525gdy" defaultMessage="View All" />}>
+            <IconButton href={href} size="small" color="primary">
               <ArrowOutward />
             </IconButton>
           </Tooltip>

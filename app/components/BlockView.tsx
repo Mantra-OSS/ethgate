@@ -11,6 +11,7 @@ import BlockTransactionList from './BlockTransactionList';
 import { NodePageConnectionSection, NodePageSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
 import { useSolver } from '../client/backend';
+import { FormattedMessage } from 'react-intl';
 
 export default function BlockView({ node }: { node: Block }) {
   const solver = useSolver();
@@ -34,7 +35,15 @@ export default function BlockView({ node }: { node: Block }) {
         {edgeTypes.map((edgeType) => (
           <Grid key={edgeType.connectionName} item xs={12} md={6}>
             <NodePageConnectionSection
-              title={edgeType.connectionName}
+              title={
+                <FormattedMessage
+                  id="asdasdasdasd"
+                  defaultMessage={'Connection "{name}"'}
+                  values={{
+                    name: edgeType.connectionName,
+                  }}
+                />
+              }
               href={`/${node.meta.slug}/${edgeType.connectionName}`}
             >
               {edgeType.connectionName === 'transactions' && <BlockTransactionList block={node} />}

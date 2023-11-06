@@ -29,7 +29,7 @@ export default function BlockTransactionList({ block: tail }: { block: Block }) 
 
   const [, startTransition] = useTransition();
 
-  const [transactions, loadNext] = useConnection<BlockHasTransaction>(edgeType.name, tail.id, {
+  const [connection, loadNext] = useConnection<BlockHasTransaction>(edgeType.name, tail.id, {
     first: 10,
   });
   const onLoadNext = useCallback(() => {
@@ -42,10 +42,10 @@ export default function BlockTransactionList({ block: tail }: { block: Block }) 
     <>
       <InfiniteList
         // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={transactions?.pageInfo.hasNextPage && onLoadNext}
+        loadNext={connection?.pageInfo.hasNextPage && onLoadNext}
       >
         <NodeList>
-          {transactions?.edges.map(({ headId }) => (
+          {connection?.edges.map(({ headId }) => (
             <Collapse key={headId}>
               <NodeListItem>
                 <BlockTransactionListItem transactionId={headId} />
