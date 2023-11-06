@@ -9,7 +9,7 @@ import type {
   SolverEdge,
   SolverNode,
 } from '../data';
-import { Block, ChainHasBlock, Connection, DatabaseAbstract } from '../data';
+import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../data';
 import { SolverGraph } from '../graph';
 
 const graph = new SolverGraph();
@@ -49,7 +49,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
     const latestBlocks = this.getBlocksByTag(chainId);
     let last;
     for await (const providerBlock of latestBlocks) {
-      const block = new Block(providerBlock);
+      const block = blockType.create(providerBlock);
       if (last && last.id === block.id) continue;
       last = block;
       const edge = new ChainHasBlock(networkId, block.id, {}, block.data.timestamp);

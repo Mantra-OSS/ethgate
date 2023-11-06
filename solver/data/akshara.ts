@@ -82,17 +82,16 @@ export class Chain extends AksharaNode<
   chainId = `Chain:${this.data.chainId}`;
 }
 
-export const blockType = new AksharaNodeType<Block>((data) => new Block(data), blockSchema);
+export const blockType = new AksharaNodeType<Block>(
+  (data) => new Block(`Block:${formatBlockId(data)}`, data),
+  blockSchema,
+);
 export class Block extends AksharaNode<
   'Block',
   Ethgate.AksharaBlockData,
   `Block:${Ethgate.AksharaBlockId}`
 > {
   type = 'Block' as const;
-
-  constructor(data: Block['data']) {
-    super(`Block:${formatBlockId(data)}`, data);
-  }
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   meta = {
     name: this.data.number.toString(),
