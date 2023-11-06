@@ -23,10 +23,12 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
     <>
       <NodeAvatar
         avatarType={
-          pathname.includes('transactions')
-            ? 'transaction'
+          pathname.includes('logs')
+            ? 'chain-log'
+            : 'transactions'
+            ? 'chain-transaction'
             : pathname.includes('blocks')
-            ? 'block'
+            ? 'chain-block'
             : 'chain'
         }
         chainId={node.data.chainId}

@@ -17,6 +17,8 @@ import { TransitionGroup } from 'react-transition-group';
 import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 
+import { NodeAvatar } from './ui';
+
 export default function ReceiptLogList({ receipt }: { receipt: Receipt }) {
   const [, startTransition] = useTransition();
   const [logs, hasNext, loadNext] = useConnection<ReceiptHasLog>('ReceiptHasLog', receipt.id, {
@@ -58,7 +60,7 @@ export function ReceiptLogListItem({ logId }: { logId: Log['id'] }) {
     >
       <CardContent>
         <Stack direction="row" gap={1}>
-          <Avatar alt={node.meta.name}>{node.meta.name}</Avatar>
+          <NodeAvatar avatarType="log" />
           <Link href={`${node.transactionIndex}/logs/${node.logIndex}`}>
             <Typography>Log Id: {node.meta.name}</Typography>
           </Link>

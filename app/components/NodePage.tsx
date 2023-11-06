@@ -54,7 +54,9 @@ export function NodePageConnectionSection({
         </>
       }
     >
-      {children}
+      <Stack minHeight={300}>
+        <FallbackBoundary>{children}</FallbackBoundary>
+      </Stack>
     </NodePageSection>
   );
 }

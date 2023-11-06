@@ -20,6 +20,8 @@ import { useConnection } from '../helpers/hooks';
 
 import { NodeList, NodeListItem } from './NodeList';
 
+import { NodeAvatar } from './ui';
+
 export default function BlockTransactionList({ block }: { block: Block }) {
   console.log('BlockTransactionList', block);
   const [, startTransition] = useTransition();
@@ -65,7 +67,8 @@ export function BlockTransactionListItem({ transactionId }: { transactionId: Tra
   return (
     <ListItemButton href={`${node.blockNumber}/transactions/${node.transactionIndex}`}>
       <ListItemAvatar>
-        <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar>
+        {/* <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar> */}
+        <NodeAvatar avatarType="transaction" />
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">

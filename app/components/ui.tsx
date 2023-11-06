@@ -1,12 +1,30 @@
-import { Receipt, ViewInAr } from '@mui/icons-material';
-import { Avatar, CircularProgress } from '@mui/material';
+import { Receipt, ViewInAr, Article } from '@mui/icons-material';
+import { Avatar, Box, CircularProgress } from '@mui/material';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
+export function FallbackContainer({ children }: { children: React.ReactNode }) {
+  return (
+    <Box alignSelf={'center'} justifySelf={'center'} m="auto">
+      {children}
+    </Box>
+  );
+}
+
 export function FallbackBoundary({ children }: { children: React.ReactNode }) {
   return (
-    <ErrorBoundary fallbackRender={({ error }) => <div>{error.message}</div>}>
-      <Suspense fallback={<CircularProgress />}>{children}</Suspense>
+    <ErrorBoundary
+      fallbackRender={({ error }) => <FallbackContainer>{error.message}</FallbackContainer>}
+    >
+      <Suspense
+        fallback={
+          <FallbackContainer>
+            <CircularProgress />
+          </FallbackContainer>
+        }
+      >
+        {children}
+      </Suspense>
     </ErrorBoundary>
   );
 }
@@ -16,19 +34,44 @@ export function NodeAvatar({
   chainId,
   children,
 }: {
-  avatarType: 'chain' | 'block' | 'transaction';
-  chainId: string;
-  children: React.ReactNode;
+  avatarType:
+    | 'chain'
+    | 'chain-block'
+    | 'chain-transaction'
+    | 'chain-log'
+    | 'block'
+    | 'transaction'
+    | 'log';
+  chainId?: string;
+  children?: React.ReactNode;
 }) {
   // Make route for png or svg file.
   switch (avatarType) {
+    case 'block':
+      return (
+        <Avatar alt="Block Icon">
+          <ViewInAr color="primary" />
+        </Avatar>
+      );
+    case 'transaction':
+      return (
+        <Avatar alt="Transaction Icon">
+          <Article color="primary" />
+        </Avatar>
+      );
+    case 'log':
+      return (
+        <Avatar alt="Log Icon">
+          <Receipt color="primary" />
+        </Avatar>
+      );
     case 'chain':
       return (
         <Avatar alt={`Number ${chainId} chain logo`} src={`/statics/${chainId}.svg`}>
           {children}
         </Avatar>
       );
-    case 'block':
+    case 'chain-block':
       return (
         <>
           <Avatar alt={`Number ${chainId} chain logo`} src={`/statics/1.svg`}>
@@ -39,13 +82,24 @@ export function NodeAvatar({
           </Avatar>
         </>
       );
-    case 'transaction':
+    case 'chain-transaction':
       return (
         <>
           <Avatar alt={`Number ${chainId} chain logo`} src={`/statics/1.svg`}>
             {children}
           </Avatar>
           <Avatar alt="Transaction Icon">
+            <Article color="primary" />
+          </Avatar>
+        </>
+      );
+    case 'chain-log':
+      return (
+        <>
+          <Avatar alt={`Number ${chainId} chain logo`} src={`/statics/1.svg`}>
+            {children}
+          </Avatar>
+          <Avatar alt="Log Icon">
             <Receipt color="primary" />
           </Avatar>
         </>

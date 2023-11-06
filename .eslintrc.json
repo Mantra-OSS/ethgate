@@ -2,7 +2,8 @@
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
-    "plugin:@eslint-community/eslint-plugin-eslint-comments/recommended"
+    "plugin:@eslint-community/eslint-plugin-eslint-comments/recommended",
+    "plugin:storybook/recommended"
   ],
   "plugins": ["import", "@eslint-community/eslint-plugin-eslint-comments"],
   "overrides": [
@@ -30,10 +31,17 @@
       {
         "groups": [["builtin", "external", "internal"], ["parent"], ["sibling", "index"]],
         "newlines-between": "always",
-        "alphabetize": { "order": "asc" }
+        "alphabetize": {
+          "order": "asc"
+        }
       }
     ],
-    "@eslint-community/eslint-comments/disable-enable-pair": ["error", { "allowWholeFile": true }],
+    "@eslint-community/eslint-comments/disable-enable-pair": [
+      "error",
+      {
+        "allowWholeFile": true
+      }
+    ],
     "@eslint-community/eslint-comments/no-unused-disable": "error",
     "no-restricted-globals": [
       "error",

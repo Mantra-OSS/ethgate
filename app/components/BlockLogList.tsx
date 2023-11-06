@@ -18,6 +18,8 @@ import { useConnection } from '../helpers/hooks';
 
 import { NodeList, NodeListItem } from './NodeList';
 
+import { NodeAvatar } from './ui';
+
 export default function BlockLogList({ block }: { block: Block }) {
   const [, startTransition] = useTransition();
 
@@ -60,7 +62,8 @@ export function BlockLogListItem({ logId }: { logId: Log['id'] }) {
       href={`${node.blockNumber}/transactions/${node.transactionIndex}/logs/${node.logIndex}`}
     >
       <ListItemAvatar>
-        <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar>
+        {/* <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar> */}
+        <NodeAvatar avatarType="log" />
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">
