@@ -18,7 +18,7 @@ import type { EdgeType } from './abstract';
 import { SolverGraphAbstract } from './abstract';
 
 export class SolverGraph extends SolverGraphAbstract {
-  nodeTypes: NodeType<any>[] = [Chain.type, Block, Transaction, Receipt, Log];
+  nodeTypes: NodeType<any>[] = [Chain.type, Block.type, Transaction.type, Receipt.type, Log.type];
   edgeTypes: EdgeType<any>[] = [
     ChainHasChain,
     ChainHasBlock,
