@@ -21,18 +21,17 @@ import { useConnection } from '../helpers/hooks';
 import { NodeList, NodeListItem } from './NodeList';
 
 import { NodeAvatar } from './ui';
+import { useSolver } from '../client/backend';
 
-export default function BlockTransactionList({ block }: { block: Block }) {
-  console.log('BlockTransactionList', block);
+export default function BlockTransactionList({ block: tail }: { block: Block }) {
+  const solver = useSolver();
+  const edgeType = solver.solver.graph.getEdgeType('BlockHasTransaction');
+
   const [, startTransition] = useTransition();
 
-  const [transactions, loadNext] = useConnection<BlockHasTransaction>(
-    'BlockHasTransaction',
-    block.id,
-    {
-      first: 10,
-    },
-  );
+  const [transactions, loadNext] = useConnection<BlockHasTransaction>(edgeType.name, tail.id, {
+    first: 10,
+  });
   const onLoadNext = useCallback(() => {
     startTransition(() => {
       loadNext();

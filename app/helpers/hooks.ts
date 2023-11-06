@@ -44,13 +44,13 @@ export const useConnection = function useConnection<Edge extends SolverEdge>(
 
     console.debug('aggregating connections', connection);
 
-    // setAggregatedConnection({
-    //   edges: [...(aggregatedConnection?.edges ?? []), ...connection.edges],
+    // setAggregatedConnection((current) => ({
+    //   edges: [...(current?.edges ?? []), ...connection.edges],
     //   pageInfo: {
-    //     ...aggregatedConnection?.pageInfo,
+    //     ...current?.pageInfo,
     //     ...connection.pageInfo,
     //   },
-    // });
+    // }));
   }, [connection?.pageInfo.startCursor, connection?.pageInfo.endCursor]);
 
   const loadNext = useCallback(async () => {
@@ -69,5 +69,5 @@ export const useConnection = function useConnection<Edge extends SolverEdge>(
     setConnection(await readConnection(type, tailId, initialArgs));
   }, [type, tailId, initialArgs]);
 
-  return [aggregatedConnection, loadNext, refetch];
+  return [connection, loadNext, refetch];
 };
