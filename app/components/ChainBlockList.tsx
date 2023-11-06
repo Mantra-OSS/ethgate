@@ -66,7 +66,7 @@ export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
         <TransitionGroup>
           {blocks.edges.map(({ headId }) => (
             <Collapse key={headId}>
-              <ListItem>
+              <ListItem disablePadding>
                 <FallbackBoundary>
                   <ChainBlockListItem blockId={headId} />
                 </FallbackBoundary>
@@ -85,6 +85,8 @@ export function ChainBlockListItem({ blockId }: { blockId: Block['id'] }) {
 
   const timestamp = DateTime.fromMillis(node.timestamp * 1000);
   const now = useNow();
+
+  // throw new Promise(() => {});
 
   return (
     <ListItemButton href={`${node.data.chainId}/blocks/${node.number}`}>
