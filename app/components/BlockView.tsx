@@ -8,6 +8,7 @@ import { FallbackBoundary } from '../components/ui';
 import BlockLogList from './BlockLogList';
 import BlockOverview from './BlockOverview';
 import BlockTransactionList from './BlockTransactionList';
+import { NodePageConnectionSection, NodePageSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
 
 export default function BlockView({ node }: { node: Block }) {
@@ -15,37 +16,25 @@ export default function BlockView({ node }: { node: Block }) {
     <>
       <Grid container spacing={1} padding={1}>
         <Grid item xs={12}>
-          <Paper>
-            <Stack direction="row" padding={2} spacing={2}>
-              <NodePageBarContent node={node} />
-            </Stack>
-            <Divider />
-            <FallbackBoundary>
-              <BlockOverview node={node} />
-            </FallbackBoundary>
-          </Paper>
+          <NodePageSection
+            title={
+              <Stack direction="row" padding={2} spacing={2}>
+                <NodePageBarContent node={node} />
+              </Stack>
+            }
+          >
+            <BlockOverview node={node} />
+          </NodePageSection>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper>
-            <Typography variant="h3" padding={1} textAlign="center">
-              Transactions
-            </Typography>
-            <Divider />
-            <FallbackBoundary>
-              <BlockTransactionList block={node} />
-            </FallbackBoundary>
-          </Paper>
+          <NodePageConnectionSection title="Transactions" href="#">
+            <BlockTransactionList block={node} />
+          </NodePageConnectionSection>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper>
-            <Typography variant="h3" padding={1} textAlign="center">
-              Logs
-            </Typography>
-            <Divider />
-            <FallbackBoundary>
-              <BlockLogList block={node} />
-            </FallbackBoundary>
-          </Paper>
+          <NodePageConnectionSection title="Logs" href="#">
+            <BlockLogList block={node} />
+          </NodePageConnectionSection>
         </Grid>
       </Grid>
     </>

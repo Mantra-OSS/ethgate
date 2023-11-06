@@ -18,6 +18,8 @@ import { TransitionGroup } from 'react-transition-group';
 import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 
+import { NodeList, NodeListItem } from './NodeList';
+
 export default function BlockTransactionList({ block }: { block: Block }) {
   console.log('BlockTransactionList', block);
   const [, startTransition] = useTransition();
@@ -42,15 +44,15 @@ export default function BlockTransactionList({ block }: { block: Block }) {
         // loadPrevious={hasPrevious && onLoadPrevious}
         loadNext={hasNext && onLoadNext}
       >
-        <TransitionGroup>
+        <NodeList>
           {transactions.edges.map(({ headId }) => (
             <Collapse key={headId}>
-              <ListItem>
+              <NodeListItem>
                 <BlockTransactionListItem transactionId={headId} />
-              </ListItem>
+              </NodeListItem>
             </Collapse>
           ))}
-        </TransitionGroup>
+        </NodeList>
       </InfiniteList>
     </>
   );

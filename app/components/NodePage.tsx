@@ -1,4 +1,5 @@
-import { Divider, Paper, Stack, Typography } from '@mui/material';
+import { ArrowOutward } from '@mui/icons-material';
+import { Divider, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
 
 import type { SolverNode } from '../../solver/data';
 
@@ -9,32 +10,11 @@ export function NodePage({ node, children }: { node: SolverNode; children: React
 }
 
 export function NodePageSection({
-  node,
   title,
   actions,
   children,
 }: {
-  node: SolverNode;
-  title: string;
-  actions?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <Paper>
-      {children}
-    </Paper>
-  );
-}
-
-
-export function NodePageConnectionSection({
-  node,
-  title,
-  actions,
-  children,
-}: {
-  node: SolverNode;
-  title: string;
+  title: React.ReactNode;
   actions?: React.ReactNode;
   children: React.ReactNode;
 }) {
@@ -49,5 +29,32 @@ export function NodePageConnectionSection({
       <Divider />
       <FallbackBoundary>{children}</FallbackBoundary>
     </Paper>
+  );
+}
+
+export function NodePageConnectionSection({
+  title,
+  href,
+  children,
+}: {
+  title: React.ReactNode;
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <NodePageSection
+      title={title}
+      actions={
+        <>
+          <Tooltip title="View All">
+            <IconButton href={href} size="small" aria-label="view all" color="primary">
+              <ArrowOutward />
+            </IconButton>
+          </Tooltip>
+        </>
+      }
+    >
+      {children}
+    </NodePageSection>
   );
 }

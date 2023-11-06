@@ -25,7 +25,7 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
                 .map((word: any) => word[0])
                 .join('')}
             </Avatar> */}
-      <NodeAvatar chainId={node.data.chainId} chainName={node.meta.name}>
+      <NodeAvatar avatarType="chain" data={node.data.chainId}>
         {node.meta.name
           .split(' ')
           .map((word: any) => word[0])

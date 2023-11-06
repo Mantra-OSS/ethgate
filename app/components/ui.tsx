@@ -11,18 +11,39 @@ export function FallbackBoundary({ children }: { children: React.ReactNode }) {
 }
 
 export function NodeAvatar({
-  chainId,
-  chainName,
+  avatarType,
+  data,
   children,
 }: {
-  chainId: string;
-  chainName: string;
+  avatarType: 'chain' | 'block' | 'transaction';
+  data: string;
   children: React.ReactNode;
 }) {
   // Make route for png or svg file.
-  return (
-    <Avatar alt={`${chainName} logo`} src={`/statics/${chainId}.svg`}>
-      {children}
-    </Avatar>
-  );
+  switch (avatarType) {
+    case 'chain':
+      return (
+        <Avatar alt={`Number ${data} chain logo`} src={`/statics/${data}.svg`}>
+          {children}
+        </Avatar>
+      );
+    case 'block':
+      return (
+        <Avatar alt={`Number chain logo`} src={`/statics/1.svg`}>
+          {children}
+        </Avatar>
+      );
+    case 'transaction':
+      return (
+        <Avatar alt={`Number chain logo`} src={`/statics/1.svg`}>
+          {children}
+        </Avatar>
+      );
+    default:
+      return (
+        <Avatar alt={`Number chain logo`} src={`/statics/1.svg`}>
+          {children}
+        </Avatar>
+      );
+  }
 }

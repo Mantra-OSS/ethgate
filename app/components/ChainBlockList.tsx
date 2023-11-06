@@ -3,7 +3,6 @@ import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import {
   Avatar,
   Collapse,
-  ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
@@ -13,13 +12,13 @@ import {
 import { DateTime } from 'luxon';
 import { useCallback, useEffect, useTransition } from 'react';
 import { FormattedRelativeTime } from 'react-intl';
-import { TransitionGroup } from 'react-transition-group';
 
 import InfiniteList from '../components/InfiniteList';
-import { FallbackBoundary } from '../components/ui';
 import { serverPromise } from '../helpers/backend';
 import { useConnection, useNode } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
+
+import { NodeList, NodeListItem } from './NodeList';
 
 export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
   const [, startTransition] = useTransition();
@@ -63,17 +62,15 @@ export default function ChainBlockList({ chainId }: { chainId: Chain['id'] }) {
         // loadPrevious={hasPrevious && onLoadPrevious}
         loadNext={hasNext && onLoadNext}
       >
-        <TransitionGroup>
+        <NodeList>
           {blocks.edges.map(({ headId }) => (
             <Collapse key={headId}>
-              <ListItem disablePadding>
-                <FallbackBoundary>
-                  <ChainBlockListItem blockId={headId} />
-                </FallbackBoundary>
-              </ListItem>
+              <NodeListItem>
+                <ChainBlockListItem blockId={headId} />
+              </NodeListItem>
             </Collapse>
           ))}
-        </TransitionGroup>
+        </NodeList>
       </InfiniteList>
     </>
   );

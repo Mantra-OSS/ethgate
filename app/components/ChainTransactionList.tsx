@@ -4,7 +4,6 @@ import { useNode } from '@/app/helpers/hooks';
 import type { Block, Chain, ChainHasTransaction, Transaction } from '@/lib-solver';
 import {
   Collapse,
-  ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
@@ -13,14 +12,13 @@ import {
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useCallback, useTransition } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { FormattedRelativeTime } from 'react-intl';
-import { TransitionGroup } from 'react-transition-group';
 
 import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
 
+import { NodeList, NodeListItem } from './NodeList';
 import { NodeAvatar } from './ui';
 
 export default function ChainTransactionList({ chainId }: { chainId: Chain['id'] }) {
@@ -47,17 +45,15 @@ export default function ChainTransactionList({ chainId }: { chainId: Chain['id']
         // loadPrevious={hasPrevious && onLoadPrevious}
         loadNext={hasNext && onLoadNext}
       >
-        <TransitionGroup>
+        <NodeList>
           {transactions.edges.map(({ headId }) => (
             <Collapse key={headId}>
-              <ListItem>
-                <ErrorBoundary fallback={<div>Could not load transaction</div>}>
-                  <ChainTransactionListItem transactionId={headId} />
-                </ErrorBoundary>
-              </ListItem>
+              <NodeListItem>
+                <ChainTransactionListItem transactionId={headId} />
+              </NodeListItem>
             </Collapse>
           ))}
-        </TransitionGroup>
+        </NodeList>
       </InfiniteList>
     </>
   );
@@ -85,7 +81,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
             .map((word) => word[0])
             .join('')}
         </Avatar> */}
-        <NodeAvatar chainId={chain.data.chainId} chainName={chain.meta.name}>
+        <NodeAvatar avatarType="chain" data={chain.data.chainId}>
           {chain.meta.name
             .split(' ')
             .map((word: any) => word[0])

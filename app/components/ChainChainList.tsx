@@ -62,10 +62,7 @@ export function ChainChainListItem({ chainId }: { chainId: Chain['id'] }) {
     >
       <CardContent>
         <Stack direction="row" gap={1}>
-          <Avatar
-            alt={node.meta.name}
-            // src={`/static/images/avatar/${value + 1}.jpg`}
-          >
+          <Avatar alt={node.meta.name} src={`/statics/${node.data.chainId}.svg`}>
             {node.meta.name
               .split(' ')
               .map((word) => word[0])
