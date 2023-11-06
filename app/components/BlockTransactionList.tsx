@@ -68,7 +68,7 @@ export function BlockTransactionListItem({ transactionId }: { transactionId: Tra
     <ListItemButton href={`${node.blockNumber}/transactions/${node.transactionIndex}`}>
       <ListItemAvatar>
         {/* <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar> */}
-        <NodeAvatar avatarType="transaction" />
+        <NodeAvatar node={node} />
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">

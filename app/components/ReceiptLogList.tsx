@@ -60,7 +60,7 @@ export function ReceiptLogListItem({ logId }: { logId: Log['id'] }) {
     >
       <CardContent>
         <Stack direction="row" gap={1}>
-          <NodeAvatar avatarType="log" />
+          <NodeAvatar node={node} />
           <Link href={`${node.transactionIndex}/logs/${node.logIndex}`}>
             <Typography>Log Id: {node.meta.name}</Typography>
           </Link>

@@ -72,7 +72,7 @@ export function ChainTransactionListItem({ transactionId }: { transactionId: Tra
       href={`${node.data.chainId}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
     >
       <ListItemAvatar>
-        <NodeAvatar avatarType="transaction" />
+        <NodeAvatar node={node} />
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">

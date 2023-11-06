@@ -21,23 +21,7 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
   console.log(pathname);
   return (
     <>
-      <NodeAvatar
-        avatarType={
-          pathname.includes('logs')
-            ? 'chain-log'
-            : pathname.includes('transactions')
-            ? 'chain-transaction'
-            : pathname.includes('blocks')
-            ? 'chain-block'
-            : 'chain'
-        }
-        chainId={node.data.chainId}
-      >
-        {node.meta.name
-          .split(' ')
-          .map((word: any) => word[0])
-          .join('')}
-      </NodeAvatar>
+      <NodeAvatar node={node} />
       <Typography variant="h4" flex={1}>
         {node.meta.name}
       </Typography>

@@ -8,7 +8,7 @@ export abstract class SolverNode<
   Id extends ObjectId<Name> = ObjectId<Name>,
 > {
   abstract type: Name;
-  abstract meta: { name: string; path: ObjectId<any>[] };
+  abstract meta: { name: string; imageUrl?: string; path: ObjectId<any>[] };
   id: Id;
   data: Data;
   constructor(id: Id, data: Data) {

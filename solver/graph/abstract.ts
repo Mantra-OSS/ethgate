@@ -50,4 +50,9 @@ export abstract class SolverGraphAbstract {
   getEdgeType<T extends EdgeType<any>>(type: string): T {
     return this.edgeTypes.find((edgeType) => edgeType.name === type)! as T;
   }
+
+  getEdgeTypesForNode<T extends EdgeType<any>>(type: string): T {
+    const nodeType = this.getNodeType(type);
+    return this.edgeTypes.find((edgeType) => edgeType.tail === nodeType)! as T;
+  }
 }

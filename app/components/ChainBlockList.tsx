@@ -88,7 +88,7 @@ export function ChainBlockListItem({ blockId }: { blockId: Block['id'] }) {
   return (
     <ListItemButton href={`${node.data.chainId}/blocks/${node.number}`}>
       <ListItemAvatar>
-        <NodeAvatar avatarType="block" />
+        <NodeAvatar node={node} />
       </ListItemAvatar>
       <ListItemText>
         <Stack direction="row" spacing={1} justifyContent="space-between">
