@@ -1,16 +1,16 @@
 import type { EthgateSolverDatabase } from '../database/database';
 import type { ProperPageArgs } from '../graph';
 
-import type { Block, Chain } from './akshara';
+import type { Block, Chain, Log, Transaction } from './akshara';
 import {
   BlockHasReceipt,
   BlockHasTransaction,
   ChainHasBlock,
-  Log,
   ReceiptHasLog,
-  Transaction,
   blockType,
   chainType,
+  logType,
+  transactionType,
 } from './akshara';
 import type { EdgeGenerator } from './database/abstract';
 import { SolverEdge } from './database/abstract';
@@ -19,7 +19,7 @@ export class BlockHasLog extends SolverEdge<'BlockHasLog', Block['id'], Log['id'
   static typeName = 'BlockHasLog' as const;
   type = 'BlockHasLog' as const;
   static tail = blockType;
-  static head = Log.type;
+  static head = logType;
   static connectionName = 'logs';
   static async *get(
     tailId: BlockHasLog['tailId'],
@@ -66,7 +66,7 @@ export class ChainHasTransaction extends SolverEdge<
   static typeName = 'ChainHasTransaction' as const;
   type = 'ChainHasTransaction' as const;
   static tail = chainType;
-  static head = Transaction.type;
+  static head = transactionType;
   static connectionName = 'transactions';
   static async *get(
     tailId: ChainHasTransaction['tailId'],

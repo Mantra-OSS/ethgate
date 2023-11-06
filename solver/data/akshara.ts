@@ -65,7 +65,7 @@ export abstract class AksharaEdge<
   Data extends object = any,
 > extends SolverEdge<Name, TailId, HeadId, Data> {}
 
-export const chainType = new AksharaNodeType(
+export const chainType = new AksharaNodeType<Chain>(
   (data) => new Chain(`Chain:${formatChainId(data)}`, data),
   chainSchema,
 );
@@ -125,13 +125,15 @@ export class Block extends AksharaNode<
   transactions = this.data.transactions;
 }
 
+export const transactionType = new AksharaNodeType<Transaction>(
+  (data) => new Transaction(data),
+  transactionSchema,
+);
 export class Transaction extends AksharaNode<
   'Transaction',
   Ethgate.AksharaTransactionData,
   `Transaction:${Ethgate.AksharaTransactionId}`
 > {
-  static type = new AksharaNodeType((data) => new Transaction(data), transactionSchema);
-
   type = 'Transaction' as const;
 
   static async get(id: Transaction['id'], ctx: AksharaTypeContext): Promise<Transaction> {
@@ -170,12 +172,12 @@ export class Transaction extends AksharaNode<
   s = this.data.s;
 }
 
+export const receiptType = new AksharaNodeType<Receipt>((data) => new Receipt(data), receiptSchema);
 export class Receipt extends AksharaNode<
   'Receipt',
   Ethgate.AksharaReceiptData,
   `Receipt:${Ethgate.AksharaReceiptId}`
 > {
-  static type = new AksharaNodeType((data) => new Receipt(data), receiptSchema);
   type = 'Receipt' as const;
   static async get(id: Receipt['id'], ctx: AksharaTypeContext): Promise<Receipt> {
     const [, localId] = parseGlobalId(id);
@@ -219,8 +221,8 @@ export class Receipt extends AksharaNode<
   status = this.data.status;
 }
 
+export const logType = new AksharaNodeType<Log>((data) => new Log(data), logSchema);
 export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethgate.AksharaLogId}`> {
-  static type = new AksharaNodeType((data) => new Log(data), logSchema);
   type = 'Log' as const;
   static async get(id: Log['id'], ctx: AksharaTypeContext): Promise<Log> {
     const [, localId] = parseGlobalId(id);
@@ -329,7 +331,7 @@ export class BlockHasTransaction extends AksharaEdge<
   static typeName = 'BlockHasTransaction' as const;
   type = 'BlockHasTransaction' as const;
   static tail = blockType;
-  static head = Transaction.type;
+  static head = transactionType;
   static connectionName = 'transactions';
   static async *get(
     tailId: BlockHasTransaction['tailId'],
@@ -353,7 +355,7 @@ export class BlockHasReceipt extends AksharaEdge<
   static typeName = 'BlockHasReceipt' as const;
   type = 'BlockHasReceipt' as const;
   static tail = blockType;
-  static head = Receipt.type;
+  static head = receiptType;
   static connectionName = 'receipts';
   static async *get(
     tailId: BlockHasReceipt['tailId'],
@@ -378,8 +380,8 @@ export class BlockHasReceipt extends AksharaEdge<
 export class ReceiptHasLog extends AksharaEdge<'ReceiptHasLog', Receipt['id'], Log['id'], object> {
   static typeName = 'ReceiptHasLog' as const;
   type = 'ReceiptHasLog' as const;
-  static tail = Receipt.type;
-  static head = Log.type;
+  static tail = receiptType;
+  static head = logType;
   static connectionName = 'logs';
   static async *get(
     tailId: ReceiptHasLog['tailId'],
