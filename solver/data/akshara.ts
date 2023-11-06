@@ -24,11 +24,13 @@ export class AksharaNodeType<T extends AksharaNode> implements NodeType<T> {
   name: T['type'];
   schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>;
   get: (id: T['id'], ctx: AksharaTypeContext) => Promise<T | void>;
+  create: (data: T['data']) => T;
   constructor(
     create: (data: T['data']) => T,
     schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>,
   ) {
     this.name = schema.aksharaType;
+    this.create = create;
     this.schema = schema;
     this.get = async (id: T['id'], ctx: AksharaTypeContext): Promise<T | void> => {
       const [, localId] = parseGlobalId(id);
