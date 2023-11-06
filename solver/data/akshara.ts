@@ -125,7 +125,7 @@ export class Block extends AksharaNode<
 }
 
 export const transactionType = new AksharaNodeType<Transaction>(
-  (data) => new Transaction(data),
+  (data) => new Transaction(`Transaction:${formatTransactionId(data)}`, data),
   transactionSchema,
 );
 export class Transaction extends AksharaNode<
@@ -134,19 +134,6 @@ export class Transaction extends AksharaNode<
   `Transaction:${Ethgate.AksharaTransactionId}`
 > {
   type = 'Transaction' as const;
-
-  static async get(id: Transaction['id'], ctx: AksharaTypeContext): Promise<Transaction> {
-    const [, localId] = parseGlobalId(id);
-    const obj = await ctx.aks.getObject(localId);
-    if (!obj) {
-      throw new Error(`Not found ${id}`);
-    }
-    return new Transaction(obj as any);
-  }
-
-  constructor(data: Transaction['data']) {
-    super(`Transaction:${formatTransactionId(data)}`, data);
-  }
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   blockId: Block['id'] = `Block:${this.data.chainId}-${this.data.blockNumber}`;
   meta = {
@@ -171,26 +158,16 @@ export class Transaction extends AksharaNode<
   s = this.data.s;
 }
 
-export const receiptType = new AksharaNodeType<Receipt>((data) => new Receipt(data), receiptSchema);
+export const receiptType = new AksharaNodeType<Receipt>(
+  (data) => new Receipt(`Receipt:${formatReceiptId(data)}`, data),
+  receiptSchema,
+);
 export class Receipt extends AksharaNode<
   'Receipt',
   Ethgate.AksharaReceiptData,
   `Receipt:${Ethgate.AksharaReceiptId}`
 > {
   type = 'Receipt' as const;
-  static async get(id: Receipt['id'], ctx: AksharaTypeContext): Promise<Receipt> {
-    const [, localId] = parseGlobalId(id);
-    const obj = await ctx.aks.getObject(localId);
-    if (!obj) {
-      throw new Error(`Not found ${id}`);
-    }
-
-    return new Receipt(obj as any);
-  }
-
-  constructor(data: Receipt['data']) {
-    super(`Receipt:${formatReceiptId(data)}`, data);
-  }
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   blockId: Block['id'] = `Block:${this.data.chainId}-${this.data.blockNumber}`;
   transactionId: Transaction['id'] = `Transaction:${formatTransactionId(this.data)}`;
@@ -204,7 +181,7 @@ export class Receipt extends AksharaNode<
         `Log:${this.data.chainId}-${this.data.blockNumber}-${this.data.transactionIndex}-${log.logIndex}` satisfies Log['id'],
     )
     .reverse();
-  logs: Log[] = this.data.logs.map((log) => new Log(log)).reverse();
+  logs: Log[] = this.data.logs.map((log) => logType.create(log)).reverse();
   contractAddress = this.data.contractAddress;
   // chainId = this.data.chainId;
   gasUsed = this.data.gasUsed;
@@ -220,22 +197,12 @@ export class Receipt extends AksharaNode<
   status = this.data.status;
 }
 
-export const logType = new AksharaNodeType<Log>((data) => new Log(data), logSchema);
+export const logType = new AksharaNodeType<Log>(
+  (data) => new Log(`Log:${formatLogId(data)}`, data),
+  logSchema,
+);
 export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethgate.AksharaLogId}`> {
   type = 'Log' as const;
-  static async get(id: Log['id'], ctx: AksharaTypeContext): Promise<Log> {
-    const [, localId] = parseGlobalId(id);
-    const obj = await ctx.aks.getObject(localId);
-    if (!obj) {
-      throw new Error(`Not found ${id}`);
-    }
-    return new Log(obj as any);
-  }
-
-  constructor(data: Log['data']) {
-    //   `${data.chainId}-${data.blockNumber}-${data.transactionIndex}-${data.logIndex}` as const;
-    super(`Log:${formatLogId(data)}`, data);
-  }
   chainId: Chain['id'] = `Chain:${this.data.chainId}`;
   blockId: Block['id'] = `Block:${this.data.chainId}-${this.data.blockNumber}`;
   transactionId: Transaction['id'] = `Transaction:${formatTransactionId(this.data)}`;
@@ -387,7 +354,7 @@ export class ReceiptHasLog extends AksharaEdge<'ReceiptHasLog', Receipt['id'], L
     args: ProperPageArgs<ReceiptHasLog>,
     ctx: AksharaTypeContext,
   ): EdgeGenerator<ReceiptHasLog> {
-    const tail = await Receipt.get(tailId, ctx);
+    const tail = await receiptType.read(tailId, ctx);
     const block = await blockType.read(tail.blockId, ctx);
     for (const logId of tail.logIds) {
       const edge = new ReceiptHasLog(tailId, logId, {}, block.data.timestamp);
