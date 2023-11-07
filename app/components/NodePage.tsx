@@ -7,13 +7,8 @@ import type { SolverEdge, SolverNode } from '../../solver/data';
 import type { EdgeType } from '../../solver/graph';
 import { useSolver } from '../client/backend';
 
-import BlockOverview from './BlockOverview';
-import ChainOverview from './ChainOverview';
-import LogOverview from './LogOverview';
 import NodeConnectionList from './NodeConnectionList';
 import NodePageBarContent from './NodePageBarContent';
-import ReceiptOverview from './ReceiptOverview';
-import TransactionOverview from './TransactionOverview';
 import {
   BlockTransactionListItem,
   ChainBlockListItem,
@@ -22,6 +17,13 @@ import {
   ReceiptLogListItem,
 } from './list-items';
 import { BlockLogListItem } from './list-items';
+import {
+  BlockOverview,
+  ChainOverview,
+  LogOverview,
+  ReceiptOverview,
+  TransactionOverview,
+} from './overviews';
 import { FallbackBoundary } from './ui';
 
 export default function NodePage({ node }: { node: SolverNode }) {
