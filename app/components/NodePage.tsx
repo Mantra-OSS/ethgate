@@ -12,6 +12,8 @@ import BlockOverview from './BlockOverview';
 import { BlockTransactionListItem } from './BlockTransactionList';
 import NodeConnectionList from './NodeConnectionList';
 import NodePageBarContent from './NodePageBarContent';
+import { ReceiptLogListItem } from './ReceiptLogList';
+import TransactionOverview from './TransactionOverview';
 import { FallbackBoundary } from './ui';
 
 export function NodePage({ node, children }: { node: SolverNode; children: React.ReactNode }) {
@@ -20,9 +22,12 @@ export function NodePage({ node, children }: { node: SolverNode; children: React
 
 export default function NodePage2({ node }: { node: SolverNode }) {
   const solver = useSolver();
-  const edgeTypes = solver.solver.graph
-    .getEdgeTypesForNode(node.type)
-    .filter((edgeType) => !['receipts'].includes(edgeType.connectionName));
+  const edgeTypes = solver.solver.graph.getEdgeTypesForNode(node.type).filter((edgeType) => {
+    if (edgeType.name === 'BlockHasReceipt') {
+      return false;
+    }
+    return true;
+  });
   return (
     <>
       <Grid container spacing={1} padding={1}>
@@ -128,6 +133,16 @@ export function NodePageConnectionSection2({
       );
       break;
     }
+    case 'TransactionHasLog': {
+      children = (
+        <NodeConnectionList
+          node={node}
+          edgeType={edgeType}
+          renderItem={({ headId }) => <ReceiptLogListItem logId={headId} />}
+        />
+      );
+      break;
+    }
     default:
       throw new Error(`Unknown edge type: ${edgeType.name}`);
   }
@@ -183,6 +198,10 @@ export function NodePageOverviewSection2({ node }: { node: SolverNode }) {
   switch (node.type) {
     case 'Block': {
       children = <BlockOverview node={node as any} />;
+      break;
+    }
+    case 'Transaction': {
+      children = <TransactionOverview node={node as any} />;
       break;
     }
     default:

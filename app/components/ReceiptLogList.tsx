@@ -1,48 +1,9 @@
 'use client';
 import { useNode } from '@/app/helpers/hooks';
-import type { Log, Receipt, ReceiptHasLog } from '@/lib-solver';
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Collapse,
-  Link,
-  ListItem,
-  Stack,
-  Typography,
-} from '@mui/material';
-import { useCallback, useTransition } from 'react';
-import { TransitionGroup } from 'react-transition-group';
-
-import InfiniteList from '../components/InfiniteList';
-import { useConnection } from '../helpers/hooks';
+import type { Log } from '@/lib-solver';
+import { Card, CardContent, Link, Stack, Typography } from '@mui/material';
 
 import { NodeAvatar } from './ui';
-
-export default function ReceiptLogList({ receipt }: { receipt: Receipt }) {
-  const [, startTransition] = useTransition();
-  const [logs, loadNext] = useConnection<ReceiptHasLog>('ReceiptHasLog', receipt.id, {});
-
-  const onLoadNext = useCallback(() => {
-    startTransition(() => {
-      loadNext();
-    });
-  }, [loadNext]);
-
-  return (
-    <InfiniteList loadNext={logs?.pageInfo.hasNextPage && onLoadNext}>
-      <TransitionGroup component={Stack} direction="row" sx={{ overflowX: 'auto' }}>
-        {logs?.edges.map(({ headId }) => (
-          <Collapse key={headId}>
-            <ListItem>
-              <ReceiptLogListItem logId={headId} />
-            </ListItem>
-          </Collapse>
-        ))}
-      </TransitionGroup>
-    </InfiniteList>
-  );
-}
 
 export function ReceiptLogListItem({ logId }: { logId: Log['id'] }) {
   const node = useNode<Log>(logId);

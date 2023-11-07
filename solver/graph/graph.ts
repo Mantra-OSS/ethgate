@@ -10,7 +10,7 @@ import {
   receiptType,
   transactionType,
 } from '../data/akshara';
-import { BlockHasLog, ChainHasTransaction } from '../data/chainnn';
+import { BlockHasLog, ChainHasTransaction, TransactionHasLog } from '../data/chainnn';
 import { ChainHasDescendantBlock } from '../data/chainnnn';
 
 import type { NodeType } from '.';
@@ -26,6 +26,7 @@ export class SolverGraph extends SolverGraphAbstract {
     BlockHasTransaction,
     BlockHasLog,
     BlockHasReceipt,
+    TransactionHasLog,
     ReceiptHasLog,
     ChainHasDescendantBlock,
   ];

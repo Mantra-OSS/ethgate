@@ -1,7 +1,7 @@
 import type { EthgateSolverDatabase } from '../database/database';
 import type { ProperPageArgs } from '../graph';
 
-import type { Block, Chain, Log, Transaction } from './akshara';
+import type { Block, Chain, Log, Receipt, Transaction } from './akshara';
 import {
   BlockHasReceipt,
   BlockHasTransaction,
@@ -10,10 +10,49 @@ import {
   blockType,
   chainType,
   logType,
+  receiptType,
   transactionType,
 } from './akshara';
 import type { EdgeGenerator } from './database/abstract';
 import { SolverEdge } from './database/abstract';
+
+export class TransactionHasLog extends SolverEdge<
+  'TransactionHasLog',
+  Transaction['id'],
+  Log['id'],
+  object
+> {
+  static typeName = 'TransactionHasLog' as const;
+  type = 'TransactionHasLog' as const;
+  static tail = transactionType;
+  static head = logType;
+  static connectionName = 'logs';
+  static async *get(
+    tailId: TransactionHasLog['tailId'],
+    args: ProperPageArgs<TransactionHasLog>,
+    ctx: EthgateSolverDatabase,
+  ): EdgeGenerator<TransactionHasLog> {
+    const tail = await transactionType.read(tailId, ctx);
+    const receipt = await receiptType.read(tail.receiptId, ctx);
+    for await (const receiptHasLog of ReceiptHasLog.get(
+      receipt.id,
+      {
+        isForward: args.isForward,
+        after: args.after && (await ctx.readNode<Log>(args.after).then((node) => node.id)),
+        limit: args.limit,
+      },
+      ctx,
+    )) {
+      const edge = new TransactionHasLog(
+        tailId,
+        receiptHasLog.headId,
+        receiptHasLog.data,
+        receiptHasLog.time,
+      );
+      yield edge;
+    }
+  }
+}
 
 export class BlockHasLog extends SolverEdge<'BlockHasLog', Block['id'], Log['id'], object> {
   static typeName = 'BlockHasLog' as const;
