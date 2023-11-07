@@ -36,11 +36,10 @@ export async function generateViewport(): Promise<Viewport> {
 }
 
 export default async function ExplorerLayout({
-  children,
-  nav,
+  children, // nav,
 }: {
   children: React.ReactNode;
-  nav: React.ReactNode;
+  // nav: React.ReactNode;
 }) {
   return (
     <ClientProvider>
@@ -53,7 +52,7 @@ export default async function ExplorerLayout({
               </Typography>
             </Box>
             <AppBreadcrumbs />
-            {nav}
+            {/* {nav} */}
             <Box flex={1} />
             <Stack direction="row" spacing={2} alignItems="center">
               <Button href="/about">About</Button>
