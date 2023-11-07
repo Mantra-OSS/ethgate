@@ -12,7 +12,8 @@ import {
 import { blockSchema, chainSchema, logSchema, receiptSchema, transactionSchema } from '@/spec-node';
 import { parseGlobalId } from '@/spec-solver';
 
-import type { NodeType, ProperPageArgs } from '../graph';
+import type { ProperPageArgs } from '../graph';
+import { NodeType } from '../graph';
 
 import { SolverEdge, SolverNode } from './database/abstract';
 import type { EdgeGenerator, ObjectId } from './database/abstract';
@@ -20,19 +21,15 @@ import type { EdgeGenerator, ObjectId } from './database/abstract';
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;
 };
-export class AksharaNodeType<T extends AksharaNode> implements NodeType<T> {
-  name: T['type'];
+export class AksharaNodeType<T extends AksharaNode> extends NodeType<T> {
   schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>;
-  get: (id: T['id'], ctx: AksharaTypeContext) => Promise<T | void>;
   create: (data: T['data']) => T;
   constructor(
     create: (data: T['data']) => T,
     schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>,
   ) {
-    this.name = schema.aksharaType;
-    this.create = create;
-    this.schema = schema;
-    this.get = async (id: T['id'], ctx: AksharaTypeContext): Promise<T | void> => {
+    const name = schema.aksharaType;
+    const get = async (id: T['id'], ctx: AksharaTypeContext): Promise<T | void> => {
       const [, localId] = parseGlobalId(id);
       const obj = await ctx.aks.getObject(localId);
       if (!obj) {
@@ -40,6 +37,9 @@ export class AksharaNodeType<T extends AksharaNode> implements NodeType<T> {
       }
       return create(obj);
     };
+    super(name, get);
+    this.create = create;
+    this.schema = schema;
   }
   async read(id: T['id'], ctx: AksharaTypeContext): Promise<T> {
     const node = await this.get(id, ctx);

@@ -1,4 +1,3 @@
 export * from './akshara';
-export * from './chainnn';
-export * from './chainnnn';
+export * from './derived';
 export * from './database/abstract';

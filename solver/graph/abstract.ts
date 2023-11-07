@@ -11,10 +11,18 @@ import type { AksharaTypeContext, EdgeGenerator, SolverEdge, SolverNode } from '
 // const asd  =  new RegExp('asd');
 // type Asd  =  RegExpConstructor;
 
-export interface NodeType<T extends SolverNode> {
+export type NodeGetFn<T extends SolverNode> = (
+  id: T['id'],
+  ctx: AksharaTypeContext,
+) => T | void | Promise<T | void>;
+
+export class NodeType<T extends SolverNode> {
   name: T['type'];
-  schema: Extract<AksharaObjectSchema, { aksharaType: T['type'] }>;
-  get(id: T['id'], ctx: AksharaTypeContext): Promise<T | void>;
+  get: NodeGetFn<T>;
+  constructor(name: T['type'], get: NodeGetFn<T>) {
+    this.name = name;
+    this.get = get;
+  }
 }
 
 export type ProperPageArgs<T extends SolverEdge> = {

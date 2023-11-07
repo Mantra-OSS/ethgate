@@ -60,7 +60,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
 
   async getNode<Node extends SolverNode>(id: Node['id']): Promise<Node | undefined> {
     const [type] = parseGlobalId(id);
-    const nodeType = this.graph.nodeTypes.find((nodeType) => nodeType.schema.aksharaType === type)!;
+    const nodeType = this.graph.nodeTypes.find((nodeType) => nodeType.name === type)!;
     return nodeType.get(id, this);
   }
   async *_getConnection<Edge extends SolverEdge>(
