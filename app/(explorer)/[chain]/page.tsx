@@ -1,5 +1,4 @@
-import ChainView from '@/app/components/ChainView';
-import { NodePage } from '@/app/components/NodePage';
+import NodePage from '@/app/components/NodePage';
 import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
@@ -38,9 +37,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ChainPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return (
-    <NodePage node={node.toObject()}>
-      <ChainView node={node.toObject()} />
-    </NodePage>
-  );
+  return <NodePage node={node.toObject()} />;
 }

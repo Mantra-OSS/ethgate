@@ -1,4 +1,4 @@
-import NodePage2 from '@/app/components/NodePage';
+import NodePage from '@/app/components/NodePage';
 import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata, ResolvingMetadata } from 'next';
@@ -33,5 +33,5 @@ export async function generateMetadata(
 
 export default async function BlockPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return <NodePage2 node={node.toObject()} />;
+  return <NodePage node={node.toObject()} />;
 }

@@ -10,17 +10,19 @@ import { useSolver } from '../client/backend';
 import { BlockLogListItem } from './BlockLogList';
 import BlockOverview from './BlockOverview';
 import { BlockTransactionListItem } from './BlockTransactionList';
+import { ChainBlockListItem } from './ChainBlockList';
+import { ChainChainListItem } from './ChainChainList';
+import ChainOverview from './ChainOverview';
+import { ChainTransactionListItem } from './ChainTransactionList';
+import LogOverview from './LogOverview';
 import NodeConnectionList from './NodeConnectionList';
 import NodePageBarContent from './NodePageBarContent';
 import { ReceiptLogListItem } from './ReceiptLogList';
+import ReceiptOverview from './ReceiptOverview';
 import TransactionOverview from './TransactionOverview';
 import { FallbackBoundary } from './ui';
 
-export function NodePage({ node, children }: { node: SolverNode; children: React.ReactNode }) {
-  return <>{children}</>;
-}
-
-export default function NodePage2({ node }: { node: SolverNode }) {
+export default function NodePage({ node }: { node: SolverNode }) {
   const solver = useSolver();
   const edgeTypes = solver.solver.graph.getEdgeTypesForNode(node.type).filter((edgeType) => {
     if (edgeType.name === 'BlockHasReceipt') {
@@ -113,6 +115,46 @@ export function NodePageConnectionSection2({
 }) {
   let children: React.ReactNode;
   switch (edgeType.name) {
+    case 'ChainHasChain': {
+      children = (
+        <NodeConnectionList
+          node={node}
+          edgeType={edgeType}
+          renderItem={({ headId }) => <ChainChainListItem chainId={headId} />}
+        />
+      );
+      break;
+    }
+    case 'ChainHasDescendantBlock': {
+      children = (
+        <NodeConnectionList
+          node={node}
+          edgeType={edgeType}
+          renderItem={({ headId }) => <ChainBlockListItem blockId={headId} />}
+        />
+      );
+      break;
+    }
+    case 'ChainHasBlock': {
+      children = (
+        <NodeConnectionList
+          node={node}
+          edgeType={edgeType}
+          renderItem={({ headId }) => <ChainBlockListItem blockId={headId} />}
+        />
+      );
+      break;
+    }
+    case 'ChainHasTransaction': {
+      children = (
+        <NodeConnectionList
+          node={node}
+          edgeType={edgeType}
+          renderItem={({ headId }) => <ChainTransactionListItem transactionId={headId} />}
+        />
+      );
+      break;
+    }
     case 'BlockHasTransaction': {
       children = (
         <NodeConnectionList
@@ -196,12 +238,24 @@ export function NodePageConnectionSection2({
 export function NodePageOverviewSection2({ node }: { node: SolverNode }) {
   let children: React.ReactNode;
   switch (node.type) {
+    case 'Chain': {
+      children = <ChainOverview node={node as any} />;
+      break;
+    }
     case 'Block': {
       children = <BlockOverview node={node as any} />;
       break;
     }
     case 'Transaction': {
       children = <TransactionOverview node={node as any} />;
+      break;
+    }
+    case 'Receipt': {
+      children = <ReceiptOverview receipt={node as any} />;
+      break;
+    }
+    case 'Log': {
+      children = <LogOverview node={node as any} />;
       break;
     }
     default:
