@@ -1,18 +1,42 @@
 'use client';
 import { ArrowOutward } from '@mui/icons-material';
-import { Box, Divider, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
 import type { SolverEdge, SolverNode } from '../../solver/data';
 import type { EdgeType } from '../../solver/graph';
+import { useSolver } from '../client/backend';
 
 import { BlockLogListItem } from './BlockLogList';
+import BlockOverview from './BlockOverview';
 import { BlockTransactionListItem } from './BlockTransactionList';
 import NodeConnectionList from './NodeConnectionList';
+import NodePageBarContent from './NodePageBarContent';
 import { FallbackBoundary } from './ui';
 
 export function NodePage({ node, children }: { node: SolverNode; children: React.ReactNode }) {
   return <>{children}</>;
+}
+
+export default function NodePage2({ node }: { node: SolverNode }) {
+  const solver = useSolver();
+  const edgeTypes = solver.solver.graph
+    .getEdgeTypesForNode(node.type)
+    .filter((edgeType) => !['receipts'].includes(edgeType.connectionName));
+  return (
+    <>
+      <Grid container spacing={1} padding={1}>
+        <Grid item xs={12}>
+          <NodePageOverviewSection2 node={node} />
+        </Grid>
+        {edgeTypes.map((edgeType) => (
+          <Grid key={edgeType.connectionName} item xs={12} md={6}>
+            <NodePageConnectionSection2 node={node} edgeType={edgeType} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
+  );
 }
 
 export function NodePageSection({
@@ -150,6 +174,29 @@ export function NodePageConnectionSection2({
       </Stack>
       <Divider />
       <Box pt={1} />
+    </NodePageSection>
+  );
+}
+
+export function NodePageOverviewSection2({ node }: { node: SolverNode }) {
+  let children: React.ReactNode;
+  switch (node.type) {
+    case 'Block': {
+      children = <BlockOverview node={node as any} />;
+      break;
+    }
+    default:
+      throw new Error(`Unknown node type: ${node.type}`);
+  }
+  return (
+    <NodePageSection
+      title={
+        <Stack direction="row" padding={2} spacing={2}>
+          <NodePageBarContent node={node} />
+        </Stack>
+      }
+    >
+      {children}
     </NodePageSection>
   );
 }
