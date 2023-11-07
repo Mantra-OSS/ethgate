@@ -4,7 +4,7 @@ import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } fro
 import { FormattedMessage } from 'react-intl';
 
 import type { SolverEdge, SolverNode } from '../../solver/graph';
-import type { EdgeType } from '../../solver/graph/graph';
+import type { EdgeType } from '../../solver/graph/graph/abstract';
 import { useSolver } from '../client/backend';
 
 import NodeConnectionList from './NodeConnectionList';

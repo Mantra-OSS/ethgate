@@ -1,6 +1,8 @@
-import type { AksharaObjectSchema, Time } from '@/lib-node';
+import type { Akshara, Time } from '@/lib-node';
 
-import type { AksharaTypeContext, EdgeGenerator } from '..';
+export type GraphTypeContext = {
+  aks: Akshara;
+};
 
 export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
 
@@ -38,7 +40,7 @@ export interface GraphEdge<
 
 export type NodeGetFn<T extends GraphNode> = (
   id: T['id'],
-  ctx: AksharaTypeContext,
+  ctx: GraphTypeContext,
 ) => T | void | Promise<T | void>;
 
 export class NodeType<T extends GraphNode> {
@@ -64,7 +66,7 @@ export interface EdgeType<T extends GraphEdge> {
   tail: NodeType<any>;
   head: NodeType<any>;
   connectionName: string;
-  get(tailId: T['tailId'], args: ProperPageArgs<T>, ctx: AksharaTypeContext): GraphEdgeGenerator<T>;
+  get(tailId: T['tailId'], args: ProperPageArgs<T>, ctx: GraphTypeContext): GraphEdgeGenerator<T>;
 }
 
 export abstract class SolverGraphAbstract {

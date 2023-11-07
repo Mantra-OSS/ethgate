@@ -16,8 +16,8 @@ import { chains } from '@mantra-oss/chains';
 import { SolverEdge, SolverNode } from './abstract';
 import type { EdgeGenerator, ObjectId } from './abstract';
 import { type Chain, chainType } from './akshara';
-import { NodeType } from './graph';
-import type { ProperPageArgs } from './graph';
+import type { ProperPageArgs } from './graph/abstract';
+import { NodeType } from './graph/abstract';
 
 export const explorerType = new NodeType<Explorer>(
   'Explorer',

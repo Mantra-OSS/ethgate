@@ -10,7 +10,7 @@ import type {
   SolverNode,
 } from '../graph';
 import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../graph';
-import type { SolverGraph } from '../graph/graph';
+import type { SolverGraph } from '../solver';
 
 export type EthgateSolverDatabaseConfig = {
   node: AksharaAbstract;

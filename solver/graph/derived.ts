@@ -14,7 +14,7 @@ import {
   receiptType,
   transactionType,
 } from './akshara';
-import type { ProperPageArgs } from './graph';
+import type { ProperPageArgs } from './graph/abstract';
 
 export class TransactionHasLog extends SolverEdge<
   'TransactionHasLog',

@@ -14,8 +14,8 @@ import { parseGlobalId } from '@/spec-solver';
 
 import { SolverEdge, SolverNode } from './abstract';
 import type { EdgeGenerator, ObjectId } from './abstract';
-import type { ProperPageArgs } from './graph';
-import { NodeType } from './graph';
+import type { ProperPageArgs } from './graph/abstract';
+import { NodeType } from './graph/abstract';
 
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;
