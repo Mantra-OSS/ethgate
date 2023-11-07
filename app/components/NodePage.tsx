@@ -3,8 +3,8 @@ import { ArrowOutward } from '@mui/icons-material';
 import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 
-import type { SolverEdge, SolverNode } from '../../solver/data';
-import type { EdgeType } from '../../solver/graph';
+import type { SolverEdge, SolverNode } from '../../solver/graph';
+import type { EdgeType } from '../../solver/graph/graph';
 import { useSolver } from '../client/backend';
 
 import NodeConnectionList from './NodeConnectionList';

@@ -1,7 +1,7 @@
 import NodeConnectionPage from '@/app/components/NodeConnectionPage';
 import { readAksharaNode } from '@/app/server/akshara.server';
 
-import { ChainHasBlock } from '../../../../solver/data';
+import { ChainHasBlock } from '../../../../solver/graph';
 import type { Props } from '../page';
 import { keyFromParams } from '../page';
 

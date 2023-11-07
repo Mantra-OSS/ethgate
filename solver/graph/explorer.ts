@@ -13,12 +13,11 @@ import { blockSchema, chainSchema, logSchema, receiptSchema, transactionSchema }
 import { parseGlobalId } from '@/spec-solver';
 import { chains } from '@mantra-oss/chains';
 
-import type { ProperPageArgs } from '../graph';
-import { NodeType } from '../graph';
-
+import { SolverEdge, SolverNode } from './abstract';
+import type { EdgeGenerator, ObjectId } from './abstract';
 import { type Chain, chainType } from './akshara';
-import { SolverEdge, SolverNode } from './database/abstract';
-import type { EdgeGenerator, ObjectId } from './database/abstract';
+import { NodeType } from './graph';
+import type { ProperPageArgs } from './graph';
 
 export const explorerType = new NodeType<Explorer>(
   'Explorer',

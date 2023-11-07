@@ -3,7 +3,7 @@ import { Avatar, Box, CircularProgress } from '@mui/material';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import type { Chain, SolverNode } from '../../solver/data';
+import type { Chain, SolverNode } from '../../solver/graph';
 
 export function FallbackContainer({ children }: { children: React.ReactNode }) {
   return (

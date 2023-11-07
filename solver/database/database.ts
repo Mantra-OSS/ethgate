@@ -8,9 +8,9 @@ import type {
   PageInfo,
   SolverEdge,
   SolverNode,
-} from '../data';
-import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../data';
-import type { SolverGraph } from '../graph';
+} from '../graph';
+import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../graph';
+import type { SolverGraph } from '../graph/graph';
 
 export type EthgateSolverDatabaseConfig = {
   node: AksharaAbstract;

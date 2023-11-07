@@ -9,14 +9,14 @@ import {
   logType,
   receiptType,
   transactionType,
-} from '../data/akshara';
+} from '../akshara';
 import {
   BlockHasLog,
   ChainHasDescendantBlock,
   ChainHasTransaction,
   TransactionHasLog,
-} from '../data/derived';
-import { ExplorerHasChain, explorerType } from '../data/explorer';
+} from '../derived';
+import { ExplorerHasChain, explorerType } from '../explorer';
 
 import type { NodeType } from '.';
 import type { EdgeType } from './abstract';

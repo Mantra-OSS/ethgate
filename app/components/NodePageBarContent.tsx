@@ -3,7 +3,7 @@ import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import type { SolverNode } from '../../solver/data';
+import type { SolverNode } from '../../solver/graph';
 
 import { NodeAvatar } from './ui';
 

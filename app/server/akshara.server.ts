@@ -6,8 +6,8 @@ import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { memoize } from 'lodash';
 
-import type { SolverNode } from '../../solver/data';
-import { blockType, chainType, logType, receiptType, transactionType } from '../../solver/data';
+import type { SolverNode } from '../../solver/graph';
+import { blockType, chainType, logType, receiptType, transactionType } from '../../solver/graph';
 
 const { ANKR_KEY } = process.env;
 

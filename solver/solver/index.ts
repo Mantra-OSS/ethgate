@@ -2,7 +2,7 @@ import type { AksharaAbstract, AksharaConfig } from '@/lib-node';
 import { chains } from '@mantra-oss/chains';
 
 import { EthgateSolverDatabase as SolverDatabase } from '../database';
-import { SolverGraph } from '../graph';
+import { SolverGraph } from '../graph/graph';
 
 export type SolverConfig = {
   node: AksharaAbstract;
@@ -35,4 +35,6 @@ export class Solver {
     this.chains = chains;
     this.database = database;
   }
+
+  async resolvePath(path: string): Promise<any> {}
 }

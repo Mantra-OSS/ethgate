@@ -1,66 +1,137 @@
-import type { AksharaObjectSchema } from '@/lib-node';
+import type { Time } from '@/lib-node';
 
-import type { AksharaTypeContext, EdgeGenerator, SolverEdge, SolverNode } from '../data';
+export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
 
-// export type NodeType = {
-//   //idgetter
-//   id: string
-//   //ctor
-//   new(...args:any[]): NodeType
-// }
-// const asd  =  new RegExp('asd');
-// type Asd  =  RegExpConstructor;
-
-export type NodeGetFn<T extends SolverNode> = (
-  id: T['id'],
-  ctx: AksharaTypeContext,
-) => T | void | Promise<T | void>;
-
-export class NodeType<T extends SolverNode> {
-  name: T['type'];
-  get: NodeGetFn<T>;
-  constructor(name: T['type'], get: NodeGetFn<T>) {
-    this.name = name;
-    this.get = get;
-  }
-}
-
-export type ProperPageArgs<T extends SolverEdge> = {
-  before?: T['cursor'];
-  after?: T['cursor'];
-  isForward: boolean;
-  limit: number;
+export type SolverNodeMeta = {
+  name: string;
+  imageUrl?: string;
+  slug: string;
+  path: ObjectId<any>[];
+  themeColor?: string;
 };
 
-export interface EdgeType<T extends SolverEdge> {
-  name: T['type'];
-  tail: NodeType<any>;
-  head: NodeType<any>;
-  connectionName: string;
-  get(tailId: T['tailId'], args: ProperPageArgs<T>, ctx: AksharaTypeContext): EdgeGenerator<T>;
+export abstract class SolverNode<
+  Name extends string = any,
+  Data extends object = any,
+  Id extends ObjectId<Name> = ObjectId<Name>,
+> {
+  abstract type: Name;
+  abstract meta: SolverNodeMeta;
+  id: Id;
+  data: Data;
+  constructor(id: Id, data: Data) {
+    this.id = id;
+    this.data = data;
+  }
+  /** @deprecated */
+  toObject(): any {
+    return { ...this };
+  }
 }
 
-export abstract class SolverGraphAbstract {
-  abstract nodeTypes: NodeType<any>[];
-  abstract edgeTypes: EdgeType<any>[];
+export abstract class SolverEdge<
+  Name extends string = any,
+  TailId extends string = any,
+  HeadId extends string = any,
+  Data extends object = any,
+> {
+  abstract type: Name;
+  tailId: TailId;
+  headId: HeadId;
+  data: Data;
+  time: Time;
+  constructor(tailId: TailId, headId: HeadId, data: Data, time: Time) {
+    this.tailId = tailId;
+    this.headId = headId;
+    this.data = data;
+    this.time = time;
+  }
+  get cursor() {
+    return this.headId;
+  }
+}
 
-  // registerNodeType(nodeType: NodeConstructor<any>) {
-  //   this.nodeTypes.push(nodeType);
-  // }
-  // registerEdgeType(edgeType: EdgeConstructor<any>) {
-  //   this.edgeTypes.push(edgeType);
-  // }
+export type PageArgs<Edge extends SolverEdge> = {
+  before?: Edge['cursor'];
+  after?: Edge['cursor'];
+  last?: number;
+  first?: number;
+};
+export type PageInfo<Edge extends SolverEdge> = {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor?: Edge['cursor'];
+  endCursor?: Edge['cursor'];
+};
+export type EdgeGenerator<Edge extends SolverEdge> = AsyncGenerator<Edge, undefined, undefined>;
+export type ConnectionGenerator<Edge extends SolverEdge> = AsyncGenerator<
+  Edge,
+  PageInfo<Edge>,
+  undefined
+>;
+export class Connection<Edge extends SolverEdge> implements ConnectionGenerator<Edge> {
+  readonly _generator: ConnectionGenerator<Edge>;
 
-  getNodeType(type: string): NodeType<any> {
-    return this.nodeTypes.find((nodeType) => nodeType.name === type)!;
+  constructor(generator: ConnectionGenerator<Edge>) {
+    this._generator = generator;
   }
 
-  getEdgeType<T extends EdgeType<any>>(type: string): T {
-    return this.edgeTypes.find((edgeType) => edgeType.name === type)! as T;
+  async collect(): Promise<{ edges: Edge[]; pageInfo: PageInfo<Edge> }> {
+    const edges = [];
+    let item;
+    while ((item = await this.next()) && !item.done) {
+      const edge = item.value;
+      edges.push(edge);
+    }
+    const pageInfo = item.value;
+    return { edges, pageInfo };
   }
 
-  getEdgeTypesForNode<T extends EdgeType<any>>(type: string): T[] {
-    const nodeType = this.getNodeType(type);
-    return this.edgeTypes.filter((edgeType) => edgeType.tail === nodeType)! as T[];
+  // ConnectionGenerator implementation
+  [Symbol.asyncIterator]() {
+    return this._generator[Symbol.asyncIterator]();
+  }
+  next() {
+    return this._generator.next();
+  }
+  return(value: PageInfo<Edge>) {
+    return this._generator.return(value);
+  }
+  throw(error: any) {
+    return this._generator.throw(error);
+  }
+}
+
+export abstract class DatabaseError extends Error {
+  abstract readonly name: `Database${string}Error`;
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class DatabaseNodeNotFoundError extends DatabaseError {
+  readonly name = 'DatabaseNodeNotFoundError';
+  constructor(pred: any) {
+    super(`Node not found: ${JSON.stringify(pred)}`);
+  }
+}
+
+export abstract class DatabaseAbstract<
+  DatabaseNode extends SolverNode,
+  DatabaseEdge extends SolverEdge,
+> {
+  abstract getNode<Node extends DatabaseNode>(id: Node['id']): Promise<Node | undefined>;
+  abstract getConnection<Edge extends DatabaseEdge>(
+    type: Edge['type'],
+    tailId_: Edge['tailId'],
+    args_: PageArgs<Edge['headId']>,
+  ): Connection<Edge>;
+
+  async readNode<Node extends DatabaseNode>(id: Node['id']): Promise<Node> {
+    const node = await this.getNode(id);
+    if (!node) {
+      throw new DatabaseNodeNotFoundError(id);
+    }
+    return node;
   }
 }

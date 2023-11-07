@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 
 import { ETHGATE_NODE_TEST_CHAINS } from '../../akshara/testing';
-import { SolverGraph } from '../graph';
+import { SolverGraph } from '../graph/graph';
 
 import { EthgateSolverDatabase } from '.';
 

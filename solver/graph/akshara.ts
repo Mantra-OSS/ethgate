@@ -12,11 +12,10 @@ import {
 import { blockSchema, chainSchema, logSchema, receiptSchema, transactionSchema } from '@/spec-node';
 import { parseGlobalId } from '@/spec-solver';
 
-import type { ProperPageArgs } from '../graph';
-import { NodeType } from '../graph';
-
-import { SolverEdge, SolverNode } from './database/abstract';
-import type { EdgeGenerator, ObjectId } from './database/abstract';
+import { SolverEdge, SolverNode } from './abstract';
+import type { EdgeGenerator, ObjectId } from './abstract';
+import type { ProperPageArgs } from './graph';
+import { NodeType } from './graph';
 
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;

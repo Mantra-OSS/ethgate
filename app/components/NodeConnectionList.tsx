@@ -6,7 +6,7 @@ import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/m
 import { useCallback, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 
-import type { EdgeType } from '../../solver/graph';
+import type { EdgeType } from '../../solver/graph/graph';
 import { useConnection } from '../helpers/hooks';
 
 import InfiniteList from './InfiniteList';
