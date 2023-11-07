@@ -22,7 +22,7 @@ export async function GET(request: Request, { params }: Props) {
   const chain = await readAksharaNode(chainKey);
   const solver = await getSolver();
 
-  const node = chain;
+  const node = await solver.solver.resolvePath(['chains', chain.meta.slug, ...(params.path ?? [])]);
   // if (params.path){
   // for (let i = 0; i < params.path.length; i+=2) {
   //   const connectionName = params.path[i];
