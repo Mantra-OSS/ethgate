@@ -15,7 +15,7 @@ export function AppBreadcrumbs() {
   return (
     <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
       {matches.map((match, i) => (
-        <Link key={i} href={`${match.href as any}`}>
+        <Link key={i} href={`${match.href as any}` as any}>
           <Typography variant="h5" color="primary">
             {match.title}
           </Typography>
