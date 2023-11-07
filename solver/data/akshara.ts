@@ -75,7 +75,12 @@ export class Chain extends AksharaNode<
   `Chain:${Ethgate.AksharaChainId}`
 > {
   type = 'Chain' as const;
-  meta = { name: this.data.meta.name, slug: this.data.extra.meta.slug, path: [this.id] };
+  meta = {
+    name: this.data.meta.name,
+    slug: this.data.extra.meta.slug,
+    path: [this.id],
+    themeColor: 'red',
+  };
   parentId: Chain['id'] | undefined = this.data.parentId
     ? (`Chain:${this.data.parentId}` as const)
     : undefined;

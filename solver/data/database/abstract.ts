@@ -2,13 +2,21 @@ import type { Time } from '@/lib-node';
 
 export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
 
+export type SolverNodeMeta = {
+  name: string;
+  imageUrl?: string;
+  slug: string;
+  path: ObjectId<any>[];
+  themeColor?: string;
+};
+
 export abstract class SolverNode<
   Name extends string = any,
   Data extends object = any,
   Id extends ObjectId<Name> = ObjectId<Name>,
 > {
   abstract type: Name;
-  abstract meta: { name: string; imageUrl?: string; slug: string; path: ObjectId<any>[] };
+  abstract meta: SolverNodeMeta;
   id: Id;
   data: Data;
   constructor(id: Id, data: Data) {
