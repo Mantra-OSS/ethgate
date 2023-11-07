@@ -31,9 +31,12 @@ export default function NodePage({ node }: { node: SolverNode }) {
   const edgeTypes = solver.solver.graph.getEdgeTypesForNode(node.type).filter((edgeType) => {
     if (edgeType.name === 'BlockHasReceipt') {
       return false;
+    } else if (edgeType.name === 'ChainHasChain' && Object.keys(node).includes('parentId')) {
+      return false;
     }
     return true;
   });
+
   return (
     <>
       <Grid container spacing={1} padding={1}>
@@ -41,7 +44,12 @@ export default function NodePage({ node }: { node: SolverNode }) {
           <NodePageOverviewSection2 node={node} />
         </Grid>
         {edgeTypes.map((edgeType) => (
-          <Grid key={edgeType.connectionName} item xs={12} md={6}>
+          <Grid
+            key={edgeType.connectionName}
+            item
+            xs={12}
+            md={edgeTypes.length > 2 ? 4 : edgeTypes.length > 1 ? 6 : 12}
+          >
             <NodePageConnectionSection2 node={node} edgeType={edgeType} />
           </Grid>
         ))}
