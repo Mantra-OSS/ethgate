@@ -69,6 +69,33 @@ export interface EdgeType<T extends GraphEdge> {
   get(tailId: T['tailId'], args: ProperPageArgs<T>, ctx: GraphTypeContext): GraphEdgeGenerator<T>;
 }
 
+export type EdgeGetFn<T extends GraphEdge> = (
+  tailId: T['tailId'],
+  args: ProperPageArgs<T>,
+  ctx: GraphTypeContext,
+) => GraphEdgeGenerator<T>;
+
+export class EdgeType2<T extends GraphEdge> {
+  name: T['type'];
+  tail: NodeType<any>;
+  head: NodeType<any>;
+  connectionName: string;
+  get: EdgeGetFn<T>;
+  constructor(
+    name: T['type'],
+    tail: NodeType<any>,
+    head: NodeType<any>,
+    connectionName: string,
+    get: EdgeGetFn<T>,
+  ) {
+    this.name = name;
+    this.tail = tail;
+    this.head = head;
+    this.connectionName = connectionName;
+    this.get = get;
+  }
+}
+
 export abstract class SolverGraphAbstract {
   abstract nodeTypes: NodeType<any>[];
   abstract edgeTypes: EdgeType<any>[];

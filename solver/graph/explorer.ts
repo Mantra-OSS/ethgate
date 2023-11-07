@@ -6,7 +6,7 @@ import { SolverEdge } from './abstract';
 import type { EdgeGenerator } from './abstract';
 import type { Block } from './akshara';
 import { type Chain, blockType, chainType } from './akshara';
-import { NodeType } from './graph/abstract';
+import { EdgeType2, NodeType } from './graph/abstract';
 import type { GraphTypeContext, ProperPageArgs } from './graph/abstract';
 import type { SolverNode } from './graph/abstract';
 
@@ -30,18 +30,12 @@ export type Explorer = SolverNode<
   `Explorer:`
 >;
 
-export class ExplorerHasChain extends SolverEdge<
+export const explorerHasChainType = new EdgeType2<ExplorerHasChain>(
   'ExplorerHasChain',
-  Explorer['id'],
-  Chain['id'],
-  object
-> {
-  static typeName = 'ExplorerHasChain' as const;
-  type = 'ExplorerHasChain' as const;
-  static tail = explorerType;
-  static head = chainType;
-  static connectionName = 'chains';
-  static async *get(
+  explorerType,
+  chainType,
+  'chains',
+  async function* get(
     tailId: ExplorerHasChain['tailId'],
     args: ProperPageArgs<ExplorerHasChain>,
     ctx: GraphTypeContext,
@@ -51,7 +45,21 @@ export class ExplorerHasChain extends SolverEdge<
       const edge = new ExplorerHasChain(tailId, `Chain:${chain.chainId}`, {}, 0);
       yield edge;
     }
-  }
+  },
+);
+
+export class ExplorerHasChain extends SolverEdge<
+  'ExplorerHasChain',
+  Explorer['id'],
+  Chain['id'],
+  object
+> {
+  static typeName = explorerHasChainType.name;
+  type = 'ExplorerHasChain' as const;
+  static tail = explorerHasChainType.tail;
+  static head = explorerHasChainType.head;
+  static connectionName = explorerHasChainType.connectionName;
+  static get = explorerHasChainType.get;
 }
 
 export class ExplorerHasBlock extends SolverEdge<
