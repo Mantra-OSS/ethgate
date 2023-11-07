@@ -63,65 +63,65 @@ export function ChainOverview({ node }: { node: Chain }) {
           )}
         />
       </XYChart> */}
-      <ChainChart chainId={node.id} />
+      {/* <ChainChart chainId={node.id} /> */}
     </>
   );
 }
 
-function ChainChart({ chainId }: { chainId: Chain['id'] }) {
-  const [, startTransition] = useTransition();
-  const [blocks, loadNext, refetch] = useConnection<ChainHasBlock>('ChainHasBlock', chainId, {
-    first: 10,
-  });
-  const onLoadNext = useCallback(() => {
-    startTransition(() => {
-      loadNext();
-    });
-  }, [loadNext]);
+// function ChainChart({ chainId }: { chainId: Chain['id'] }) {
+//   const [, startTransition] = useTransition();
+//   const [blocks, loadNext, refetch] = useConnection<ChainHasBlock>('ChainHasBlock', chainId, {
+//     first: 10,
+//   });
+//   const onLoadNext = useCallback(() => {
+//     startTransition(() => {
+//       loadNext();
+//     });
+//   }, [loadNext]);
 
-  useEffect(() => {
-    let abort = false;
+//   useEffect(() => {
+//     let abort = false;
 
-    (async () => {
-      const database = (await solverPromise).solver.database;
-      const update = await database.networkUpdates(chainId).next();
-      if (update.done) return;
-      if (abort) return;
-      startTransition(() => {
-        refetch();
-      });
-      // const { headId } = update.value;
-    })();
+//     (async () => {
+//       const database = (await solverPromise).solver.database;
+//       const update = await database.networkUpdates(chainId).next();
+//       if (update.done) return;
+//       if (abort) return;
+//       startTransition(() => {
+//         refetch();
+//       });
+//       // const { headId } = update.value;
+//     })();
 
-    return () => {
-      abort = true;
-    };
-  });
-  /*   const data = blocks.edges.map((block) => ({
-    x: block.data.number,
-    y: block.data.transactions.length,
-  })); */
-  const data = [
-    { x: '111853870', y: 50 },
-    { x: '111853871', y: 10 },
-    { x: '111853872', y: 20 },
-    { x: '111853873', y: 42 },
-    { x: '111853874', y: 75 },
-    { x: '111853875', y: 57 },
-    { x: '111853876', y: 32 },
-  ];
-  return (
-    <>
-      <InfiniteList
-      // startSubscriptionConfig={subscriptionConfig}
-      // loadPrevious={hasPrevious && onLoadPrevious}
-      // loadNext={blocks?.pageInfo.hasNextPage && onLoadNext}
-      >
-        <Chart data={data} />
-      </InfiniteList>
-    </>
-  );
-}
+//     return () => {
+//       abort = true;
+//     };
+//   });
+//   /*   const data = blocks.edges.map((block) => ({
+//     x: block.data.number,
+//     y: block.data.transactions.length,
+//   })); */
+//   const data = [
+//     { x: '111853870', y: 50 },
+//     { x: '111853871', y: 10 },
+//     { x: '111853872', y: 20 },
+//     { x: '111853873', y: 42 },
+//     { x: '111853874', y: 75 },
+//     { x: '111853875', y: 57 },
+//     { x: '111853876', y: 32 },
+//   ];
+//   return (
+//     <>
+//       <InfiniteList
+//       // startSubscriptionConfig={subscriptionConfig}
+//       // loadPrevious={hasPrevious && onLoadPrevious}
+//       // loadNext={blocks?.pageInfo.hasNextPage && onLoadNext}
+//       >
+//         <Chart data={data} />
+//       </InfiniteList>
+//     </>
+//   );
+// }
 
 function Chart({ data }: { data: any[] }) {
   const accessors = {
