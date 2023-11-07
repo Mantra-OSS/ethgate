@@ -12,10 +12,11 @@ import {
 import { blockSchema, chainSchema, logSchema, receiptSchema, transactionSchema } from '@/spec-node';
 import { parseGlobalId } from '@/spec-solver';
 
-import { SolverEdge, SolverNode } from './abstract';
+import { SolverEdge } from './abstract';
 import type { EdgeGenerator, ObjectId } from './abstract';
-import type { ProperPageArgs } from './graph/abstract';
 import { NodeType } from './graph/abstract';
+import type { GraphNodeMeta, ProperPageArgs } from './graph/abstract';
+import type { GraphNode } from './graph/abstract';
 
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;
@@ -55,7 +56,21 @@ export abstract class AksharaNode<
   Name extends string = any,
   Data extends object = any,
   Id extends ObjectId<Name> = ObjectId<Name>,
-> extends SolverNode<Name, Data, Id> {}
+> implements GraphNode<Name, Data, Id>
+{
+  abstract type: Name;
+  abstract meta: GraphNodeMeta;
+  id: Id;
+  data: Data;
+  constructor(id: Id, data: Data) {
+    this.id = id;
+    this.data = data;
+  }
+  /** @deprecated */
+  toObject(): any {
+    return { ...this };
+  }
+}
 
 export abstract class AksharaEdge<
   Name extends string = any,

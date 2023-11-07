@@ -1,23 +1,23 @@
 import { chains } from '@mantra-oss/chains';
 
-import { SolverEdge, SolverNode } from './abstract';
+import { SolverEdge } from './abstract';
 import type { EdgeGenerator, ObjectId } from './abstract';
 import { type Chain, chainType } from './akshara';
-import type { ProperPageArgs } from './graph/abstract';
 import { NodeType } from './graph/abstract';
+import type { ProperPageArgs } from './graph/abstract';
+import type { GraphNode } from './graph/abstract';
 
-export const explorerType = new NodeType<Explorer>(
-  'Explorer',
-  (id, data) => new Explorer(`Explorer:`, data),
-);
-export class Explorer extends SolverNode<'Explorer', object, `Explorer:`> {
-  type = 'Explorer' as const;
-  meta = {
+export const explorerType = new NodeType<Explorer>('Explorer', (id, data) => ({
+  id,
+  type: 'Explorer',
+  meta: {
     name: '',
     slug: '',
     path: [],
-  };
-}
+  },
+  data,
+}));
+export type Explorer = GraphNode<'Explorer', object, `Explorer:`>;
 
 export class ExplorerHasChain extends SolverEdge<
   'ExplorerHasChain',

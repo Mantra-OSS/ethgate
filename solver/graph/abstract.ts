@@ -1,33 +1,8 @@
 import type { Time } from '@/lib-node';
 
+import type { GraphNode } from './graph/abstract';
+
 export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
-
-export type SolverNodeMeta = {
-  name: string;
-  imageUrl?: string;
-  slug: string;
-  path: ObjectId<any>[];
-  themeColor?: string;
-};
-
-export abstract class SolverNode<
-  Name extends string = any,
-  Data extends object = any,
-  Id extends ObjectId<Name> = ObjectId<Name>,
-> {
-  abstract type: Name;
-  abstract meta: SolverNodeMeta;
-  id: Id;
-  data: Data;
-  constructor(id: Id, data: Data) {
-    this.id = id;
-    this.data = data;
-  }
-  /** @deprecated */
-  toObject(): any {
-    return { ...this };
-  }
-}
 
 export abstract class SolverEdge<
   Name extends string = any,
@@ -117,7 +92,7 @@ export class DatabaseNodeNotFoundError extends DatabaseError {
 }
 
 export abstract class DatabaseAbstract<
-  DatabaseNode extends SolverNode,
+  DatabaseNode extends GraphNode,
   DatabaseEdge extends SolverEdge,
 > {
   abstract getNode<Node extends DatabaseNode>(id: Node['id']): Promise<Node | undefined>;
