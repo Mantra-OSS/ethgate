@@ -110,9 +110,9 @@ function ChainChart({ chainId }: { chainId: Chain['id'] }) {
   return (
     <>
       <InfiniteList
-        // startSubscriptionConfig={subscriptionConfig}
-        // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={blocks?.pageInfo.hasNextPage && onLoadNext}
+      // startSubscriptionConfig={subscriptionConfig}
+      // loadPrevious={hasPrevious && onLoadPrevious}
+      // loadNext={blocks?.pageInfo.hasNextPage && onLoadNext}
       >
         <Chart data={data} />
       </InfiniteList>
