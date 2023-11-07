@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 
 import { ETHGATE_NODE_TEST_CHAINS } from '../../akshara/testing';
+import { SolverGraph } from '../graph';
 
 import { EthgateSolverDatabase } from '.';
-import { SolverGraph } from '../graph';
 
 const graph = new SolverGraph();
 

@@ -1,15 +1,11 @@
-import type { Block, Chain, ChainHasBlock, Log, Receipt, Transaction } from '@/lib-solver';
+import type { Block, Chain, Log, Receipt, Transaction } from '@/lib-solver';
 import { Avatar, Divider, Link, Stack, Typography } from '@mui/material';
 import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 import { DateTime } from 'luxon';
-import { useCallback, useEffect, useTransition } from 'react';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
-import { solverPromise } from '../client/backend';
-import { useConnection, useNode } from '../helpers/hooks';
+import { useNode } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
-
-import InfiniteList from './InfiniteList';
 
 export function ChainOverview({ node }: { node: Chain }) {
   /*   const data1 = [
