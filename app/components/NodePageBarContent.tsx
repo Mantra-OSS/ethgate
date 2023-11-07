@@ -1,6 +1,5 @@
 import { MoreVert } from '@mui/icons-material';
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
-import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -10,7 +9,6 @@ import { NodeAvatar } from './ui';
 
 export default function NodePageBarContent({ node }: { node: SolverNode }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const pathname = usePathname();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -18,7 +16,6 @@ export default function NodePageBarContent({ node }: { node: SolverNode }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(pathname);
   return (
     <>
       <NodeAvatar node={node} />

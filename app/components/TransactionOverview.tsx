@@ -1,6 +1,7 @@
-import type { Transaction, Chain } from '@/lib-solver';
+import type { Chain, Transaction } from '@/lib-solver';
 import { Avatar, Divider, Link, Stack, Typography } from '@mui/material';
 import { FormattedNumber } from 'react-intl';
+
 import { useNode } from '../helpers/hooks';
 
 export default function TransactionOverview({ node }: { node: Transaction }) {
@@ -17,6 +18,16 @@ export default function TransactionOverview({ node }: { node: Transaction }) {
             .map((word) => word[0])
             .join('')}
         </Avatar>
+      </Stack>
+      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+        <Typography>Block Hash</Typography>
+        <Typography>{node.blockHash}</Typography>
+      </Stack>
+      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+        <Typography>Block Number</Typography>
+        <Typography>
+          <FormattedNumber value={node.blockNumber} />
+        </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Transaction Hash</Typography>

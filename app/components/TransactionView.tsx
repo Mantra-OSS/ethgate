@@ -3,7 +3,6 @@
 import type { Transaction } from '@/lib-solver';
 import type { Receipt } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack } from '@mui/material';
-import { usePathname, useRouter, useSelectedLayoutSegments } from 'next/navigation';
 
 import { FallbackBoundary } from '../components/ui';
 import { useNode } from '../helpers/hooks';
@@ -15,10 +14,6 @@ import TransactionOverview from './TransactionOverview';
 
 export default function TransactionView({ node }: { node: Transaction }) {
   const receipt = useNode<Receipt>(node.receiptId);
-  const router = useRouter();
-  const segments = useSelectedLayoutSegments();
-  const pathname = usePathname();
-  console.log({ pathname, segments, router });
 
   return (
     <Grid container spacing={1} padding={1}>

@@ -1,16 +1,15 @@
 'use client';
 
-import { Divider, Grid, Paper, Stack } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 
 import type { Chain } from '../../solver/data';
-import { FallbackBoundary } from '../components/ui';
+import { useSolver } from '../client/backend';
 
 import ChainBlockList from './ChainBlockList';
 import ChainOverview from './ChainOverview';
 import ChainTransactionList from './ChainTransactionList';
 import { NodePageConnectionSection, NodePageSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
-import { useSolver } from '../client/backend';
 
 export default function ChainView({ node }: { node: Chain }) {
   const solver = useSolver();

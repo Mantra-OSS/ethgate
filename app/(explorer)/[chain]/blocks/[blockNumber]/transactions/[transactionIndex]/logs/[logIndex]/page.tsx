@@ -30,8 +30,19 @@ export async function keyFromParams(params: Params): Promise<AksharaLogKey & { t
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const node = await readAksharaNode(await keyFromParams(params));
+  const chain = Object.values(chains).find(
+    (chain) => chain.chainId === params.chain || chain.meta.slug === params.chain,
+  );
+  if (!chain) notFound();
+  console.log(node);
   return {
-    title: node.meta.name,
+    title: `Log: ${node.meta.name}`,
+    description: `Log number ${node.meta.name} of chain number ${
+      chain.chainId
+    }, block number ${parseInt(params.blockNumber, 10)}, transaction index ${parseInt(
+      params.transactionIndex,
+      10,
+    )}.`,
   };
 }
 

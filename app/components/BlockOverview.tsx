@@ -3,8 +3,8 @@ import { Avatar, Divider, Link, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
-import { useNow } from '../viewer/viewer';
 import { useNode } from '../helpers/hooks';
+import { useNow } from '../viewer/viewer';
 
 export default function BlockOverview({ node }: { node: Block }) {
   const chain = useNode<Chain>(node.chainId);
@@ -24,11 +24,11 @@ export default function BlockOverview({ node }: { node: Block }) {
         </Avatar>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Hash</Typography>
+        <Typography>Block Hash</Typography>
         <Typography>{node.hash}</Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Number</Typography>
+        <Typography>Block Number</Typography>
         <Typography>{<FormattedNumber value={node.number} />}</Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
