@@ -1,18 +1,11 @@
 'use client';
 
 import { useNode } from '@/app/helpers/hooks';
-import type { Block, SolverEdge, Transaction } from '@/lib-solver';
-import { ListItemAvatar, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
-
-import type { EdgeType } from '../../solver/graph';
-
-import NodeConnectionList from './NodeConnectionList';
-import { NodeAvatar } from './ui';
+import type { Transaction } from '@/lib-solver';
+import { ListItemText, Typography } from '@mui/material';
 
 export function BlockTransactionListItem({ transactionId }: { transactionId: Transaction['id'] }) {
-  console.log('BlockTransactionListItem', transactionId);
   const node = useNode<Transaction>(transactionId);
-
   return (
     <>
       <ListItemText>

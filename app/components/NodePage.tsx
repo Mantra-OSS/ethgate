@@ -6,6 +6,9 @@ import { FormattedMessage } from 'react-intl';
 import type { SolverEdge, SolverNode } from '../../solver/data';
 import type { EdgeType } from '../../solver/graph';
 
+import { BlockLogListItem } from './BlockLogList';
+import { BlockTransactionListItem } from './BlockTransactionList';
+import NodeConnectionList from './NodeConnectionList';
 import { FallbackBoundary } from './ui';
 
 export function NodePage({ node, children }: { node: SolverNode; children: React.ReactNode }) {
@@ -75,12 +78,35 @@ export function NodePageConnectionSection({
 export function NodePageConnectionSection2({
   node,
   edgeType,
-  children,
 }: {
   node: SolverNode;
   edgeType: EdgeType<any>;
-  children: React.ReactNode;
 }) {
+  let children: React.ReactNode;
+  switch (edgeType.name) {
+    case 'BlockHasTransaction': {
+      children = (
+        <NodeConnectionList
+          node={node}
+          edgeType={edgeType}
+          renderItem={({ headId }) => <BlockTransactionListItem transactionId={headId} />}
+        />
+      );
+      break;
+    }
+    case 'BlockHasLog': {
+      children = (
+        <NodeConnectionList
+          node={node}
+          edgeType={edgeType}
+          renderItem={({ headId }) => <BlockLogListItem logId={headId} />}
+        />
+      );
+      break;
+    }
+    default:
+      throw new Error(`Unknown edge type: ${edgeType.name}`);
+  }
   return (
     <NodePageSection
       title={
