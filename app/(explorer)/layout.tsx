@@ -1,13 +1,25 @@
 import { GitHub, Twitter } from '@mui/icons-material';
-import { Alert, AppBar, Box, Button, IconButton, Paper, Stack, Toolbar } from '@mui/material';
+import {
+  Alert,
+  AppBar,
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Stack,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import type { Metadata, Viewport } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import ClientProvider from '../client/AppProvider';
-import logo from '../client/logo.svg';
 import { AppBreadcrumbs } from '../client/breadcrumbs';
+import logo from '../client/logo.svg';
 import { readAksharaNode } from '../server/akshara.server';
+
+import EthgateLogo from './EthgateLogo';
 
 // https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 export async function generateMetadata(): Promise<Metadata> {
@@ -37,7 +49,9 @@ export default async function ExplorerLayout({
         <AppBar position="sticky">
           <Toolbar>
             <Box pr={2}>
-              <Image src={logo} alt="ethgate.io logo" width={32} height={32} />
+              <Typography color="primary">
+                <EthgateLogo />
+              </Typography>
             </Box>
             <AppBreadcrumbs />
             {nav}
