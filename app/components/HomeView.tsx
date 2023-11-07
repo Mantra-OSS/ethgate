@@ -7,8 +7,8 @@ import { Container, Divider, Grid, Paper, Stack, Typography } from '@mui/materia
 import { FallbackBoundary } from '../components/ui';
 
 // import ChainDescendantBlockList from './ChainDescendantBlockList';
-import ChainChainList from './ChainChainList';
-import ChainOverview from './ChainOverview';
+// import ChainChainList from './ChainChainList';
+// import ChainOverview from './ChainOverview';
 // import ChainTransactionList from './ChainTransactionList';
 
 export default function HomeView() {
@@ -24,9 +24,7 @@ export default function HomeView() {
                 Chain Overview
               </Typography>
               <Divider />
-              <FallbackBoundary>
-                <ChainOverview node={node} />
-              </FallbackBoundary>
+              <FallbackBoundary>{/* <ChainOverview node={node} /> */}</FallbackBoundary>
             </Paper>
           </Grid>
           <Grid item xs={12}>
@@ -37,7 +35,7 @@ export default function HomeView() {
               <Divider />
               <FallbackBoundary>
                 <Stack direction="row" sx={{ overflowX: 'auto' }}>
-                  <ChainChainList chain={node} />
+                  {/* <ChainChainList chain={node} /> */}
                 </Stack>
               </FallbackBoundary>
             </Paper>

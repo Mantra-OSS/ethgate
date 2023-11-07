@@ -7,19 +7,21 @@ import type { SolverEdge, SolverNode } from '../../solver/data';
 import type { EdgeType } from '../../solver/graph';
 import { useSolver } from '../client/backend';
 
-import { BlockLogListItem } from './BlockLogList';
 import BlockOverview from './BlockOverview';
-import { BlockTransactionListItem } from './BlockTransactionList';
-import { ChainBlockListItem } from './ChainBlockList';
-import { ChainChainListItem } from './ChainChainList';
 import ChainOverview from './ChainOverview';
-import { ChainTransactionListItem } from './ChainTransactionList';
 import LogOverview from './LogOverview';
 import NodeConnectionList from './NodeConnectionList';
 import NodePageBarContent from './NodePageBarContent';
-import { ReceiptLogListItem } from './ReceiptLogList';
 import ReceiptOverview from './ReceiptOverview';
 import TransactionOverview from './TransactionOverview';
+import {
+  BlockTransactionListItem,
+  ChainBlockListItem,
+  ChainChainListItem,
+  ChainTransactionListItem,
+  ReceiptLogListItem,
+} from './list-items';
+import { BlockLogListItem } from './list-items';
 import { FallbackBoundary } from './ui';
 
 export default function NodePage({ node }: { node: SolverNode }) {
