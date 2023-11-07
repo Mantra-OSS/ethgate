@@ -36,6 +36,9 @@ export function ChainOverview({ node }: { node: Chain }) {
           <Typography>Chain ID</Typography>
           <Typography>{node.data.chainId}</Typography>
         </Stack>
+        {Object.keys(node).includes('parentId') && (
+          <ParentChainOverview chainId={node.parentId as Chain['id']} />
+        )}
       </Stack>
       {/*       <XYChart height={300} xScale={{ type: 'band' }} yScale={{ type: 'linear' }}>
         <AnimatedAxis orientation="bottom" />
@@ -61,6 +64,19 @@ export function ChainOverview({ node }: { node: Chain }) {
       </XYChart> */}
       {/* <ChainChart chainId={node.id} /> */}
     </>
+  );
+}
+
+function ParentChainOverview({ chainId }: { chainId: Chain['id'] }) {
+  const chain = useNode<Chain>(chainId);
+
+  return (
+    <Stack direction="row" justifyContent="space-between">
+      <Typography>Parent Chain</Typography>
+      <Link href={`/${chain.meta.slug}`}>
+        <Typography>{chain.meta.name}</Typography>
+      </Link>
+    </Stack>
   );
 }
 
