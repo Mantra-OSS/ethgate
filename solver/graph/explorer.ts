@@ -1,7 +1,7 @@
 import { chains } from '@mantra-oss/chains';
 
 import { SolverEdge } from './abstract';
-import type { EdgeGenerator, ObjectId } from './abstract';
+import type { EdgeGenerator } from './abstract';
 import { type Chain, chainType } from './akshara';
 import { NodeType } from './graph/abstract';
 import type { ProperPageArgs } from './graph/abstract';

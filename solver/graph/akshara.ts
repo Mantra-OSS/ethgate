@@ -13,9 +13,9 @@ import { blockSchema, chainSchema, logSchema, receiptSchema, transactionSchema }
 import { parseGlobalId } from '@/spec-solver';
 
 import { SolverEdge } from './abstract';
-import type { EdgeGenerator, ObjectId } from './abstract';
+import type { EdgeGenerator } from './abstract';
 import { NodeType } from './graph/abstract';
-import type { GraphNodeMeta, ProperPageArgs } from './graph/abstract';
+import type { GraphNodeMeta, ObjectId, ProperPageArgs } from './graph/abstract';
 import type { GraphNode } from './graph/abstract';
 
 export type AksharaTypeContext = {

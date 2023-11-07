@@ -2,8 +2,6 @@ import type { Time } from '@/lib-node';
 
 import type { GraphNode } from './graph/abstract';
 
-export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
-
 export abstract class SolverEdge<
   Name extends string = any,
   TailId extends string = any,

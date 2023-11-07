@@ -1,10 +1,10 @@
 import 'server-only';
 import {
+  type GraphNode,
   type PageArgs,
   type PageInfo,
   Solver,
   type SolverEdge,
-  type SolverNode,
 } from '@/lib-solver';
 import { memoize } from 'lodash';
 import { use } from 'react';
@@ -44,7 +44,7 @@ export async function getSolver() {
 //   }
 // }
 
-export const readNode = memoize(async function readNode<T extends SolverNode>(id: T['id']) {
+export const readNode = memoize(async function readNode<T extends GraphNode>(id: T['id']) {
   const database = (await solverPromise).solver.database;
   const node = await database.readNode(id);
   return node;
