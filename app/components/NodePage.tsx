@@ -9,14 +9,8 @@ import { useSolver } from '../client/backend';
 
 import NodeConnectionList from './NodeConnectionList';
 import NodePageBarContent from './NodePageBarContent';
-import {
-  BlockTransactionListItem,
-  ChainBlockListItem,
-  ChainChainListItem,
-  ChainTransactionListItem,
-  ReceiptLogListItem,
-} from './list-items';
-import { BlockLogListItem } from './list-items';
+import { BlockListItem, ChainListItem, TransactionListItem } from './list-items';
+import { LogListItem } from './list-items';
 import {
   BlockOverview,
   ChainOverview,
@@ -132,7 +126,7 @@ export function NodePageConnectionSection2({
         <NodeConnectionList
           node={node}
           edgeType={edgeType}
-          renderItem={({ headId }) => <ChainChainListItem chainId={headId} />}
+          renderItem={({ headId }) => <ChainListItem chainId={headId} />}
         />
       );
       break;
@@ -142,7 +136,7 @@ export function NodePageConnectionSection2({
         <NodeConnectionList
           node={node}
           edgeType={edgeType}
-          renderItem={({ headId }) => <ChainBlockListItem blockId={headId} />}
+          renderItem={({ headId }) => <BlockListItem blockId={headId} />}
         />
       );
       break;
@@ -152,7 +146,7 @@ export function NodePageConnectionSection2({
         <NodeConnectionList
           node={node}
           edgeType={edgeType}
-          renderItem={({ headId }) => <ChainBlockListItem blockId={headId} />}
+          renderItem={({ headId }) => <BlockListItem blockId={headId} />}
         />
       );
       break;
@@ -162,7 +156,7 @@ export function NodePageConnectionSection2({
         <NodeConnectionList
           node={node}
           edgeType={edgeType}
-          renderItem={({ headId }) => <ChainTransactionListItem transactionId={headId} />}
+          renderItem={({ headId }) => <TransactionListItem transactionId={headId} />}
         />
       );
       break;
@@ -172,7 +166,7 @@ export function NodePageConnectionSection2({
         <NodeConnectionList
           node={node}
           edgeType={edgeType}
-          renderItem={({ headId }) => <BlockTransactionListItem transactionId={headId} />}
+          renderItem={({ headId }) => <TransactionListItem transactionId={headId} />}
         />
       );
       break;
@@ -182,7 +176,7 @@ export function NodePageConnectionSection2({
         <NodeConnectionList
           node={node}
           edgeType={edgeType}
-          renderItem={({ headId }) => <BlockLogListItem logId={headId} />}
+          renderItem={({ headId }) => <LogListItem logId={headId} />}
         />
       );
       break;
@@ -192,7 +186,7 @@ export function NodePageConnectionSection2({
         <NodeConnectionList
           node={node}
           edgeType={edgeType}
-          renderItem={({ headId }) => <ReceiptLogListItem logId={headId} />}
+          renderItem={({ headId }) => <LogListItem logId={headId} />}
         />
       );
       break;
