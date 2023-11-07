@@ -2,6 +2,7 @@ import LogView from '@/app/components/LogView';
 import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 import type { AksharaLogKey } from '../../../../../../../../../akshara/spec/db';
@@ -34,8 +35,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     (chain) => chain.chainId === params.chain || chain.meta.slug === params.chain,
   );
   if (!chain) notFound();
-  console.log(node);
-  return {
+  const metadata = {
     title: `Log: ${node.meta.name}`,
     description: `Log number ${node.meta.name} of chain number ${
       chain.chainId
@@ -43,6 +43,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       params.transactionIndex,
       10,
     )}.`,
+  };
+
+  return {
+    ...metadata,
+    twitter: {
+      ...metadata,
+    },
   };
 }
 
