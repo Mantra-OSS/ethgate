@@ -26,39 +26,6 @@ class AksharaServer extends Akshara {
 
 export const createAkshara = memoize(async () => new AksharaServer());
 
-export async function readObject<Key extends AksharaObjectKey>(
-  key: Key,
-): Promise<AksharaObjects[Key['type']]['Data']> {
-  const akshara = await createAkshara();
-  const object = await akshara.getObject(key);
-  if (!object) {
-    throw new Error(`Object not found: ${JSON.stringify(key)}`);
-  }
-  return object;
-}
-
-export async function readAksharaNode<Key extends AksharaObjectKey>(
-  key: Key,
-): Promise<AksharaNode> {
-  const akshara = await createAkshara();
-  const object = await akshara.getObject(key);
-  if (!object) {
-    throw new Error(`Object not found: ${JSON.stringify(key)}`);
-  }
-  switch (key.type) {
-    case 'Chain':
-      return chainType.create(object);
-    case 'Block':
-      return blockType.create(object);
-    case 'Transaction':
-      return transactionType.create(object);
-    case 'Receipt':
-      return receiptType.create(object);
-    case 'Log':
-      return logType.create(object);
-  }
-}
-
 const serverChains = {
   '1': {
     ...chains['1'],

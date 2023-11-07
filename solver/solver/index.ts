@@ -2,7 +2,7 @@ import type { AksharaAbstract, AksharaConfig, AksharaObjectKey } from '@/lib-nod
 import { chains } from '@mantra-oss/chains';
 
 import { EthgateSolverDatabase as SolverDatabase } from '../database';
-import type { Chain } from '../graph';
+import type { Block, Chain, Transaction } from '../graph';
 import {
   BlockHasLog,
   BlockHasReceipt,
@@ -90,7 +90,8 @@ export class Solver {
     for (let i = 0; i < parts.length; i += 2) {
       const connectionSlug = parts[i];
       const edgeType = this.graph.edgeTypes.find(
-        (edgeType) => edgeType.connectionName === connectionSlug,
+        (edgeType) =>
+          edgeType.tail.name === resolved.type && edgeType.connectionName === connectionSlug,
       );
       if (!edgeType) {
         throw new Error(`No such connection ${connectionSlug}`);
@@ -127,6 +128,37 @@ export class Solver {
             throw new Error(`Object not found: ${JSON.stringify(key)}`);
           }
           resolved = blockType.create(object);
+          break;
+        }
+        case 'BlockHasTransaction': {
+          const block = resolved as Block;
+          const key = {
+            type: 'Transaction',
+            chainId: block.data.chainId,
+            blockNumber: block.data.number,
+            transactionIndex: parseInt(headSlug, 10),
+          } satisfies AksharaObjectKey;
+          const object = await this.database.aks.getObject(key);
+          if (!object) {
+            throw new Error(`Object not found: ${JSON.stringify(key)}`);
+          }
+          resolved = transactionType.create(object);
+          break;
+        }
+        case 'TransactionHasLog': {
+          const transaction = resolved as Transaction;
+          const key = {
+            type: 'Log',
+            chainId: transaction.data.chainId,
+            blockNumber: transaction.data.blockNumber,
+            transactionIndex: transaction.data.transactionIndex,
+            logIndex: parseInt(headSlug, 10),
+          } satisfies AksharaObjectKey;
+          const object = await this.database.aks.getObject(key);
+          if (!object) {
+            throw new Error(`Object not found: ${JSON.stringify(key)}`);
+          }
+          resolved = logType.create(object);
           break;
         }
         default: {

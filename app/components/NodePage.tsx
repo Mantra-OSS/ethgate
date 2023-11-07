@@ -1,5 +1,5 @@
 'use client';
-import type { SolverEdge, SolverNode } from '@/lib-solver';
+import type { SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { ArrowOutward } from '@mui/icons-material';
 import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';

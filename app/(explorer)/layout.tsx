@@ -17,7 +17,6 @@ import Link from 'next/link';
 import ClientProvider from '../client/AppProvider';
 import { AppBreadcrumbs } from '../client/breadcrumbs';
 import logo from '../client/logo.svg';
-import { readAksharaNode } from '../server/akshara.server';
 
 import EthgateLogo from './EthgateLogo';
 
