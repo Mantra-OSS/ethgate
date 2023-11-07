@@ -3,9 +3,7 @@
 import { useNode } from '@/app/helpers/hooks';
 import type { Block, BlockHasTransaction, Transaction } from '@/lib-solver';
 import {
-  Avatar,
   Collapse,
-  ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
@@ -13,20 +11,21 @@ import {
   Typography,
 } from '@mui/material';
 import { useCallback, useTransition } from 'react';
-import { TransitionGroup } from 'react-transition-group';
 
+import type { EdgeType } from '../../solver/graph';
 import InfiniteList from '../components/InfiniteList';
 import { useConnection } from '../helpers/hooks';
 
 import { NodeList, NodeListItem } from './NodeList';
-
 import { NodeAvatar } from './ui';
-import { useSolver } from '../client/backend';
 
-export default function BlockTransactionList({ block: tail }: { block: Block }) {
-  const solver = useSolver();
-  const edgeType = solver.solver.graph.getEdgeType('BlockHasTransaction');
-
+export default function BlockTransactionList({
+  edgeType,
+  tail,
+}: {
+  edgeType: EdgeType<any>;
+  tail: Block;
+}) {
   const [, startTransition] = useTransition();
 
   const [connection, loadNext] = useConnection<BlockHasTransaction>(edgeType.name, tail.id, {

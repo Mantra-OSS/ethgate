@@ -1,17 +1,16 @@
 'use client';
 
 import type { Block } from '@/lib-solver';
-import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
 
-import { FallbackBoundary } from '../components/ui';
+import { useSolver } from '../client/backend';
 
 import BlockLogList from './BlockLogList';
 import BlockOverview from './BlockOverview';
 import BlockTransactionList from './BlockTransactionList';
-import { NodePageConnectionSection, NodePageSection } from './NodePage';
+import { NodePageConnectionSection, NodePageConnectionSection2, NodePageSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
-import { useSolver } from '../client/backend';
-import { FormattedMessage } from 'react-intl';
 
 export default function BlockView({ node }: { node: Block }) {
   const solver = useSolver();
@@ -34,28 +33,12 @@ export default function BlockView({ node }: { node: Block }) {
         </Grid>
         {edgeTypes.map((edgeType) => (
           <Grid key={edgeType.connectionName} item xs={12} md={6}>
-            <NodePageConnectionSection
-              title={
-                <FormattedMessage
-                  id={`Connection.title`}
-                  defaultMessage={`{name, select,
-                    chains {Chains}
-                    blocks {Blocks}
-                    transactions {Transactions}
-                    receipts {Receipts}
-                    logs {Logs}
-                    other {Connection \"{name}\"}
-                  }`}
-                  values={{
-                    name: edgeType.connectionName,
-                  }}
-                />
-              }
-              href={`${node.meta.slug}/${edgeType.connectionName}`}
-            >
-              {edgeType.connectionName === 'transactions' && <BlockTransactionList block={node} />}
+            <NodePageConnectionSection2 node={node} edgeType={edgeType}>
+              {edgeType.connectionName === 'transactions' && (
+                <BlockTransactionList edgeType={edgeType} tail={node} />
+              )}
               {edgeType.connectionName === 'logs' && <BlockLogList block={node} />}
-            </NodePageConnectionSection>
+            </NodePageConnectionSection2>
           </Grid>
         ))}
       </Grid>
