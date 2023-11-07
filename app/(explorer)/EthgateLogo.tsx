@@ -17,8 +17,8 @@ export default function EthgateLogo() {
           height="100"
           fill="transparent"
           stroke="currentColor"
-          stroke-width="4"
-          clip-path="url(#myClip)"
+          strokeWidth="4"
+          clipPath="url(#myClip)"
         />
         <g transform="rotate(45, 100, 100)">
           <rect
@@ -28,7 +28,7 @@ export default function EthgateLogo() {
             height="80"
             fill="transparent"
             stroke="currentColor"
-            stroke-width="4"
+            strokeWidth="4"
           />
           <g transform="rotate(45, 100, 100)">
             <rect
@@ -38,7 +38,7 @@ export default function EthgateLogo() {
               height="40"
               fill="transparent"
               stroke="currentColor"
-              stroke-width="4"
+              strokeWidth="4"
             />
           </g>
         </g>
