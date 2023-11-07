@@ -1,6 +1,6 @@
 import Blah from '@/app/client/Blah';
 import TransactionView from '@/app/components/TransactionView';
-import { readAksharaNode } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';

@@ -13,7 +13,8 @@ class AksharaClient extends Akshara {
       IDBKeyRange: globalThis.indexedDB ? globalThis.IDBKeyRange : IDBKeyRange,
     });
     const fetchFn = globalThis.fetch.bind(globalThis);
-    super({ chains, fetchFn, database });
+    const daBatchScheduleFn = (callback: any) => setTimeout(callback, 2000);
+    super({ chains, fetchFn, database, daBatchScheduleFn });
   }
 }
 

@@ -19,7 +19,7 @@ describe('EthgateSolverDatabase', () => {
       indexedDB: new IDBFactory(),
       IDBKeyRange: IDBKeyRange,
     });
-    node = new Akshara({ chains, fetchFn, database });
+    node = new Akshara({ chains, fetchFn, database, daBatchScheduleFn: undefined as any });
   });
 
   it('can read "Chain:1"', async () => {

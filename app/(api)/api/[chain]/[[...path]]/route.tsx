@@ -1,4 +1,4 @@
-import { readAksharaNode } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import { notFound } from 'next/navigation';
 import { NextResponse } from 'next/server';

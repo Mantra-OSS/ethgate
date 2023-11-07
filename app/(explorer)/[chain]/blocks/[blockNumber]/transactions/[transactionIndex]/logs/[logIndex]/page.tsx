@@ -1,5 +1,5 @@
 import LogView from '@/app/components/LogView';
-import { readAksharaNode } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';

@@ -1,4 +1,3 @@
-'use server';
 import 'server-only';
 
 import { Akshara, AksharaDatabase } from '@/lib-node';
@@ -20,7 +19,9 @@ class AksharaServer extends Akshara {
       IDBKeyRange,
     });
     const fetchFn = globalThis.fetch.bind(globalThis);
-    super({ chains: serverChains, fetchFn, database });
+    // TODO: No batch
+    // TODO: No cache
+    super({ chains: serverChains, fetchFn, database, daBatchScheduleFn: undefined as any });
   }
 }
 

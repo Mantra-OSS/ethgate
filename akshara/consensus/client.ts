@@ -19,32 +19,32 @@ import { BatchLoader } from './utils';
 
 const ENABLE_CACHING = false;
 
-// export type AksharaDaClientConfig = {
-//   chain: AksharaChainData;
-//   fetch: Fetch;
-//   batchScheduleFn?: (callback: () => void) => void;
-//   cacheMap: DataLoader.CacheMap<string, Promise<AksharaDaClientResult>>;
-//   persistCache: boolean;
-// };
+export type AksharaDaClientConfig = {
+  root: AksharaChainData;
+  fetchFn: Fetch;
+  batchScheduleFn: (callback: () => void) => void;
+  // cacheMap: DataLoader.CacheMap<string, Promise<AksharaDaClientResult>>;
+  // persistCache: boolean;
+};
 
 export class AksharaDaClient extends AksharaDaClientAbstract {
   readonly pool: AksharaPeerPool;
   readonly loader: BatchLoader<AksharaDaCall, AksharaDaResult, string>;
   latestBlocks: Map<AksharaChainId, AksharaBlockData> = new Map();
 
-  constructor(root: AksharaChainData, fetchFn: Fetch) {
-    super(root);
-    const peers = root.rpcs.map(({ url }) => {
+  constructor(config: AksharaDaClientConfig) {
+    super(config.root);
+    const peers = config.root.rpcs.map(({ url }) => {
       const peer = new EthereumPeer({
         url,
-        fetch: fetchFn,
+        fetch: config.fetchFn,
       });
       return peer;
     });
 
     const configg = {
       // batchScheduleFn: (callback: any) => setTimeout(callback, 1000 / 30 / 30),
-      batchScheduleFn: (callback: any) => setTimeout(callback, 2000),
+      batchScheduleFn: config.batchScheduleFn,
       cacheMap: new Map(),
       persistCache: ENABLE_CACHING,
     };

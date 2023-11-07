@@ -24,6 +24,7 @@ describe('Akshara', () => {
       chains: ETHGATE_NODE_TEST_CHAINS,
       fetchFn,
       database,
+      daBatchScheduleFn: undefined as any,
     });
     chainIds = ['1', ...(await node.execute('GetChains', [{ chainId: '1' }]))];
     latestBlocks = new Map(
@@ -43,7 +44,12 @@ describe('Akshara', () => {
       IDBKeyRange,
     });
     fetchFn = jest.fn(fetch);
-    node = new Akshara({ chains: ETHGATE_NODE_TEST_CHAINS, fetchFn, database });
+    node = new Akshara({
+      chains: ETHGATE_NODE_TEST_CHAINS,
+      fetchFn,
+      database,
+      daBatchScheduleFn: undefined as any,
+    });
     chainIds.forEach((chainId) => {
       const client = node.getDaClient(chainId);
       client.latestBlocks = latestBlocks;

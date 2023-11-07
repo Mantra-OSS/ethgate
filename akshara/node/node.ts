@@ -29,12 +29,14 @@ export type AksharaConfig = {
   chains: Record<AksharaChainId, Chain>;
   fetchFn: FetchFn;
   database: AksharaDatabase;
+  daBatchScheduleFn: (callback: () => void) => void;
 };
 
 export class Akshara extends AksharaAbstract {
   chains: Record<AksharaChainId, Chain>;
   fetchFn: FetchFn;
   database: AksharaDatabase;
+  daBatchScheduleFn: (callback: () => void) => void;
   consensusClients: Map<AksharaChainId, AksharaDaClient> = new Map();
 
   constructor(config: AksharaConfig) {
@@ -52,6 +54,7 @@ export class Akshara extends AksharaAbstract {
     this.chains = config.chains;
     this.fetchFn = config.fetchFn;
     this.database = config.database;
+    this.daBatchScheduleFn = config.daBatchScheduleFn;
   }
 
   // getLatestBlock(chainId: AksharaChainId): AksharaBlockData | undefined {
@@ -78,8 +81,12 @@ export class Akshara extends AksharaAbstract {
   getDaClient(chainId: AksharaChainId): AksharaDaClient {
     let client = this.consensusClients.get(chainId);
     if (!client) {
-      const chain = this._getChain(chainId);
-      client = new AksharaDaClient(chain, this.fetchFn);
+      const root = this._getChain(chainId);
+      client = new AksharaDaClient({
+        root,
+        fetchFn: this.fetchFn,
+        batchScheduleFn: this.daBatchScheduleFn,
+      });
       this.consensusClients.set(chainId, client);
     }
     return client;

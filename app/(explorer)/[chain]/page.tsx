@@ -1,7 +1,7 @@
 import Blah from '@/app/client/Blah';
 import ChainView from '@/app/components/ChainView';
 import { NodePage } from '@/app/components/NodePage';
-import { readAksharaNode } from '@/app/helpers/akshara.server';
+import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';

@@ -10,8 +10,8 @@ describe('AksharaDaClient', () => {
   let client: AksharaDaClient;
   beforeEach(() => {
     fetchFn = jest.fn(fetch);
-    client = new AksharaDaClient(
-      {
+    client = new AksharaDaClient({
+      root: {
         chainId: ETHGATE_NODE_TEST_CHAINS['1'].chainId,
         meta: ETHGATE_NODE_TEST_CHAINS['1'].meta,
         parent: undefined,
@@ -20,7 +20,8 @@ describe('AksharaDaClient', () => {
         extra: ETHGATE_NODE_TEST_CHAINS['1'],
       },
       fetchFn,
-    );
+      batchScheduleFn: undefined as any,
+    });
   });
 
   it('can fetch genesis', async () => {

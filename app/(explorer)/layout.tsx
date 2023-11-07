@@ -1,4 +1,3 @@
-'use server';
 import { GitHub, Twitter } from '@mui/icons-material';
 import { Alert, AppBar, Box, Button, IconButton, Paper, Stack, Toolbar } from '@mui/material';
 import type { Metadata, Viewport } from 'next';
