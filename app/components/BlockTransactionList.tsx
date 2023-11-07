@@ -1,93 +1,37 @@
 'use client';
 
 import { useNode } from '@/app/helpers/hooks';
-import type { Block, BlockHasTransaction, Transaction } from '@/lib-solver';
-import {
-  Collapse,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from '@mui/material';
-import { useCallback, useTransition } from 'react';
+import type { Block, SolverEdge, Transaction } from '@/lib-solver';
+import { ListItemAvatar, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 
 import type { EdgeType } from '../../solver/graph';
-import InfiniteList from '../components/InfiniteList';
-import { useConnection } from '../helpers/hooks';
 
-import { NodeList, NodeListItem } from './NodeList';
+import NodeConnectionList from './NodeConnectionList';
 import { NodeAvatar } from './ui';
-
-export default function BlockTransactionList({
-  edgeType,
-  tail,
-}: {
-  edgeType: EdgeType<any>;
-  tail: Block;
-}) {
-  const [, startTransition] = useTransition();
-
-  const [connection, loadNext] = useConnection<BlockHasTransaction>(edgeType.name, tail.id, {
-    first: 10,
-  });
-  const onLoadNext = useCallback(() => {
-    startTransition(() => {
-      loadNext();
-    });
-  }, [loadNext]);
-
-  return (
-    <>
-      <InfiniteList
-        // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={connection?.pageInfo.hasNextPage && onLoadNext}
-      >
-        <NodeList>
-          {connection?.edges.map(({ headId }) => (
-            <Collapse key={headId}>
-              <NodeListItem>
-                <BlockTransactionListItem transactionId={headId} />
-              </NodeListItem>
-            </Collapse>
-          ))}
-        </NodeList>
-      </InfiniteList>
-    </>
-  );
-}
 
 export function BlockTransactionListItem({ transactionId }: { transactionId: Transaction['id'] }) {
   console.log('BlockTransactionListItem', transactionId);
   const node = useNode<Transaction>(transactionId);
 
   return (
-    <ListItemButton href={`${node.blockNumber}/transactions/${node.transactionIndex}`}>
-      <ListItemAvatar>
-        {/* <Avatar alt={node.meta.name}>{node.meta.name.slice(0, 1)}</Avatar> */}
-        <NodeAvatar node={node} />
-      </ListItemAvatar>
+    <>
       <ListItemText>
-        <Stack direction="row" spacing={1} justifyContent="space-between">
-          <Stack direction="column">
-            <Typography>
-              {node.hash.slice(0, 6)}...{node.hash.slice(-6)}
-            </Typography>
-            <Typography>{node.blockNumber}</Typography>
-          </Stack>
-          <Stack direction="column">
-            <Typography>
-              From: {node.from.slice(0, 6)}...{node.from.slice(-6)}
-            </Typography>
-            <Typography>
-              To: {node.to.slice(0, 6)}...{node.from.slice(-6)}
-            </Typography>
-          </Stack>
-          <Stack direction="column">
-            <Typography>{(parseInt(node.value, 16) / 10 ** 18).toFixed(2)} ETH</Typography>
-          </Stack>
-        </Stack>
+        <Typography>
+          {node.hash.slice(0, 6)}...{node.hash.slice(-6)}
+        </Typography>
+        <Typography>{node.blockNumber}</Typography>
       </ListItemText>
-    </ListItemButton>
+      <ListItemText>
+        <Typography>
+          From: {node.from.slice(0, 6)}...{node.from.slice(-6)}
+        </Typography>
+        <Typography>
+          To: {node.to.slice(0, 6)}...{node.from.slice(-6)}
+        </Typography>
+      </ListItemText>
+      <ListItemText>
+        <Typography>{(parseInt(node.value, 16) / 10 ** 18).toFixed(2)} ETH</Typography>
+      </ListItemText>
+    </>
   );
 }
