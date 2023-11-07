@@ -5,7 +5,7 @@ import type { EdgeGenerator } from './abstract';
 import { type Chain, chainType } from './akshara';
 import { NodeType } from './graph/abstract';
 import type { ProperPageArgs } from './graph/abstract';
-import type { GraphNode } from './graph/abstract';
+import type { SolverNode } from './graph/abstract';
 
 export const explorerType = new NodeType<Explorer>('Explorer', (id, data) => ({
   id,
@@ -17,7 +17,7 @@ export const explorerType = new NodeType<Explorer>('Explorer', (id, data) => ({
   },
   data,
 }));
-export type Explorer = GraphNode<'Explorer', object, `Explorer:`>;
+export type Explorer = SolverNode<'Explorer', object, `Explorer:`>;
 
 export class ExplorerHasChain extends SolverEdge<
   'ExplorerHasChain',

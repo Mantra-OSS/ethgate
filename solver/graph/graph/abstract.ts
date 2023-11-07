@@ -14,7 +14,7 @@ export type GraphNodeMeta = {
   themeColor?: string;
 };
 
-export interface GraphNode<
+export interface SolverNode<
   Name extends string = any,
   Data extends object = any,
   Id extends ObjectId<Name> = ObjectId<Name>,
@@ -38,12 +38,12 @@ export interface GraphEdge<
   time: Time;
 }
 
-export type NodeGetFn<T extends GraphNode> = (
+export type NodeGetFn<T extends SolverNode> = (
   id: T['id'],
   ctx: GraphTypeContext,
 ) => T | void | Promise<T | void>;
 
-export class NodeType<T extends GraphNode> {
+export class NodeType<T extends SolverNode> {
   name: T['type'];
   get: NodeGetFn<T>;
   constructor(name: T['type'], get: NodeGetFn<T>) {

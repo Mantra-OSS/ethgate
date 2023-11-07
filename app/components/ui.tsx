@@ -1,9 +1,8 @@
+import type { Chain, SolverNode } from '@/lib-solver';
 import { Article, Receipt, ViewInAr } from '@mui/icons-material';
 import { Avatar, Box, CircularProgress } from '@mui/material';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-
-import type { Chain, SolverNode } from '../../solver/graph';
 
 export function FallbackContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -68,43 +67,4 @@ export function NodeAvatar({ node }: { node: SolverNode }) {
           .join('')}
     </Avatar>
   );
-  // case 'chain-block':
-  //   return (
-  //     <>
-  //       <Avatar alt={`Number ${chainId} chain logo`} src={`/statics/1.svg`}>
-  //         {children}
-  //       </Avatar>
-  //       <Avatar alt="Block Icon">
-  //         <ViewInAr color="primary" />
-  //       </Avatar>
-  //     </>
-  //   );
-  // case 'chain-transaction':
-  //   return (
-  //     <>
-  //       <Avatar alt={`Number ${chainId} chain logo`} src={`/statics/1.svg`}>
-  //         {children}
-  //       </Avatar>
-  //       <Avatar alt="Transaction Icon">
-  //         <Article color="primary" />
-  //       </Avatar>
-  //     </>
-  //   );
-  // case 'chain-log':
-  //   return (
-  //     <>
-  //       <Avatar alt={`Number ${chainId} chain logo`} src={`/statics/1.svg`}>
-  //         {children}
-  //       </Avatar>
-  //       <Avatar alt="Log Icon">
-  //         <Receipt color="primary" />
-  //       </Avatar>
-  //     </>
-  //   );
-  // default:
-  //   return (
-  //     <Avatar alt={`Number chain logo`} src={`/statics/1.svg`}>
-  //       {children}
-  //     </Avatar>
-  //   );
 }

@@ -1,9 +1,8 @@
+import type { SolverNode } from '@/lib-solver';
 import { MoreVert } from '@mui/icons-material';
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-
-import type { SolverNode } from '../../solver/graph';
 
 import { NodeAvatar } from './ui';
 

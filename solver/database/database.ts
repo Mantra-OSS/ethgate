@@ -3,7 +3,7 @@ import { parseGlobalId } from '@/spec-solver';
 
 import type { Chain, ConnectionGenerator, PageArgs, PageInfo, SolverEdge } from '../graph';
 import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../graph';
-import type { GraphNode } from '../graph/graph/abstract';
+import type { SolverNode } from '../graph/graph/abstract';
 import type { SolverGraph } from '../solver';
 
 export type EthgateSolverDatabaseConfig = {
@@ -11,7 +11,7 @@ export type EthgateSolverDatabaseConfig = {
   graph: SolverGraph;
 };
 
-export class EthgateSolverDatabase extends DatabaseAbstract<GraphNode, SolverEdge> {
+export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEdge> {
   node: AksharaAbstract;
   graph: SolverGraph;
 
@@ -52,7 +52,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<GraphNode, SolverEdg
     }
   }
 
-  async getNode<Node extends GraphNode>(id: Node['id']): Promise<Node | undefined> {
+  async getNode<Node extends SolverNode>(id: Node['id']): Promise<Node | undefined> {
     const [type] = parseGlobalId(id);
     const nodeType = this.graph.nodeTypes.find((nodeType) => nodeType.name === type)!;
     return nodeType.get(id, this);

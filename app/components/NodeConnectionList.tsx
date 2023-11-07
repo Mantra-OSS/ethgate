@@ -2,11 +2,11 @@
 
 import { useNode } from '@/app/helpers/hooks';
 import type { SolverEdge, SolverNode } from '@/lib-solver';
+import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import { useCallback, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 
-import type { EdgeType } from '../../solver/graph/graph/abstract';
 import { useConnection } from '../helpers/hooks';
 
 import InfiniteList from './InfiniteList';

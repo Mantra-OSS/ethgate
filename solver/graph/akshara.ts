@@ -16,7 +16,7 @@ import { SolverEdge } from './abstract';
 import type { EdgeGenerator } from './abstract';
 import { NodeType } from './graph/abstract';
 import type { GraphNodeMeta, ObjectId, ProperPageArgs } from './graph/abstract';
-import type { GraphNode } from './graph/abstract';
+import type { SolverNode } from './graph/abstract';
 
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;
@@ -56,7 +56,7 @@ export abstract class AksharaNode<
   Name extends string = any,
   Data extends object = any,
   Id extends ObjectId<Name> = ObjectId<Name>,
-> implements GraphNode<Name, Data, Id>
+> implements SolverNode<Name, Data, Id>
 {
   abstract type: Name;
   abstract meta: GraphNodeMeta;

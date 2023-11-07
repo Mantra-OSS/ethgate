@@ -2,12 +2,11 @@ import 'server-only';
 
 import { Akshara, AksharaDatabase } from '@/lib-node';
 import type { AksharaObjectKey, AksharaObjects } from '@/lib-node';
+import type { AksharaNode, SolverNode } from '@/lib-solver';
+import { blockType, chainType, logType, receiptType, transactionType } from '@/lib-solver';
 import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { memoize } from 'lodash';
-
-import type { SolverNode } from '../../solver/graph';
-import { blockType, chainType, logType, receiptType, transactionType } from '../../solver/graph';
 
 const { ANKR_KEY } = process.env;
 
@@ -38,7 +37,9 @@ export async function readObject<Key extends AksharaObjectKey>(
   return object;
 }
 
-export async function readAksharaNode<Key extends AksharaObjectKey>(key: Key): Promise<SolverNode> {
+export async function readAksharaNode<Key extends AksharaObjectKey>(
+  key: Key,
+): Promise<AksharaNode> {
   const akshara = await createAkshara();
   const object = await akshara.getObject(key);
   if (!object) {

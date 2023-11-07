@@ -1,6 +1,6 @@
 import type { Time } from '@/lib-node';
 
-import type { GraphNode } from './graph/abstract';
+import type { SolverNode } from './graph/abstract';
 
 export abstract class SolverEdge<
   Name extends string = any,
@@ -90,7 +90,7 @@ export class DatabaseNodeNotFoundError extends DatabaseError {
 }
 
 export abstract class DatabaseAbstract<
-  DatabaseNode extends GraphNode,
+  DatabaseNode extends SolverNode,
   DatabaseEdge extends SolverEdge,
 > {
   abstract getNode<Node extends DatabaseNode>(id: Node['id']): Promise<Node | undefined>;

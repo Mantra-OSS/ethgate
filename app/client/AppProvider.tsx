@@ -1,7 +1,6 @@
 'use client';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { mapValues } from 'lodash';
-import { useRouter } from 'next/navigation';
 import { IntlProvider } from 'react-intl';
 import { RecoilRoot } from 'recoil';
 
@@ -11,10 +10,6 @@ import tr from '../lang/tr.json';
 import { ViewerProvider, useViewer } from '../viewer';
 
 function AppIntlProvider({ children }: { children: React.ReactNode }) {
-  // const router = useRouter();
-
-  // console.log(router.);
-
   const viewer = useViewer();
 
   let messages;
