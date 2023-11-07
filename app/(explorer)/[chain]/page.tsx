@@ -1,4 +1,3 @@
-import Blah from '@/app/client/Blah';
 import ChainView from '@/app/components/ChainView';
 import { NodePage } from '@/app/components/NodePage';
 import { readAksharaNode } from '@/app/server/akshara.server';
@@ -41,9 +40,7 @@ export default async function ChainPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
   return (
     <NodePage node={node.toObject()}>
-      <Blah node={node.toObject()}>
-        <ChainView node={node.toObject()} />
-      </Blah>
+      <ChainView node={node.toObject()} />
     </NodePage>
   );
 }

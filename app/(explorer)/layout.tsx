@@ -6,6 +6,8 @@ import Link from 'next/link';
 
 import ClientProvider from '../client/AppProvider';
 import logo from '../client/logo.svg';
+import { AppBreadcrumbs } from '../client/breadcrumbs';
+import { readAksharaNode } from '../server/akshara.server';
 
 // https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,13 +36,14 @@ export default async function ExplorerLayout({
       <Stack role="banner" style={{ minHeight: '100vh' }}>
         <AppBar position="sticky">
           <Toolbar>
-            <Image src={logo} alt="ethgate.io logo" width={32} height={32} />
+            <Box pr={2}>
+              <Image src={logo} alt="ethgate.io logo" width={32} height={32} />
+            </Box>
+            <AppBreadcrumbs />
             {nav}
             <Box flex={1} />
             <Stack direction="row" spacing={2} alignItems="center">
-              <Button href="/about" color={'primary'}>
-                About
-              </Button>
+              <Button href="/about">About</Button>
               <IconButton href="https://github.com/mantra-oss/" target="_blank" color={'primary'}>
                 <GitHub />
               </IconButton>

@@ -1,4 +1,3 @@
-import Blah from '@/app/client/Blah';
 import BlockView from '@/app/components/BlockView';
 import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
@@ -34,9 +33,5 @@ export async function generateMetadata(
 
 export default async function BlockPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return (
-    <Blah node={node.toObject()}>
-      <BlockView node={node.toObject()} />
-    </Blah>
-  );
+  return <BlockView node={node.toObject()} />;
 }
