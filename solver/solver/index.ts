@@ -75,5 +75,30 @@ export class Solver {
     this.database = database;
   }
 
-  async resolvePath(path: string): Promise<any> {}
+  async resolvePath(path: string): Promise<any> {
+    if (!path.startsWith('/')) {
+      throw new Error('Path must start with /');
+    }
+    const parts = path.split('/').slice(1);
+
+    const root = await explorerType.get('Explorer:', this.database);
+
+    const resolved = root;
+    for (let i = 0; i < parts.length; i += 2) {
+      const connectionSlug = parts[i];
+      const edgeType = this.graph.edgeTypes.find(
+        (edgeType) => edgeType.connectionName === connectionSlug,
+      );
+      if (!edgeType) {
+        throw new Error(`No such connection ${connectionSlug}`);
+      }
+      const headSlug = parts[i + 1];
+      if (headSlug === undefined) {
+        // TODO: Resolve edges instead of throwing
+        throw new Error(`No head slug for ${connectionSlug}`);
+      }
+      throw new Error(`Not yet implemented`);
+    }
+    return resolved;
+  }
 }
