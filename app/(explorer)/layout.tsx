@@ -62,7 +62,7 @@ export default async function ExplorerLayout({
       </Stack>
       <Box m={1} mt="auto">
         <Paper>
-          <Stack width="100%" direction="row" justifyContent="flex-end" padding={2}>
+          <Stack width="100%" direction="row" justifyContent="flex-end" padding={1}>
             <IconButton href="https://github.com/mantra-oss/" target="_blank" color={'primary'}>
               <GitHub />
             </IconButton>

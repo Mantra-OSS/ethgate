@@ -27,31 +27,31 @@ export const useConnection = function useConnection<Edge extends SolverEdge>(
     })();
   }, [type, tailId, initialArgs]);
 
-  useEffect(() => {
-    const startCursor = connection?.pageInfo.startCursor;
-    const endCursor = connection?.pageInfo.endCursor;
+  // useEfEffect(() => {
+  //   const startCursor = connection?.pageInfo.startCursor;
+  //   const endCursor = connection?.pageInfo.endCursor;
 
-    if (!startCursor || !endCursor) {
-      return;
-    }
+  //   if (!startCursor || !endCursor) {
+  //     return;
+  //   }
 
-    if (
-      aggregatedConnection?.pageInfo.startCursor === startCursor &&
-      aggregatedConnection?.pageInfo.endCursor === endCursor
-    ) {
-      return;
-    }
+  //   if (
+  //     aggregatedConnection?.pageInfo.startCursor === startCursor &&
+  //     aggregatedConnection?.pageInfo.endCursor === endCursor
+  //   ) {
+  //     return;
+  //   }
 
-    console.debug('aggregating connections', connection);
+  //   console.debug('aggregating connections', connection);
 
-    // setAggregatedConnection((current) => ({
-    //   edges: [...(current?.edges ?? []), ...connection.edges],
-    //   pageInfo: {
-    //     ...current?.pageInfo,
-    //     ...connection.pageInfo,
-    //   },
-    // }));
-  }, [connection?.pageInfo.startCursor, connection?.pageInfo.endCursor]);
+  //   setAggregatedConnection((current) => ({
+  //     edges: [...(current?.edges ?? []), ...connection.edges],
+  //     pageInfo: {
+  //       ...current?.pageInfo,
+  //       ...connection.pageInfo,
+  //     },
+  //   }));
+  // }, [connection?.pageInfo.startCursor, connection?.pageInfo.endCursor]);
 
   const loadNext = useCallback(async () => {
     if (!connection) {
@@ -62,11 +62,11 @@ export const useConnection = function useConnection<Edge extends SolverEdge>(
       first: initialArgs.first,
     };
     console.debug('loading next page', newConnectionPageArgs);
-    setConnection(await readConnection(type, tailId, newConnectionPageArgs));
+    // setConnection(await readConnection(type, tailId, newConnectionPageArgs));
   }, [connection, type, tailId]);
 
   const refetch = useCallback(async () => {
-    setConnection(await readConnection(type, tailId, initialArgs));
+    // setConnection(await readConnection(type, tailId, initialArgs));
   }, [type, tailId, initialArgs]);
 
   return [connection, loadNext, refetch];

@@ -1,5 +1,6 @@
+'use client';
 import { ArrowOutward } from '@mui/icons-material';
-import { Divider, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Divider, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
 
 import type { SolverNode } from '../../solver/data';
 
@@ -47,7 +48,7 @@ export function NodePageConnectionSection({
       title={title}
       actions={
         <>
-          <Tooltip title={<FormattedMessage id="73525gdy" defaultMessage="View All" />}>
+          <Tooltip title={<FormattedMessage id="Connection.viewAll" defaultMessage="View All" />}>
             <IconButton href={href} size="small" color="primary">
               <ArrowOutward />
             </IconButton>
@@ -55,9 +56,17 @@ export function NodePageConnectionSection({
         </>
       }
     >
-      <Stack minHeight={300}>
+      <Stack
+        minHeight={300}
+        maxHeight={500}
+        style={{
+          overflowY: 'auto',
+        }}
+      >
         <FallbackBoundary>{children}</FallbackBoundary>
       </Stack>
+      <Divider />
+      <Box pt={1} />
     </NodePageSection>
   );
 }

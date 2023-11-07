@@ -55,7 +55,7 @@ export interface Connection<Edge extends SolverEdge> {
   pageInfo: PageInfo<Edge>;
 }
 
-export const readConnection = async function readConnection<Edge extends SolverEdge>(
+export const readConnection = memoize(async function readConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
   args: PageArgs<Edge>,
@@ -69,4 +69,4 @@ export const readConnection = async function readConnection<Edge extends SolverE
     )}`,
   );
   return connection;
-};
+});

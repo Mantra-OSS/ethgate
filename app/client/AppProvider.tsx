@@ -1,27 +1,33 @@
 'use client';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { mapValues } from 'lodash';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { IntlProvider } from 'react-intl';
 import { RecoilRoot } from 'recoil';
 
 import { theme } from '../components/theme';
 import tr from '../lang/tr.json';
+import en from '../lang/en.json';
 import { ViewerProvider, useViewer } from '../viewer';
 
 function AppIntlProvider({ children }: { children: React.ReactNode }) {
   // const router = useRouter();
 
-  // console.log(router.locale);
+  // console.log(router.);
 
   const viewer = useViewer();
 
-  const messages =
-    viewer.locale === 'tr'
-      ? // TODO: Load lazily
-        mapValues(tr, (value) => value.defaultMessage)
-      : {};
-
+  let messages;
+  switch (viewer.locale) {
+    case 'tr': {
+      messages = mapValues(tr, (value) => value.defaultMessage);
+      break;
+    }
+    case 'en': {
+      messages = mapValues(en, (value) => value.defaultMessage);
+      break;
+    }
+  }
   return (
     <IntlProvider locale={viewer.locale} messages={messages}>
       {children}

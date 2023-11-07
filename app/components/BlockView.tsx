@@ -37,14 +37,21 @@ export default function BlockView({ node }: { node: Block }) {
             <NodePageConnectionSection
               title={
                 <FormattedMessage
-                  id="asdasdasdasd"
-                  defaultMessage={'Connection "{name}"'}
+                  id={`Connection.title`}
+                  defaultMessage={`{name, select,
+                    chains {Chains}
+                    blocks {Blocks}
+                    transactions {Transactions}
+                    receipts {Receipts}
+                    logs {Logs}
+                    other {Connection \"{name}\"}
+                  }`}
                   values={{
                     name: edgeType.connectionName,
                   }}
                 />
               }
-              href={`/${node.meta.slug}/${edgeType.connectionName}`}
+              href={`${node.meta.slug}/${edgeType.connectionName}`}
             >
               {edgeType.connectionName === 'transactions' && <BlockTransactionList block={node} />}
               {edgeType.connectionName === 'logs' && <BlockLogList block={node} />}
