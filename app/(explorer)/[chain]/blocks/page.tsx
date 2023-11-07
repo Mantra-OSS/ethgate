@@ -1,10 +1,11 @@
-import ChainBlocksView from '@/app/components/ChainBlocksView';
+import NodeConnectionPage from '@/app/components/NodeConnectionPage';
 import { readAksharaNode } from '@/app/server/akshara.server';
 
+import { ChainHasBlock } from '../../../../solver/data';
 import type { Props } from '../page';
 import { keyFromParams } from '../page';
 
 export default async function ChainHasBlocksPage({ params }: Props) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return <ChainBlocksView node={node.toObject()} />;
+  return <NodeConnectionPage node={node.toObject()} edgeTypeName={'ChainHasBlock'} />;
 }
