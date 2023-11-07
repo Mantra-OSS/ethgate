@@ -8,7 +8,6 @@ import {
   BlockHasTransaction,
   ChainHasBlock,
   ChainHasChain,
-  ChainHasDescendantBlock,
   ChainHasTransaction,
   ReceiptHasLog,
   TransactionHasLog,
@@ -41,7 +40,6 @@ export class SolverGraph extends SolverGraphAbstract {
     BlockHasReceipt,
     TransactionHasLog,
     ReceiptHasLog,
-    ChainHasDescendantBlock,
   ];
 }
 
