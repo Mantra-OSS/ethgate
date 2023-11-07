@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Pool, Result } from '@/lib-utils';
 import type {
   AksharaBlockData,

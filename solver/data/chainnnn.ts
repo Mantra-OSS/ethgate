@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { EthgateSolverDatabase } from '../database/database';
 import type { ProperPageArgs } from '../graph';
 

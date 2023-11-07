@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { MetadataRoute } from 'next';
 
 import { theme } from './components/theme';

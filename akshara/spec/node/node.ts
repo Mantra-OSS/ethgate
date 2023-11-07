@@ -95,7 +95,6 @@ export abstract class AksharaAbstract extends RpcClient<AksharaMethod> {
     key: Partial<AksharaChainKey>,
     high: Time,
     low: Time,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     buffer: number,
   ): AsyncGenerator<number, undefined, undefined> {
     if (low !== minTime) {

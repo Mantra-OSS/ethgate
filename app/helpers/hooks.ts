@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import type { SolverNode } from '@/lib-solver';
 import { type PageArgs, type SolverEdge } from '@/lib-solver';

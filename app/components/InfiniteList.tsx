@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CircularProgress } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
 

@@ -1,8 +1,9 @@
-import { Receipt, ViewInAr, Article } from '@mui/icons-material';
+import { Article, Receipt, ViewInAr } from '@mui/icons-material';
 import { Avatar, Box, CircularProgress } from '@mui/material';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Chain, SolverNode } from '../../solver/data';
+
+import type { Chain, SolverNode } from '../../solver/data';
 
 export function FallbackContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -46,12 +47,15 @@ export function NodeAvatar({ node }: { node: SolverNode }) {
       }
       case 'Transaction': {
         body = <Article color="primary" />;
+        break;
       }
       case 'Receipt': {
         body = <Article color="primary" />;
+        break;
       }
       case 'Log': {
         body = <Receipt color="primary" />;
+        break;
       }
     }
   }

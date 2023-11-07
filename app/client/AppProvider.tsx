@@ -6,8 +6,8 @@ import { IntlProvider } from 'react-intl';
 import { RecoilRoot } from 'recoil';
 
 import { theme } from '../components/theme';
-import tr from '../lang/tr.json';
 import en from '../lang/en.json';
+import tr from '../lang/tr.json';
 import { ViewerProvider, useViewer } from '../viewer';
 
 function AppIntlProvider({ children }: { children: React.ReactNode }) {

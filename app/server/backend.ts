@@ -1,4 +1,4 @@
-'use client';
+import 'server-only';
 import {
   type PageArgs,
   type PageInfo,
@@ -9,7 +9,7 @@ import {
 import { memoize } from 'lodash';
 import { use } from 'react';
 
-import { createAkshara } from './akshara.client';
+import { createAkshara } from './akshara.server';
 
 export class EthgateSolver {
   solver: Solver;
@@ -25,10 +25,10 @@ export class EthgateSolver {
   }
 }
 
-export const solverPromise = EthgateSolver.create();
+const solverPromise = EthgateSolver.create();
 
-export function useSolver() {
-  return use(solverPromise);
+export async function getSolver() {
+  return solverPromise;
 }
 
 // export class PunkerBackendClient {
