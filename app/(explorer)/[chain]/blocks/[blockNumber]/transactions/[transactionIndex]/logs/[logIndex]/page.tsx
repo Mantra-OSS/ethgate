@@ -1,8 +1,7 @@
-import LogView from '@/app/components/LogView';
+import NodePage from '@/app/components/NodePage';
 import { readAksharaNode } from '@/app/server/akshara.server';
 import { chains } from '@mantra-oss/chains';
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 import type { AksharaLogKey } from '../../../../../../../../../akshara/spec/db';
@@ -55,5 +54,5 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function LogPage({ params }: { params: Params }) {
   const node = await readAksharaNode(await keyFromParams(params));
-  return <LogView node={node.toObject()} />;
+  return <NodePage node={node.toObject()} />;
 }

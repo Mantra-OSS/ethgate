@@ -1,63 +1,14 @@
 'use client';
 
 import { useNode } from '@/app/helpers/hooks';
-import type { Block, Chain, ChainHasTransaction, Transaction } from '@/lib-solver';
-import {
-  Collapse,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from '@mui/material';
+import type { Block, Chain, Transaction } from '@/lib-solver';
+import { ListItemAvatar, ListItemButton, ListItemText, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
-import { useCallback, useTransition } from 'react';
 import { FormattedRelativeTime } from 'react-intl';
 
-import InfiniteList from '../components/InfiniteList';
-import { useConnection } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
 
-import { NodeList, NodeListItem } from './NodeList';
 import { NodeAvatar } from './ui';
-
-export default function ChainTransactionList({ chainId }: { chainId: Chain['id'] }) {
-  const [, startTransition] = useTransition();
-
-  const [transactions, loadNext] = useConnection<ChainHasTransaction>(
-    'ChainHasTransaction',
-    chainId,
-    {
-      first: 10,
-    },
-  );
-
-  const onLoadNext = useCallback(() => {
-    startTransition(() => {
-      loadNext();
-    });
-  }, [loadNext]);
-
-  return (
-    <>
-      <InfiniteList
-        // startSubscriptionConfig={subscriptionConfig}
-        // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={transactions?.pageInfo.hasNextPage && onLoadNext}
-      >
-        <NodeList>
-          {transactions?.edges.map(({ headId }) => (
-            <Collapse key={headId}>
-              <NodeListItem>
-                <ChainTransactionListItem transactionId={headId} />
-              </NodeListItem>
-            </Collapse>
-          ))}
-        </NodeList>
-      </InfiniteList>
-    </>
-  );
-}
 
 export function ChainTransactionListItem({ transactionId }: { transactionId: Transaction['id'] }) {
   const node = useNode<Transaction>(transactionId);

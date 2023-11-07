@@ -5,7 +5,7 @@ import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 import { FallbackBoundary } from '../components/ui';
 
-import ChainBlockList from './ChainBlockList';
+// import ChainBlockList from './ChainBlockList';
 import NodePageBarContent from './NodePageBarContent';
 
 export default function ChainBlocksView({ node }: { node: Chain }) {
@@ -27,7 +27,8 @@ export default function ChainBlocksView({ node }: { node: Chain }) {
           </Stack>
           <Divider />
           <FallbackBoundary>
-            <ChainBlockList chainId={node.id} />
+            asdasd
+            {/* <ChainBlockList chainId={node.id} /> */}
           </FallbackBoundary>
         </Paper>
       </Grid>

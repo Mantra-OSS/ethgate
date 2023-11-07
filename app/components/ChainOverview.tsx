@@ -1,12 +1,12 @@
 'use client';
 import type { Chain, ChainHasBlock } from '@/lib-solver';
-import { Divider, Stack, Typography, Collapse } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 import { useCallback, useEffect, useTransition } from 'react';
-import { useConnection, useNode } from '../helpers/hooks';
+
 import { solverPromise } from '../client/backend';
 import InfiniteList from '../components/InfiniteList';
-import { NodeList, NodeListItem } from './NodeList';
+import { useConnection } from '../helpers/hooks';
 
 export default function ChainOverview({ node }: { node: Chain }) {
   /*   const data1 = [

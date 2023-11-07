@@ -3,7 +3,7 @@
 import type { Chain } from '@/lib-solver';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
-import ChainTransactionList from '../components/ChainTransactionList';
+// import ChainTransactionList from '../components/ChainTransactionList';
 import { FallbackBoundary } from '../components/ui';
 
 import NodePageBarContent from './NodePageBarContent';
@@ -25,9 +25,7 @@ export default function ChainTransactionsView({ node }: { node: Chain }) {
             </Typography>
           </Stack>
           <Divider />
-          <FallbackBoundary>
-            <ChainTransactionList chainId={node.id} />
-          </FallbackBoundary>
+          <FallbackBoundary>{/* <ChainTransactionList chainId={node.id} /> */}</FallbackBoundary>
         </Paper>
       </Grid>
     </Grid>

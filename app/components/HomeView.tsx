@@ -9,7 +9,7 @@ import { FallbackBoundary } from '../components/ui';
 // import ChainDescendantBlockList from './ChainDescendantBlockList';
 import ChainChainList from './ChainChainList';
 import ChainOverview from './ChainOverview';
-import ChainTransactionList from './ChainTransactionList';
+// import ChainTransactionList from './ChainTransactionList';
 
 export default function HomeView() {
   const node = useNode<Chain>('Chain:1');
@@ -61,7 +61,7 @@ export default function HomeView() {
               </Typography>
               <Divider />
               <FallbackBoundary>
-                <ChainTransactionList chainId={node.id} />
+                {/* <ChainTransactionList chainId={node.id} /> */}
               </FallbackBoundary>
             </Paper>
           </Grid>
@@ -72,7 +72,7 @@ export default function HomeView() {
               </Typography>
               <Divider />
               <FallbackBoundary>
-                <ChainTransactionList chainId={node.id} />
+                {/* <ChainTransactionList chainId={node.id} /> */}
               </FallbackBoundary>
             </Paper>
           </Grid>

@@ -2,22 +2,15 @@
 
 import { useNode } from '@/app/helpers/hooks';
 import type { SolverEdge, SolverNode } from '@/lib-solver';
-import {
-  Collapse,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import { useCallback, useTransition } from 'react';
+import { TransitionGroup } from 'react-transition-group';
 
 import type { EdgeType } from '../../solver/graph';
 import { useConnection } from '../helpers/hooks';
 
 import InfiniteList from './InfiniteList';
-import { NodeList, NodeListItem } from './NodeList';
-import { NodeAvatar } from './ui';
+import { FallbackBoundary, NodeAvatar } from './ui';
 
 export default function NodeConnectionList<TEdge extends SolverEdge>({
   node,
@@ -45,17 +38,21 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
         // loadPrevious={hasPrevious && onLoadPrevious}
         loadNext={connection?.pageInfo.hasNextPage && onLoadNext}
       >
-        <NodeList>
-          {connection?.edges.map((edge) => (
-            <Collapse key={edge.headId}>
-              <NodeListItem>
-                <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
-                  {renderItem(edge)}
-                </NodeConnectionListItem>
-              </NodeListItem>
-            </Collapse>
-          ))}
-        </NodeList>
+        <List>
+          <TransitionGroup>
+            {connection?.edges.map((edge) => (
+              <Collapse key={edge.headId}>
+                <ListItem dense disablePadding>
+                  <FallbackBoundary>
+                    <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
+                      {renderItem(edge)}
+                    </NodeConnectionListItem>
+                  </FallbackBoundary>
+                </ListItem>
+              </Collapse>
+            ))}
+          </TransitionGroup>
+        </List>
       </InfiniteList>
     </>
   );
