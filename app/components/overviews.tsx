@@ -1,5 +1,6 @@
 import type { Block, Chain, Log, Receipt, Transaction } from '@/lib-solver';
 import { Avatar, Divider, Link, Stack, Typography } from '@mui/material';
+import { green, red } from '@mui/material/colors';
 import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
@@ -176,13 +177,14 @@ export function BlockOverview({ node }: { node: Block }) {
     <Stack divider={<Divider />}>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Chain</Typography>
-        {/* <Typography>{chain.meta.name}</Typography> */}
-        <Avatar src={`/statics/${chain.data.chainId}.svg`} alt={chain.meta.name}>
-          {chain.meta.name
-            .split(' ')
-            .map((word) => word[0])
-            .join('')}
-        </Avatar>
+        <Link href={`/${chain.meta.slug}`}>
+          <Avatar src={`/statics/${chain.data.chainId}.svg`} alt={chain.meta.name}>
+            {chain.meta.name
+              .split(' ')
+              .map((word) => word[0])
+              .join('')}
+          </Avatar>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Block Hash</Typography>
@@ -197,9 +199,20 @@ export function BlockOverview({ node }: { node: Block }) {
         <Typography>{<FormattedNumber value={node.gasUsed} />}</Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+        <Typography>Gas Limit</Typography>
+        <Typography>{<FormattedNumber value={node.gasLimit} />}</Typography>
+      </Stack>
+      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+        <Typography>Logs Bloom</Typography>
+        <Typography
+          textAlign={'right'}
+          dangerouslySetInnerHTML={{ __html: node.logsBloom.replace(/(.{20})/g, '$1<wbr />') }}
+        />
+      </Stack>
+      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Size</Typography>
         <Typography>
-          {<FormattedNumber value={node.size} style="unit" unit="byte" unitDisplay="narrow" />}
+          <FormattedNumber value={node.size} style="unit" unit="byte" unitDisplay="narrow" />
         </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
@@ -215,18 +228,15 @@ export function BlockOverview({ node }: { node: Block }) {
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Miner</Typography>
         <Typography>
-          {<Link href={`https://etherscan.io/address/${node.miner}`}>{node.miner}</Link>}
+          <Link href={`https://etherscan.io/address/${node.miner}`}>{node.miner}</Link>
         </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Parent</Typography>
         <Typography>
-          {
-            // TODO: Wrong link
-            <Link href={`/block/${node.parentId}`}>
-              <FormattedNumber value={node.number - 1} />
-            </Link>
-          }
+          <Link href={`/${chain.meta.slug}/blocks/${node.number - 1}`}>
+            <FormattedNumber value={node.number - 1} />
+          </Link>
         </Typography>
       </Stack>
     </Stack>
@@ -235,28 +245,34 @@ export function BlockOverview({ node }: { node: Block }) {
 
 export function TransactionOverview({ node }: { node: Transaction }) {
   const chain = useNode<Chain>(node.chainId);
+  const receipt = useNode<Receipt>(node.receiptId);
 
   return (
     <Stack divider={<Divider />}>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Chain</Typography>
-        {/* <Typography>{chain.meta.name}</Typography> */}
-        <Avatar src={`/statics/${chain.data.chainId}.svg`} alt={chain.meta.name}>
-          {chain.meta.name
-            .split(' ')
-            .map((word) => word[0])
-            .join('')}
-        </Avatar>
+        <Link href={`/${chain.meta.slug}`}>
+          <Avatar src={`/statics/${chain.data.chainId}.svg`} alt={chain.meta.name}>
+            {chain.meta.name
+              .split(' ')
+              .map((word) => word[0])
+              .join('')}
+          </Avatar>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Block Hash</Typography>
-        <Typography>{node.blockHash}</Typography>
+        <Link href={`/${chain.meta.slug}/blocks/${node.blockNumber}`}>
+          <Typography>{node.blockHash}</Typography>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Block Number</Typography>
-        <Typography>
-          <FormattedNumber value={node.blockNumber} />
-        </Typography>
+        <Link href={`/${chain.meta.slug}/blocks/${node.blockNumber}`}>
+          <Typography>
+            <FormattedNumber value={node.blockNumber} />
+          </Typography>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Transaction Hash</Typography>
@@ -268,11 +284,15 @@ export function TransactionOverview({ node }: { node: Transaction }) {
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>From Address</Typography>
-        <Typography>{<Link href={`/address/${node.from}`}>{node.from}</Link>}</Typography>
+        <Typography>
+          {<Link href={`https://etherscan.io/address/${node.from}`}>{node.from}</Link>}
+        </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>To Address</Typography>
-        <Typography>{<Link href={`/address/${node.to}`}>{node.to}</Link>}</Typography>
+        <Typography>
+          {<Link href={`https://etherscan.io/address/${node.to}`}>{node.to}</Link>}
+        </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Gas</Typography>
@@ -284,20 +304,16 @@ export function TransactionOverview({ node }: { node: Transaction }) {
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Input</Typography>
-        <Typography>{node.input}</Typography>
+        <Typography
+          textAlign={'right'}
+          dangerouslySetInnerHTML={{ __html: node.input.replace(/(.{20})/g, '$1<wbr />') }}
+        />
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Value</Typography>
         <Typography>{<FormattedNumber value={parseInt(node.value, 16)} />}</Typography>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Block Hash</Typography>
-        <Typography>{node.blockHash}</Typography>
-      </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Block Number</Typography>
-        <Typography>{<FormattedNumber value={node.blockNumber} />}</Typography>
-      </Stack>
+      <ReceiptOverview receipt={receipt} />
     </Stack>
   );
 }
@@ -315,7 +331,16 @@ export function ReceiptOverview({ receipt: node }: { receipt: Receipt }) {
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Logs Bloom</Typography>
-        <Typography>{node.logsBloom}</Typography>
+        <Typography
+          textAlign={'right'}
+          dangerouslySetInnerHTML={{ __html: node.logsBloom.replace(/(.{20})/g, '$1<wbr />') }}
+        />
+      </Stack>
+      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+        <Typography>Status</Typography>
+        <Typography bgcolor={parseInt(node.status, 16) ? green[700] : red[700]} paddingX={1}>
+          {parseInt(node.status, 16) ? 'Success' : 'Failed'}
+        </Typography>
       </Stack>
     </Stack>
   );
@@ -323,35 +348,49 @@ export function ReceiptOverview({ receipt: node }: { receipt: Receipt }) {
 
 export function LogOverview({ node }: { node: Log }) {
   const chain = useNode<Chain>(node.chainId);
+  console.log(chain);
   return (
     <Stack divider={<Divider />}>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Chain</Typography>
-        {/* <Typography>{chain.meta.name}</Typography> */}
-        <Avatar src={`/statics/${chain.data.chainId}.svg`} alt={chain.meta.name}>
-          {chain.meta.name
-            .split(' ')
-            .map((word) => word[0])
-            .join('')}
-        </Avatar>
+        <Link href={`/${chain.meta.slug}`}>
+          <Avatar src={`/statics/${chain.data.chainId}.svg`} alt={chain.meta.name}>
+            {chain.meta.name
+              .split(' ')
+              .map((word) => word[0])
+              .join('')}
+          </Avatar>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Block Hash</Typography>
-        <Typography>{node.blockHash}</Typography>
+        <Link href={`/${chain.meta.slug}/blocks/${node.blockNumber}`}>
+          <Typography>{node.blockHash}</Typography>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Block Number</Typography>
-        <Typography>
-          <FormattedNumber value={node.blockNumber} />
-        </Typography>
+        <Link href={`/${chain.meta.slug}/blocks/${node.blockNumber}`}>
+          <Typography>
+            <FormattedNumber value={node.blockNumber} />
+          </Typography>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Transaction Hash</Typography>
-        <Typography>{node.transactionHash}</Typography>
+        <Link
+          href={`/${chain.meta.slug}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
+        >
+          <Typography>{node.transactionHash}</Typography>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Transaction Index</Typography>
-        <Typography>{<FormattedNumber value={node.transactionIndex} />}</Typography>
+        <Link
+          href={`/${chain.meta.slug}/blocks/${node.blockNumber}/transactions/${node.transactionIndex}`}
+        >
+          <Typography>{<FormattedNumber value={node.transactionIndex} />}</Typography>
+        </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Log Index</Typography>
@@ -359,19 +398,27 @@ export function LogOverview({ node }: { node: Log }) {
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Address</Typography>
-        <Typography>{<Link href={`/address/${node.address}`}>{node.address}</Link>}</Typography>
+        <Typography>
+          {<Link href={`https://etherscan.io/address/${node.address}`}>{node.address}</Link>}
+        </Typography>
+      </Stack>
+      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+        <Typography>Topics</Typography>
+        <Typography
+          textAlign={'right'}
+          dangerouslySetInnerHTML={{ __html: node.topics.join('<br />') }}
+        />
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Data</Typography>
-        <Typography>{JSON.stringify(node.data)}</Typography>
+        <Typography
+          textAlign={'right'}
+          dangerouslySetInnerHTML={{ __html: node.data.data.replace(/(.{20})/g, '$1<wbr />') }}
+        />
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Block Hash</Typography>
-        <Typography>{node.blockHash}</Typography>
-      </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Block Number</Typography>
-        <Typography>{<FormattedNumber value={node.blockNumber} />}</Typography>
+        <Typography>Removed</Typography>
+        <Typography>{node.removed.toString()}</Typography>
       </Stack>
     </Stack>
   );
