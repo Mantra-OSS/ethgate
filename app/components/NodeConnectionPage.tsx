@@ -5,7 +5,7 @@ import { Grid, Paper, Stack } from '@mui/material';
 
 import { useSolver } from '../client/backend';
 
-import { NodePageConnectionSection2 } from './NodePage';
+import { NodePageConnectionSection } from './NodePage';
 import NodePageBarContent from './NodePageBarContent';
 
 // import ChainBlockList from './ChainBlockList';
@@ -29,7 +29,7 @@ export default function NodeConnectionPage({
         </Paper>
       </Grid>
       <Grid item xs={12}>
-        <NodePageConnectionSection2 node={node} edgeType={edgeType} />
+        <NodePageConnectionSection node={node} edgeType={edgeType} />
       </Grid>
     </Grid>
   );

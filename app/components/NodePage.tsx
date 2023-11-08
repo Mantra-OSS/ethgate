@@ -35,7 +35,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
     <>
       <Grid container spacing={1} padding={1}>
         <Grid item xs={12}>
-          <NodePageOverviewSection2 node={node} />
+          <NodePageOverviewSection node={node} />
         </Grid>
         {edgeTypes.map((edgeType) => (
           <Grid
@@ -44,7 +44,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
             xs={12}
             md={edgeTypes.length > 2 ? 4 : edgeTypes.length > 1 ? 6 : 12}
           >
-            <NodePageConnectionSection2 node={node} edgeType={edgeType} />
+            <NodePageConnectionSection node={node} edgeType={edgeType} />
           </Grid>
         ))}
       </Grid>
@@ -76,119 +76,40 @@ export function NodePageSection({
 }
 
 export function NodePageConnectionSection({
-  title,
-  href,
-  children,
-}: {
-  title: React.ReactNode;
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <NodePageSection
-      title={title}
-      actions={
-        <>
-          <Tooltip title={<FormattedMessage id="Connection.viewAll" defaultMessage="View All" />}>
-            <IconButton href={href} size="small" color="primary">
-              <ArrowOutward />
-            </IconButton>
-          </Tooltip>
-        </>
-      }
-    >
-      <Stack
-        minHeight={300}
-        maxHeight={500}
-        style={{
-          overflowY: 'auto',
-        }}
-      >
-        <FallbackBoundary>{children}</FallbackBoundary>
-      </Stack>
-      <Divider />
-      <Box pt={1} />
-    </NodePageSection>
-  );
-}
-
-export function NodePageConnectionSection2({
   node,
   edgeType,
 }: {
   node: SolverNode;
   edgeType: EdgeType<any>;
 }) {
-  let children: React.ReactNode;
+  let renderItem: React.ComponentProps<typeof NodeConnectionList>['renderItem'];
   switch (edgeType.name) {
     case 'ChainHasChain': {
-      children = (
-        <NodeConnectionList
-          node={node}
-          edgeType={edgeType}
-          renderItem={({ headId }) => <ChainListItem chainId={headId} />}
-        />
-      );
+      renderItem = ({ headId }) => <ChainListItem chainId={headId} />;
       break;
     }
     case 'ChainHasDescendantBlock': {
-      children = (
-        <NodeConnectionList
-          node={node}
-          edgeType={edgeType}
-          renderItem={({ headId }) => <BlockListItem blockId={headId} />}
-        />
-      );
+      renderItem = ({ headId }) => <BlockListItem blockId={headId} />;
       break;
     }
     case 'ChainHasBlock': {
-      children = (
-        <NodeConnectionList
-          node={node}
-          edgeType={edgeType}
-          renderItem={({ headId }) => <BlockListItem blockId={headId} />}
-        />
-      );
+      renderItem = ({ headId }) => <BlockListItem blockId={headId} />;
       break;
     }
     case 'ChainHasTransaction': {
-      children = (
-        <NodeConnectionList
-          node={node}
-          edgeType={edgeType}
-          renderItem={({ headId }) => <TransactionListItem transactionId={headId} />}
-        />
-      );
+      renderItem = ({ headId }) => <TransactionListItem transactionId={headId} />;
       break;
     }
     case 'BlockHasTransaction': {
-      children = (
-        <NodeConnectionList
-          node={node}
-          edgeType={edgeType}
-          renderItem={({ headId }) => <TransactionListItem transactionId={headId} />}
-        />
-      );
+      renderItem = ({ headId }) => <TransactionListItem transactionId={headId} />;
       break;
     }
     case 'BlockHasLog': {
-      children = (
-        <NodeConnectionList
-          node={node}
-          edgeType={edgeType}
-          renderItem={({ headId }) => <LogListItem logId={headId} />}
-        />
-      );
+      renderItem = ({ headId }) => <LogListItem logId={headId} />;
       break;
     }
     case 'TransactionHasLog': {
-      children = (
-        <NodeConnectionList
-          node={node}
-          edgeType={edgeType}
-          renderItem={({ headId }) => <LogListItem logId={headId} />}
-        />
-      );
+      renderItem = ({ headId }) => <LogListItem logId={headId} />;
       break;
     }
     default:
@@ -233,7 +154,9 @@ export function NodePageConnectionSection2({
           overflowY: 'auto',
         }}
       >
-        <FallbackBoundary>{children}</FallbackBoundary>
+        <FallbackBoundary>
+          <NodeConnectionList node={node} edgeType={edgeType} renderItem={renderItem} />
+        </FallbackBoundary>
       </Stack>
       <Divider />
       <Box pt={1} />
@@ -241,7 +164,7 @@ export function NodePageConnectionSection2({
   );
 }
 
-export function NodePageOverviewSection2({ node }: { node: SolverNode }) {
+export function NodePageOverviewSection({ node }: { node: SolverNode }) {
   let children: React.ReactNode;
   switch (node.type) {
     case 'Chain': {
