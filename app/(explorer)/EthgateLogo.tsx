@@ -1,8 +1,24 @@
-export default function EthgateLogo() {
+export default function EthgateLogo({
+  width,
+  height,
+  color = 'currentColor',
+  isLoading = false,
+}: {
+  width: number;
+  height: number;
+  color?: string;
+  isLoading?: boolean;
+}) {
   return (
-    <svg viewBox="0 0 200 200" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      viewBox="0 0 200 200"
+      width={width}
+      height={height}
+      xmlns="http://www.w3.org/2000/svg"
+      className={`${isLoading ? 'loading' : ''}`}
+    >
       <defs>
-        <clipPath id="myClip">
+        <clipPath id="clip">
           <rect x="0" y="0" width="80" height="80" transform="rotate(0, 100, 100)" />
           <rect x="120" y="120" width="80" height="80" transform="rotate(0, 100, 100)" />
           <rect x="120" y="120" width="80" height="80" transform="rotate(90, 100, 100)" />
@@ -16,9 +32,9 @@ export default function EthgateLogo() {
           width="100"
           height="100"
           fill="transparent"
-          stroke="currentColor"
+          stroke={color ? color : 'currentColor'}
           strokeWidth="4"
-          clipPath="url(#myClip)"
+          clipPath="url(#clip)"
         />
         <g transform="rotate(45, 100, 100)">
           <rect
@@ -27,7 +43,7 @@ export default function EthgateLogo() {
             width="80"
             height="80"
             fill="transparent"
-            stroke="currentColor"
+            stroke={color ? color : 'currentColor'}
             strokeWidth="4"
           />
           <g transform="rotate(45, 100, 100)">
@@ -37,7 +53,7 @@ export default function EthgateLogo() {
               width="40"
               height="40"
               fill="transparent"
-              stroke="currentColor"
+              stroke={color ? color : 'currentColor'}
               strokeWidth="4"
             />
           </g>

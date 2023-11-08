@@ -1,8 +1,10 @@
 import type { Chain, SolverNode } from '@/lib-solver';
 import { Article, Receipt, ViewInAr } from '@mui/icons-material';
-import { Avatar, Box, CircularProgress } from '@mui/material';
+import { Avatar, Box } from '@mui/material';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+
+import EthgateLogo from '../(explorer)/EthgateLogo';
 
 export function FallbackContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -20,7 +22,7 @@ export function FallbackBoundary({ children }: { children: React.ReactNode }) {
       <Suspense
         fallback={
           <FallbackContainer>
-            <CircularProgress />
+            <EthgateLogo width={40} height={40} isLoading />
           </FallbackContainer>
         }
       >

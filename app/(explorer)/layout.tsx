@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import type { Metadata, Viewport } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import ClientProvider from '../client/AppProvider';
@@ -48,7 +47,7 @@ export default async function ExplorerLayout({
           <Toolbar>
             <Box pr={2}>
               <Typography color="primary">
-                <EthgateLogo />
+                <EthgateLogo width={32} height={32} />
               </Typography>
             </Box>
             <AppBreadcrumbs />

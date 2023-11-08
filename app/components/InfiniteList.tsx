@@ -1,5 +1,6 @@
-import { CircularProgress } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+import EthgateLogo from '../(explorer)/EthgateLogo';
 
 type OperationType = any;
 type GraphQLSubscriptionConfig<T> = any;
@@ -62,9 +63,9 @@ export default function InfiniteList<T extends OperationType>({
   return (
     <>
       {/* {shouldSubscribe ? <RelaySubscriber config={startSubscriptionConfig} /> : null} */}
-      <div ref={startRef}>{loadPrevious && <CircularProgress />}</div>
+      <div ref={startRef}>{loadPrevious && <EthgateLogo width={40} height={40} isLoading />}</div>
       {children}
-      <div ref={endRef}>{loadNext && <CircularProgress />}</div>
+      <div ref={endRef}>{loadNext && <EthgateLogo width={40} height={40} isLoading />}</div>
     </>
   );
 }
