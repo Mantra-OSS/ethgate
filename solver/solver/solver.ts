@@ -43,6 +43,8 @@ export class SolverGraph extends SolverGraphAbstract {
     TransactionHasLog,
     ReceiptHasLog,
   ];
+
+  getRoot = () => explorerType;
 }
 
 export type SolverConfig = {
@@ -83,7 +85,9 @@ export class Solver {
     return root;
   }
 
-  async resolvePath(path: string[]): Promise<SolverNode | [SolverNode, EdgeType<any>] | undefined> {
+  async resolvePath(
+    path: string[],
+  ): Promise<['node', SolverNode] | ['connection', SolverNode, EdgeType<any>] | undefined> {
     const root = await this.getRoot();
 
     let resolved: SolverNode = root;
@@ -98,7 +102,7 @@ export class Solver {
       }
       const headSlug = path[i + 1];
       if (headSlug === undefined) {
-        return [resolved, edgeType];
+        return ['connection', resolved, edgeType];
       }
       switch (edgeType.name) {
         case 'ExplorerHasChain': {
@@ -112,7 +116,7 @@ export class Solver {
           if (!object) {
             throw new Error(`Object not found: ${JSON.stringify(key)}`);
           }
-          resolved = chainType.create(object);
+          resolved = edgeType.head.create(object);
           break;
         }
         case 'ChainHasBlock': {
@@ -126,7 +130,7 @@ export class Solver {
           if (!object) {
             throw new Error(`Object not found: ${JSON.stringify(key)}`);
           }
-          resolved = blockType.create(object);
+          resolved = edgeType.head.create(object);
           break;
         }
         case 'BlockHasTransaction': {
@@ -141,7 +145,7 @@ export class Solver {
           if (!object) {
             throw new Error(`Object not found: ${JSON.stringify(key)}`);
           }
-          resolved = transactionType.create(object);
+          resolved = edgeType.head.create(object);
           break;
         }
         case 'TransactionHasLog': {
@@ -157,7 +161,7 @@ export class Solver {
           if (!object) {
             throw new Error(`Object not found: ${JSON.stringify(key)}`);
           }
-          resolved = logType.create(object);
+          resolved = edgeType.head.create(object);
           break;
         }
         default: {
@@ -165,6 +169,6 @@ export class Solver {
         }
       }
     }
-    return resolved;
+    return ['node', resolved];
   }
 }

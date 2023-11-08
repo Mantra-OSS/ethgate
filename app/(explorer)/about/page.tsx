@@ -14,16 +14,16 @@ export default function AboutPage() {
       <Container maxWidth="xl">
         <div>
           <div>
-            <Typography variant="h3" padding={1} textAlign="center">
+            <Typography variant="h3" fontWeight={500} padding={1} textAlign="center">
               {' '}
-              About ETHgate{' '}
+              About ETHgate.io{' '}
             </Typography>
           </div>
           <div>
             <EthgateLogo width={100} height={100} color="red" isLoading />
           </div>
           <div>
-            <Typography variant="h5" padding={1} textAlign="center">
+            <Typography variant="h5" fontWeight={300} padding={1} textAlign="center">
               {' '}
               ETHgate is your one-stop block explorer for everything Ethereum, designed to make
               complex blockchain data easy to access and understand. We take the complexity out of
@@ -32,7 +32,7 @@ export default function AboutPage() {
             </Typography>
           </div>
           <div>
-            <Typography variant="h5" padding={1} textAlign="center">
+            <Typography variant="h5" fontWeight={300} padding={1} textAlign="center">
               {' '}
               Our core aim is to democratize data access across EVM-compatible networks. Owing to
               its flexible and modular nature, ETHgate works simply and seamlessly: no servers, no
@@ -40,10 +40,10 @@ export default function AboutPage() {
             </Typography>{' '}
           </div>
           <div>
-            <Typography variant="h5" padding={1} textAlign="center">
+            <Typography variant="h5" fontWeight={300} padding={1} textAlign="center">
               {' '}
-              Ethgate was born out of our commitment to give users a straightforward tool for diving
-              into blockchain data. Whether you are a newcomer or a seasoned expert, Ethgate puts
+              ETHgate was built with a commitment to give users a straightforward tool for diving
+              into blockchain data. Whether you are a newcomer or a seasoned expert, ETHgate puts
               the power of blockchain exploration right in your hands, all with just a few clicks.{' '}
             </Typography>
           </div>

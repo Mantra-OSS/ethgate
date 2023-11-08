@@ -10,18 +10,22 @@ import { EdgeType2, NodeType } from './graph/abstract';
 import type { GraphTypeContext, ProperPageArgs } from './graph/abstract';
 import type { SolverNode } from './graph/abstract';
 
-export const explorerType = new NodeType<Explorer>('Explorer', (id, data) => ({
-  id,
-  type: 'Explorer',
-  meta: {
-    name: '',
-    slug: '',
-    path: [],
-  },
-  data: {
+export const explorerType = new NodeType<Explorer>(
+  'Explorer',
+  (id, ctx) => ({
     chains,
-  },
-}));
+  }),
+  (data) => ({
+    id: 'Explorer:',
+    type: 'Explorer',
+    meta: {
+      name: '',
+      slug: '',
+      path: [],
+    },
+    data,
+  }),
+);
 export type Explorer = SolverNode<
   'Explorer',
   {

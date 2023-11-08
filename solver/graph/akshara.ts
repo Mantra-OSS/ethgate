@@ -15,7 +15,7 @@ import { parseGlobalId } from '@/spec-solver';
 import { SolverEdge } from './abstract';
 import type { EdgeGenerator } from './abstract';
 import { NodeType } from './graph/abstract';
-import type { GraphNodeMeta, ObjectId, ProperPageArgs } from './graph/abstract';
+import type { GraphNodeMeta, NodeCreateFn, ObjectId, ProperPageArgs } from './graph/abstract';
 import type { SolverNode } from './graph/abstract';
 
 export type AksharaTypeContext = {
@@ -23,30 +23,21 @@ export type AksharaTypeContext = {
 };
 export class AksharaNodeType<T extends AksharaNode> extends NodeType<T> {
   schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>;
-  create: (data: T['data']) => T;
   constructor(
-    create: (data: T['data']) => T,
+    create: NodeCreateFn<T>,
     schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>,
   ) {
     const name = schema.aksharaType;
-    const get = async (id: T['id'], ctx: AksharaTypeContext): Promise<T | void> => {
+    const getData = async (id: T['id'], ctx: AksharaTypeContext) => {
       const [, localId] = parseGlobalId(id);
       const obj = await ctx.aks.getObject(localId);
       if (!obj) {
         throw new Error(`Not found ${id}`);
       }
-      return create(obj);
+      return obj;
     };
-    super(name, get);
-    this.create = create;
+    super(name, getData, create);
     this.schema = schema;
-  }
-  async read(id: T['id'], ctx: AksharaTypeContext): Promise<T> {
-    const node = await this.get(id, ctx);
-    if (!node) {
-      throw new Error(`Not found ${id}`);
-    }
-    return node;
   }
 }
 

@@ -38,17 +38,32 @@ export interface GraphEdge<
   time: Time;
 }
 
-export type NodeGetFn<T extends SolverNode> = (
+export type NodeCreateFn<T extends SolverNode> = (data: T['data']) => T;
+export type NodeGetDataFn<T extends SolverNode> = (
   id: T['id'],
   ctx: GraphTypeContext,
-) => T | void | Promise<T | void>;
+) => T['data'] | void | Promise<T['data'] | void>;
 
 export class NodeType<T extends SolverNode> {
   name: T['type'];
-  get: NodeGetFn<T>;
-  constructor(name: T['type'], get: NodeGetFn<T>) {
+  getData: NodeGetDataFn<T>;
+  create: NodeCreateFn<T>;
+  constructor(name: T['type'], getData: NodeGetDataFn<T>, create: NodeCreateFn<T>) {
     this.name = name;
-    this.get = get;
+    this.getData = getData;
+    this.create = create;
+  }
+  async get(id: T['id'], ctx: GraphTypeContext): Promise<T | undefined> {
+    const data = await this.getData(id, ctx);
+    if (!data) return;
+    return this.create(data);
+  }
+  async read(id: T['id'], ctx: GraphTypeContext): Promise<T> {
+    const node = await this.get(id, ctx);
+    if (!node) {
+      throw new Error(`Not found ${id}`);
+    }
+    return node;
   }
 }
 
@@ -99,6 +114,7 @@ export class EdgeType2<T extends GraphEdge> {
 export abstract class SolverGraphAbstract {
   abstract nodeTypes: NodeType<any>[];
   abstract edgeTypes: EdgeType<any>[];
+  abstract getRoot: () => NodeType<any>;
 
   // registerNodeType(nodeType: NodeConstructor<any>) {
   //   this.nodeTypes.push(nodeType);
@@ -119,4 +135,28 @@ export abstract class SolverGraphAbstract {
     const nodeType = this.getNodeType(type);
     return this.edgeTypes.filter((edgeType) => edgeType.tail === nodeType)! as T[];
   }
+
+  // resolvePath(
+  //   path: string[],
+  // ): ['node', NodeType<any>, string] | ['edge', NodeType<any>, string, EdgeType<any>] | undefined {
+  //   const root = this.getRoot();
+
+  //   let resolved: [NodeType<any>, string] = [root, ''];
+  //   for (let i = 0; i < path.length; i += 2) {
+  //     const connectionSlug = path[i];
+  //     const edgeType = this.edgeTypes.find(
+  //       (edgeType) =>
+  //         edgeType.tail.name === resolved[0].name && edgeType.connectionName === connectionSlug,
+  //     );
+  //     if (!edgeType) {
+  //       return;
+  //     }
+  //     const headSlug = path[i + 1];
+  //     if (headSlug === undefined) {
+  //       return ['edge', ...resolved, edgeType];
+  //     }
+  //     resolved = [edgeType.head, headSlug];
+  //   }
+  //   return ['node', ...resolved];
+  // }
 }

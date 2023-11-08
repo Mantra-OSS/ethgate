@@ -14,29 +14,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const solver = await getSolver();
   const resolved = await solver.solver.resolvePath(['chains', ...params.path]);
   if (!resolved) notFound();
-  if (Array.isArray(resolved)) {
-    const [tail, edgeType] = resolved;
-    // TODO: edgeType
-    return {
-      title: `${tail.type}: ${tail.meta.name}`,
-      description: `${tail.type} page for ${tail.meta.name} on ethgate.io`,
-    };
+  switch (resolved[0]) {
+    case 'node': {
+      const [, node] = resolved;
+      return {
+        title: `${node.type}: ${node.meta.name}`,
+        description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+      };
+    }
+    case 'connection': {
+      const [, node, edgeType] = resolved;
+      // TODO: add edge type stuff to meta
+      return {
+        title: `${node.type}: ${node.meta.name}`,
+        description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+      };
+    }
   }
-  const node = resolved;
-  return {
-    title: `${node.type}: ${node.meta.name}`,
-    description: `${node.type} page for ${node.meta.name} on ethgate.io`,
-  };
 }
 
 export default async function Page({ params }: Props) {
   const solver = await getSolver();
   const resolved = await solver.solver.resolvePath(['chains', ...params.path]);
   if (!resolved) notFound();
-  if (Array.isArray(resolved)) {
-    const [tail, edgeType] = resolved;
-    return <NodeConnectionPage node={{ ...tail }} edgeTypeName={edgeType.name} />;
+  switch (resolved[0]) {
+    case 'node': {
+      const [, node] = resolved;
+      return <NodePage node={{ ...node }} />;
+    }
+    case 'connection': {
+      const [, node, edgeType] = resolved;
+      return <NodeConnectionPage node={{ ...node }} edgeTypeName={edgeType.name} />;
+    }
   }
-  const node = resolved;
-  return <NodePage node={{ ...node }} />;
 }
