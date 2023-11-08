@@ -348,7 +348,6 @@ export function ReceiptOverview({ receipt: node }: { receipt: Receipt }) {
 
 export function LogOverview({ node }: { node: Log }) {
   const chain = useNode<Chain>(node.chainId);
-  console.log(chain);
   return (
     <Stack divider={<Divider />}>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">

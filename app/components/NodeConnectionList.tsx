@@ -45,7 +45,6 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
           after: previousPageData?.pageInfo.endCursor,
         },
       ];
-      console.log({ pageIndex, previousPageData, key });
       return key;
     },
     [edgeType.name, node.id],
@@ -62,7 +61,6 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
 
   const onLoadNext = useCallback(() => {
     startTransition(() => {
-      console.log('load next');
       setSize((size) => size + 1);
     });
   }, [setSize]);
