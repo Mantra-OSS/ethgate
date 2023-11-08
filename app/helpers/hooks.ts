@@ -14,6 +14,15 @@ export const useNode = function useNode<T extends SolverNode>(id: T['id']): T {
 export const useConnection = function useConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
+  args: PageArgs<Edge>,
+): Connection<Edge> {
+  const connection = use(readConnection(type, tailId, args));
+  return connection;
+};
+
+export const useConnection2 = function useConnection2<Edge extends SolverEdge>(
+  type: Edge['type'],
+  tailId: Edge['tailId'],
   initialArgs: PageArgs<Edge>,
 ): [Connection<Edge> | undefined, loadNext: () => Promise<void>, refetch: () => Promise<void>] {
   const [connection, setConnection] = useState<Connection<Edge> | undefined>(undefined);
