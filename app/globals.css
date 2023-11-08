@@ -25,3 +25,13 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+
+.loading {
+  animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
