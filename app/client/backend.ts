@@ -57,6 +57,22 @@ export interface Connection<Edge extends SolverEdge> {
   pageInfo: PageInfo<Edge>;
 }
 
+export const connectionFetcher = async <Edge extends SolverEdge>([type, tailId, args]: [
+  type: Edge['type'],
+  tailId: Edge['tailId'],
+  args: PageArgs<Edge>,
+]) => {
+  console.debug(`[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)})`);
+  const database = (await solverPromise).solver.database;
+  const connection = await database.getConnection(type, tailId, args).collect();
+  console.debug(
+    `[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)}) -> ${JSON.stringify(
+      connection,
+    )}`,
+  );
+  return { type, tailId, ...connection };
+};
+
 export const readConnection = memoize(async function readConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],

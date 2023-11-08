@@ -112,11 +112,7 @@ export function NodeConnectionPageOverview({
         </>
       }
     >
-      <Stack
-        style={{
-          overflowY: 'auto',
-        }}
-      >
+      <Stack minHeight={300}>
         <FallbackBoundary>
           <NodeConnectionList node={node} edgeType={edgeType} renderItem={renderItem} />
         </FallbackBoundary>

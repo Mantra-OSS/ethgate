@@ -42,6 +42,9 @@ export type ConnectionGenerator<Edge extends SolverEdge> = AsyncGenerator<
   PageInfo<Edge>,
   undefined
 >;
+
+export type ConnectionBlah<Edge extends SolverEdge> = { edges: Edge[]; pageInfo: PageInfo<Edge> };
+
 export class Connection<Edge extends SolverEdge> implements ConnectionGenerator<Edge> {
   readonly _generator: ConnectionGenerator<Edge>;
 
@@ -49,7 +52,7 @@ export class Connection<Edge extends SolverEdge> implements ConnectionGenerator<
     this._generator = generator;
   }
 
-  async collect(): Promise<{ edges: Edge[]; pageInfo: PageInfo<Edge> }> {
+  async collect(): Promise<ConnectionBlah<Edge>> {
     const edges = [];
     let item;
     while ((item = await this.next()) && !item.done) {

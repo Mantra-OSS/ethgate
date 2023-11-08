@@ -1,13 +1,15 @@
 'use client';
 
-import { useConnection, useNode } from '@/app/helpers/hooks';
-import type { SolverEdge, SolverNode } from '@/lib-solver';
+import { useNode } from '@/app/helpers/hooks';
+import type { ConnectionBlah, SolverEdge, SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import { useCallback, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
+import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 
-import { usePagination } from '../helpers/hooks';
+import { connectionFetcher } from '../client/backend';
 
 import InfiniteList from './InfiniteList';
 import { FallbackBoundary, NodeAvatar } from './ui';
@@ -22,31 +24,63 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
   renderItem: (edge: TEdge) => React.ReactNode;
 }) {
   const [, startTransition] = useTransition();
+  // const { data, error } = useSWR(
+  //   [
+  //     edgeType.name,
+  //     node.id,
+  //     {
+  //       first: 10,
+  //     },
+  //   ],
+  //   connectionFetcher,
+  // );
+  const getKey = useCallback(
+    (pageIndex: number, previousPageData: ConnectionBlah<any> | null) => {
+      if (previousPageData && !previousPageData.pageInfo.hasNextPage) return null;
+      const key = [
+        edgeType.name,
+        node.id,
+        {
+          first: 10,
+          after: previousPageData?.pageInfo.endCursor,
+        },
+      ];
+      console.log({ pageIndex, previousPageData, key });
+      return key;
+    },
+    [edgeType.name, node.id],
+  );
 
-  const connection = useConnection(edgeType.name, node.id, {
-    first: 10,
-  });
-  const [loadNext] = usePagination(connection);
-  // const onLoadNext = useCallback(() => {
-  //   startTransition(() => {
-  //     loadNext();
-  //   });
-  // }, [loadNext]);
+  const { data, error, isLoading, isValidating, mutate, size, setSize } = useSWRInfinite(
+    getKey,
+    connectionFetcher,
+    { suspense: true },
+  );
+  const pages = data ?? [];
+  const lastPage = pages[pages.length - 1];
+  const edges = pages.flatMap((page) => page.edges);
+
+  const onLoadNext = useCallback(() => {
+    startTransition(() => {
+      console.log('load next');
+      setSize((size) => size + 1);
+    });
+  }, [setSize]);
 
   return (
     <>
       <InfiniteList
-      // loadPrevious={hasPrevious && onLoadPrevious}
-      // loadNext={connection?.pageInfo.hasNextPage && onLoadNext}
+        // loadPrevious={hasPrevious && onLoadPrevious}
+        loadNext={lastPage.pageInfo.hasNextPage && onLoadNext}
       >
         <List>
           <TransitionGroup>
-            {connection?.edges.map((edge) => (
+            {edges.map((edge) => (
               <Collapse key={edge.headId}>
                 <ListItem dense disablePadding>
                   <FallbackBoundary>
                     <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
-                      {renderItem(edge)}
+                      {renderItem(edge as any)}
                     </NodeConnectionListItem>
                   </FallbackBoundary>
                 </ListItem>
