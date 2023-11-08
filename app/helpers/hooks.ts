@@ -15,9 +15,9 @@ export const useConnection = function useConnection<Edge extends SolverEdge>(
   type: Edge['type'],
   tailId: Edge['tailId'],
   args: PageArgs<Edge>,
-): Connection<Edge> {
+): [Connection<Edge>] {
   const connection = use(readConnection(type, tailId, args));
-  return connection;
+  return [connection];
 };
 
 export const useConnection2 = function useConnection2<Edge extends SolverEdge>(

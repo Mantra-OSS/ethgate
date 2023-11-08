@@ -23,7 +23,7 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
 }) {
   const [, startTransition] = useTransition();
 
-  const connection = useConnection(edgeType.name, node.id, {
+  const [connection] = useConnection(edgeType.name, node.id, {
     first: 10,
   });
   // const onLoadNext = useCallback(() => {
