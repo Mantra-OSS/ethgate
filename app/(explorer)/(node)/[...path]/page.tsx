@@ -21,7 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const solver = await getSolver();
   const node = await solver.solver.resolvePath(['chains', ...params.path]);
   return {
-    title: node.meta.name,
+    title: `${node.type}: ${node.meta.name}`,
+    description: `${node.type} page for ${node.meta.name} on ethgate.io`,
   };
 }
 
