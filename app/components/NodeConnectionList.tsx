@@ -7,7 +7,7 @@ import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/m
 import { useCallback, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 
-import { useConnection2 } from '../helpers/hooks';
+import { useConnection } from '../helpers/hooks';
 
 import InfiniteList from './InfiniteList';
 import { FallbackBoundary, NodeAvatar } from './ui';
@@ -23,20 +23,20 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
 }) {
   const [, startTransition] = useTransition();
 
-  const [connection, loadNext] = useConnection2(edgeType.name, node.id, {
+  const connection = useConnection(edgeType.name, node.id, {
     first: 10,
   });
-  const onLoadNext = useCallback(() => {
-    startTransition(() => {
-      loadNext();
-    });
-  }, [loadNext]);
+  // const onLoadNext = useCallback(() => {
+  //   startTransition(() => {
+  //     loadNext();
+  //   });
+  // }, [loadNext]);
 
   return (
     <>
       <InfiniteList
-        // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={connection?.pageInfo.hasNextPage && onLoadNext}
+      // loadPrevious={hasPrevious && onLoadPrevious}
+      // loadNext={connection?.pageInfo.hasNextPage && onLoadNext}
       >
         <List>
           <TransitionGroup>

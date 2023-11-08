@@ -1,6 +1,6 @@
 'use client';
 
-import type { Chain } from '@/lib-solver';
+import type { SolverNode } from '@/lib-solver';
 import { Grid, Paper, Stack } from '@mui/material';
 
 import { useSolver } from '../client/backend';
@@ -14,7 +14,7 @@ export default function NodeConnectionPage({
   node,
   edgeTypeName,
 }: {
-  node: Chain;
+  node: SolverNode;
   edgeTypeName: string;
 }) {
   const solver = useSolver();

@@ -1,6 +1,8 @@
+import NodeConnectionPage from '@/app/components/NodeConnectionPage';
 import NodePage from '@/app/components/NodePage';
 import { getSolver } from '@/app/server/backend';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import type { Props } from './layout';
 
@@ -10,7 +12,17 @@ import type { Props } from './layout';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const solver = await getSolver();
-  const node = await solver.solver.resolvePath(['chains', ...params.path]);
+  const resolved = await solver.solver.resolvePath(['chains', ...params.path]);
+  if (!resolved) notFound();
+  if (Array.isArray(resolved)) {
+    const [tail, edgeType] = resolved;
+    // TODO: edgeType
+    return {
+      title: `${tail.type}: ${tail.meta.name}`,
+      description: `${tail.type} page for ${tail.meta.name} on ethgate.io`,
+    };
+  }
+  const node = resolved;
   return {
     title: `${node.type}: ${node.meta.name}`,
     description: `${node.type} page for ${node.meta.name} on ethgate.io`,
@@ -19,6 +31,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const solver = await getSolver();
-  const node = await solver.solver.resolvePath(['chains', ...params.path]);
+  const resolved = await solver.solver.resolvePath(['chains', ...params.path]);
+  if (!resolved) notFound();
+  if (Array.isArray(resolved)) {
+    const [tail, edgeType] = resolved;
+    return <NodeConnectionPage node={{ ...tail }} edgeTypeName={edgeType.name} />;
+  }
+  const node = resolved;
   return <NodePage node={{ ...node }} />;
 }
