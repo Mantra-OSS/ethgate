@@ -8,7 +8,7 @@ export function AppBreadcrumbs() {
   const path = usePathname().split('/');
   const matches = path.map((base, i) => ({
     title: base.length ? base : 'ethgate.io',
-    href: path.slice(0, i + 1).join('/'),
+    href: i === 0 ? '/' : path.slice(0, i + 1).join('/'),
   }));
 
   return (
