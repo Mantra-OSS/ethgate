@@ -51,6 +51,8 @@ export const readNode = memoize(async function readNode<T extends SolverNode>(id
 });
 
 export interface Connection<Edge extends SolverEdge> {
+  type: Edge['type'];
+  tailId: Edge['tailId'];
   edges: Edge[];
   pageInfo: PageInfo<Edge>;
 }
@@ -68,5 +70,5 @@ export const readConnection = memoize(async function readConnection<Edge extends
       connection,
     )}`,
   );
-  return connection;
+  return { type, tailId, ...connection };
 });

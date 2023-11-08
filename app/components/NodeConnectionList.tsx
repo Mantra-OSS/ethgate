@@ -1,13 +1,13 @@
 'use client';
 
-import { useNode } from '@/app/helpers/hooks';
+import { useConnection, useNode } from '@/app/helpers/hooks';
 import type { SolverEdge, SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import { useCallback, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 
-import { useConnection } from '../helpers/hooks';
+import { usePagination } from '../helpers/hooks';
 
 import InfiniteList from './InfiniteList';
 import { FallbackBoundary, NodeAvatar } from './ui';
@@ -23,9 +23,10 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
 }) {
   const [, startTransition] = useTransition();
 
-  const [connection] = useConnection(edgeType.name, node.id, {
+  const connection = useConnection(edgeType.name, node.id, {
     first: 10,
   });
+  const [loadNext] = usePagination(connection);
   // const onLoadNext = useCallback(() => {
   //   startTransition(() => {
   //     loadNext();
