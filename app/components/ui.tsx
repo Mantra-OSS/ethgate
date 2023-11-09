@@ -1,6 +1,8 @@
 import type { Chain, SolverNode } from '@/lib-solver';
 import { Article, Receipt, ViewInAr } from '@mui/icons-material';
+import type { SvgIconTypeMap } from '@mui/material';
 import { Avatar, Box, Button } from '@mui/material';
+import type { DefaultComponentProps } from '@mui/material/OverridableComponent';
 import { Suspense } from 'react';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -46,6 +48,32 @@ export function FallbackBoundary({
   );
 }
 
+export function NodeTypeIcon({
+  nodeType,
+  ...iconProps
+}: { nodeType: SolverNode['type'] } & DefaultComponentProps<SvgIconTypeMap<{}, 'svg'>>) {
+  switch (nodeType) {
+    case 'Chain': {
+      return <ViewInAr {...iconProps} />;
+    }
+    case 'Block': {
+      return <ViewInAr {...iconProps} />;
+    }
+    case 'Transaction': {
+      return <Article {...iconProps} />;
+    }
+    case 'Receipt': {
+      return <Article {...iconProps} />;
+    }
+    case 'Log': {
+      return <Receipt {...iconProps} />;
+    }
+    default: {
+      throw new Error(`Unknown node type: ${nodeType}`);
+    }
+  }
+}
+
 export function NodeAvatar({ node }: { node: SolverNode }) {
   let imageSrc = node.meta.imageUrl;
   let body;
@@ -56,20 +84,11 @@ export function NodeAvatar({ node }: { node: SolverNode }) {
         imageSrc = `/statics/${(node as Chain).data.chainId}.svg`;
         break;
       }
-      case 'Block': {
-        body = <ViewInAr color="primary" />;
-        break;
-      }
-      case 'Transaction': {
-        body = <Article color="primary" />;
-        break;
-      }
-      case 'Receipt': {
-        body = <Article color="primary" />;
-        break;
-      }
+      case 'Block':
+      case 'Transaction':
+      case 'Receipt':
       case 'Log': {
-        body = <Receipt color="primary" />;
+        body = <NodeTypeIcon nodeType={node.type} color="primary" />;
         break;
       }
     }
