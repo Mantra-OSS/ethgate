@@ -1,7 +1,8 @@
 import type { Chain, SolverNode } from '@/lib-solver';
 import { Article, Receipt, ViewInAr } from '@mui/icons-material';
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Box, Button } from '@mui/material';
 import { Suspense } from 'react';
+import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import EthgateLogo from '../(explorer)/EthgateLogo';
@@ -14,20 +15,33 @@ export function FallbackContainer({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function FallbackBoundary({ children }: { children: React.ReactNode }) {
+export function ErrorFallback(props: FallbackProps) {
   return (
-    <ErrorBoundary
-      fallbackRender={({ error }) => <FallbackContainer>{error.message}</FallbackContainer>}
-    >
-      <Suspense
-        fallback={
-          <FallbackContainer>
-            <EthgateLogo width={40} height={40} isLoading />
-          </FallbackContainer>
-        }
-      >
-        {children}
-      </Suspense>
+    <FallbackContainer>
+      <code>{props.error.message}</code>
+      <Button onClick={props.resetErrorBoundary}>Retry</Button>
+    </FallbackContainer>
+  );
+}
+
+export function SuspenseFallback() {
+  return (
+    <FallbackContainer>
+      <EthgateLogo width={40} height={40} isLoading />
+    </FallbackContainer>
+  );
+}
+
+export function FallbackBoundary({
+  suspenseFallback,
+  children,
+}: {
+  suspenseFallback?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Suspense fallback={suspenseFallback ?? <SuspenseFallback />}>{children}</Suspense>
     </ErrorBoundary>
   );
 }
