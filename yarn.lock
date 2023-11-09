@@ -2491,6 +2491,7 @@ __metadata:
     "@types/react-window-infinite-loader": "npm:^1"
     "@typescript-eslint/eslint-plugin": "npm:^6.9.1"
     "@visx/gradient": "npm:^3.3.0"
+    "@visx/marker": "npm:^3.3.0"
     "@visx/mock-data": "npm:^3.3.0"
     "@visx/xychart": "npm:^3.4.1"
     autoprefixer: "npm:^10.4.16"
@@ -5876,6 +5877,21 @@ __metadata:
   peerDependencies:
     react: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
   checksum: 43ab4fc285cb1a0f9bae8aa5e1ac906f207163da4bd3104f431141b21e5987fe86dafee70808b074c3644aa2b117768997d35e18fe3e695008599a62759982fc
+  languageName: node
+  linkType: hard
+
+"@visx/marker@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@visx/marker@npm:3.3.0"
+  dependencies:
+    "@types/react": "npm:*"
+    "@visx/group": "npm:3.3.0"
+    "@visx/shape": "npm:3.3.0"
+    classnames: "npm:^2.3.1"
+    prop-types: "npm:^15.6.2"
+  peerDependencies:
+    react: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
+  checksum: f5589b9051ea655d409ff0307fc44514e8c7d3f3473549373e20718624341d24c9b6e88a0f2c29dd866677496cd838d9588caa92e9c26c8d8696955519d7b086
   languageName: node
   linkType: hard
 
