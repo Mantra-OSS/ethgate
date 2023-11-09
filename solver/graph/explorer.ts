@@ -1,12 +1,11 @@
 import { chains } from '@mantra-oss/chains';
 
 import type { EthgateSolverDatabase } from '../database';
+import type { EdgeGenerator } from '../database/abstract';
 
-import { SolverEdge } from './abstract';
-import type { EdgeGenerator } from './abstract';
 import type { Block } from './akshara';
 import { type Chain, blockType, chainType } from './akshara';
-import { EdgeType2, NodeType } from './graph/abstract';
+import { EdgeType2, NodeType, SolverEdge } from './graph/abstract';
 import type { GraphTypeContext, ProperPageArgs } from './graph/abstract';
 import type { SolverNode } from './graph/abstract';
 
@@ -36,9 +35,9 @@ export type Explorer = SolverNode<
 
 export const explorerHasChainType = new EdgeType2<ExplorerHasChain>(
   'ExplorerHasChain',
+  { name: 'Chains', slug: 'chains' },
   explorerType,
   chainType,
-  'chains',
   async function* get(
     tailId: ExplorerHasChain['tailId'],
     args: ProperPageArgs<ExplorerHasChain>,
