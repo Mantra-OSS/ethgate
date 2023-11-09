@@ -38,10 +38,13 @@ export default function ClientProvider({
   themeOptions,
   children,
 }: {
-  themeOptions: ThemeOptions;
+  themeOptions?: ThemeOptions;
   children: React.ReactNode;
 }) {
-  const customTheme = useMemo(() => createTheme(theme, themeOptions), [themeOptions]);
+  const customTheme = useMemo(
+    () => (themeOptions ? createTheme(theme, themeOptions) : theme),
+    [themeOptions],
+  );
   return (
     <>
       <RecoilRoot>

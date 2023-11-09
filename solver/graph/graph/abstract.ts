@@ -8,7 +8,7 @@ export type GraphTypeContext = {
 
 export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
 
-export type GraphNodeMeta = {
+export type SolverNodeMeta = {
   name: string;
   imageUrl?: string;
   slug: string;
@@ -23,22 +23,9 @@ export interface SolverNode<
   Id extends ObjectId<Name> = ObjectId<Name>,
 > {
   type: Name;
-  meta: GraphNodeMeta;
+  meta: SolverNodeMeta;
   id: Id;
   data: Data;
-}
-
-export interface GraphEdge<
-  Name extends string = any,
-  TailId extends string = any,
-  HeadId extends string = any,
-  Data extends object = any,
-> {
-  type: Name;
-  tailId: TailId;
-  headId: HeadId;
-  data: Data;
-  time: Time;
 }
 
 export type NodeCreateFn<T extends SolverNode> = (data: T['data']) => T;
@@ -46,6 +33,11 @@ export type NodeGetDataFn<T extends SolverNode> = (
   id: T['id'],
   ctx: GraphTypeContext,
 ) => T['data'] | void | Promise<T['data'] | void>;
+
+export type SolverNodeTypeMeta = {
+  name: string;
+  slug: string;
+};
 
 export class NodeType<T extends SolverNode> {
   name: T['type'];
@@ -70,6 +62,45 @@ export class NodeType<T extends SolverNode> {
   }
 }
 
+export type SolverEdgeMeta = {
+  // ???
+};
+
+export abstract class SolverEdge<
+  Name extends string = any,
+  TailId extends string = any,
+  HeadId extends string = any,
+  Data extends object = any,
+> {
+  abstract type: Name;
+  tailId: TailId;
+  headId: HeadId;
+  data: Data;
+  time: Time;
+  constructor(tailId: TailId, headId: HeadId, data: Data, time: Time) {
+    this.tailId = tailId;
+    this.headId = headId;
+    this.data = data;
+    this.time = time;
+  }
+  get cursor() {
+    return this.headId;
+  }
+}
+
+export interface GraphEdge<
+  Name extends string = any,
+  TailId extends string = any,
+  HeadId extends string = any,
+  Data extends object = any,
+> {
+  type: Name;
+  tailId: TailId;
+  headId: HeadId;
+  data: Data;
+  time: Time;
+}
+
 export type ProperPageArgs<T extends GraphEdge> = {
   before?: T['headId'];
   after?: T['headId'];
@@ -78,6 +109,11 @@ export type ProperPageArgs<T extends GraphEdge> = {
 };
 
 export type GraphEdgeGenerator<Edge extends GraphEdge> = AsyncGenerator<Edge, undefined, undefined>;
+
+export type SolverEdgeTypeMeta = {
+  name: string;
+  slug: string;
+};
 
 export interface EdgeType<T extends GraphEdge> {
   name: T['type'];
@@ -95,21 +131,24 @@ export type EdgeGetFn<T extends GraphEdge> = (
 
 export class EdgeType2<T extends GraphEdge> {
   name: T['type'];
+  meta: SolverEdgeTypeMeta;
   tail: NodeType<any>;
   head: NodeType<any>;
-  connectionName: string;
+  get connectionName() {
+    return this.meta.slug;
+  }
   get: EdgeGetFn<T>;
   constructor(
     name: T['type'],
+    meta: SolverEdgeTypeMeta,
     tail: NodeType<any>,
     head: NodeType<any>,
-    connectionName: string,
     get: EdgeGetFn<T>,
   ) {
     this.name = name;
+    this.meta = meta;
     this.tail = tail;
     this.head = head;
-    this.connectionName = connectionName;
     this.get = get;
   }
 }

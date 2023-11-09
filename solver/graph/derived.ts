@@ -1,7 +1,6 @@
+import type { EdgeGenerator } from '../database/abstract';
 import type { EthgateSolverDatabase } from '../database/database';
 
-import type { EdgeGenerator } from './abstract';
-import { SolverEdge } from './abstract';
 import type { Block, Chain, Log, Receipt, Transaction } from './akshara';
 import {
   BlockHasReceipt,
@@ -14,7 +13,7 @@ import {
   receiptType,
   transactionType,
 } from './akshara';
-import type { ProperPageArgs } from './graph/abstract';
+import { type ProperPageArgs, SolverEdge } from './graph/abstract';
 
 export class TransactionHasLog extends SolverEdge<
   'TransactionHasLog',

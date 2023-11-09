@@ -1,19 +1,22 @@
-import { GitHub, Telegram, Twitter } from '@mui/icons-material';
+import { GitHub, NavigateNext, Telegram, Twitter } from '@mui/icons-material';
 import type { Theme, ThemeOptions } from '@mui/material';
 import {
   Alert,
   AppBar,
   Box,
+  Breadcrumbs,
   Button,
   IconButton,
+  Link,
   Paper,
   Stack,
   Toolbar,
   Typography,
 } from '@mui/material';
-import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import ClientProvider from '../client/AppProvider';
+import { AppBreadcrumbs } from '../client/breadcrumbs';
 
 import EthgateLogo from './EthgateLogo';
 
@@ -22,9 +25,9 @@ export default async function ExplorerLayout({
   children,
   nav,
 }: {
-  themeOptions: ThemeOptions;
+  themeOptions?: ThemeOptions;
   children: React.ReactNode;
-  nav: React.ReactNode;
+  nav?: React.ReactNode;
 }) {
   return (
     <ClientProvider themeOptions={themeOptions}>
@@ -36,7 +39,7 @@ export default async function ExplorerLayout({
                 <EthgateLogo width={32} height={32} />
               </Typography>
             </Box>
-            {nav}
+            {nav ?? <AppBreadcrumbs />}
             <Box flex={1} />
             <Stack direction="row" spacing={2} alignItems="center">
               <Button href="/about">About</Button>
@@ -63,6 +66,27 @@ export default async function ExplorerLayout({
     </ClientProvider>
   );
 }
+
+// function Navigation(props: { children: React.ReactNode }) {
+//   const path = usePathname().split('/');
+//   const matches = path.map((base, i) => ({
+//     title: base.length ? base : 'ethgate.io',
+//     href: i === 0 ? '/' : path.slice(0, i + 1).join('/'),
+//   }));
+
+//   return (
+//     <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
+//       {matches.map((match, i) => (
+//         <Link key={i} href={`${match.href as any}` as any}>
+//           <Typography variant="h5" color="primary">
+//             {match.title}
+//           </Typography>
+//         </Link>
+//       ))}
+//       {props.children}
+//     </Breadcrumbs>
+//   );
+// }
 
 function Socials() {
   return (

@@ -4,6 +4,10 @@ import { Breadcrumbs, Typography } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import type { SolverNode } from '../../solver/graph';
+
+import { useNode } from './backend';
+
 export function AppBreadcrumbs() {
   const path = usePathname().split('/');
   const matches = path.map((base, i) => ({
@@ -21,5 +25,15 @@ export function AppBreadcrumbs() {
         </Link>
       ))}
     </Breadcrumbs>
+  );
+}
+
+export function NodeBreadcrumb({ nodeId }: { nodeId: SolverNode['id'] }) {
+  const node = useNode(nodeId);
+
+  return (
+    <Typography variant="h5" color="primary">
+      {node.meta.name}
+    </Typography>
   );
 }

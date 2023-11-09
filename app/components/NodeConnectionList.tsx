@@ -1,16 +1,13 @@
 'use client';
 
-import { nodeSubscriptionFetcher, useNode, useSolver } from '@/app/client/backend';
+import { nodeSubscriptionFetcher, useConnection, useNode, useSolver } from '@/app/client/backend';
 import type { ConnectionBlah, Log, SolverEdge, SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
-import { useCallback, useEffect, useTransition } from 'react';
+import { memo, useCallback, useEffect, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import useSWR from 'swr';
-import useSWRInfinite from 'swr/infinite';
-import useSWRSubscription from 'swr/subscription';
-
-import { connectionFetcher } from '../client/backend';
+import { FixedSizeList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 
 import InfiniteList from './InfiniteList';
 import { FallbackBoundary, NodeAvatar, SuspenseFallback } from './ui';
@@ -24,53 +21,76 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
   edgeType: EdgeType<TEdge>;
   renderItem: (edge: TEdge) => React.ReactNode;
 }) {
-  const [, startTransition] = useTransition();
-  // const { data, error } = useSWR(
-  //   [
-  //     edgeType.name,
-  //     node.id,
-  //     {
-  //       first: 10,
-  //     },
-  //   ],
-  //   connectionFetcher,
-  // );
-  const getKey = useCallback(
-    (pageIndex: number, previousPageData: ConnectionBlah<any> | null) => {
-      if (previousPageData && !previousPageData.pageInfo.hasNextPage) return null;
-      const key = [
-        edgeType.name,
-        node.id,
-        {
-          first: 10,
-          after: previousPageData?.pageInfo.endCursor,
-        },
-      ];
-      return key;
-    },
-    [edgeType.name, node.id],
+  const { data, error, isLoading, isValidating, mutate, size, setSize } = useConnection(
+    edgeType,
+    node,
   );
-  const subscription = useSWRSubscription(node.meta.chainId ?? 'Chain:1', nodeSubscriptionFetcher);
-  const { data, error, isLoading, isValidating, mutate, size, setSize } = useSWRInfinite(
-    getKey,
-    connectionFetcher,
-    { suspense: true },
-  );
-  useEffect(() => {
-    mutate();
-  }, [mutate, subscription.data]);
   const pages = data ?? [];
   const lastPage = pages[pages.length - 1];
   const edges = pages.flatMap((page) => page.edges);
 
   const onLoadNext = useCallback(() => {
-    startTransition(() => {
-      setSize((size) => size + 1);
-    });
+    setSize((size) => size + 1);
   }, [setSize]);
+
+  const itemCount = edges.length + 1;
 
   return (
     <>
+      {/* <InfiniteLoader
+        isItemLoaded={(index) => index < edges.length}
+        itemCount={itemCount}
+        loadMoreItems={onLoadNext}
+      >
+        {({ onItemsRendered, ref }) => (
+          <List ref={ref}>
+            <FixedSizeList
+              itemCount={itemCount}
+              onItemsRendered={onItemsRendered}
+              ref={ref}
+              height={400}
+              width={300}
+              itemSize={55}
+              itemData={edges}
+            >
+              {({ index, style }) => {
+                const edge = edges[index];
+                if (!edge) {
+                  return (
+                    <ListItem dense disablePadding style={style}>
+                      <ListItemButton>
+                        <ListItemAvatar>
+                          <NodeAvatar node={node} />
+                        </ListItemAvatar>
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                }
+                // console.log(index);
+                return (
+                  <ListItem dense disablePadding style={style}>
+                    <Collapse key={edge.headId}>
+                    <FallbackBoundary
+                      suspenseFallback={
+                        <ListItemButton>
+                          <ListItemAvatar>
+                            <NodeAvatar node={node} />
+                          </ListItemAvatar>
+                        </ListItemButton>
+                      }
+                    >
+                      <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
+                        {renderItem(edge as any)}
+                      </NodeConnectionListItem>
+                    </FallbackBoundary>
+                    </Collapse>
+                  </ListItem>
+                );
+              }}
+            </FixedSizeList>
+          </List>
+        )}
+      </InfiniteLoader> */}
       <InfiniteList
         // loadPrevious={hasPrevious && onLoadPrevious}
         loadNext={lastPage.pageInfo.hasNextPage && onLoadNext}
@@ -86,12 +106,11 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
                         <ListItemAvatar>
                           <NodeAvatar node={node} />
                         </ListItemAvatar>
-                        <SuspenseFallback />
                       </ListItemButton>
                     }
                   >
                     <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
-                      <FallbackBoundary>{renderItem(edge as any)}</FallbackBoundary>
+                      {renderItem(edge as any)}
                     </NodeConnectionListItem>
                   </FallbackBoundary>
                 </ListItem>
@@ -104,7 +123,7 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
   );
 }
 
-function NodeConnectionListItem<TEdge extends SolverEdge>({
+const NodeConnectionListItem = memo(function NodeConnectionListItem<TEdge extends SolverEdge>({
   edgeType,
   tail,
   edge,
@@ -134,4 +153,4 @@ function NodeConnectionListItem<TEdge extends SolverEdge>({
       {children}
     </ListItemButton>
   );
-}
+});

@@ -1,8 +1,4 @@
 'use client';
-import { useSolver } from '@/app/client/backend';
-import { AppBreadcrumbs } from '@/app/client/breadcrumbs';
-import { createExplorerTheme } from '@/app/components/theme';
-import type { Block, Chain, Log, Transaction } from '@/lib-solver';
 import type { Chain as MantraOSSChain } from '@mantra-oss/chains';
 import { chains } from '@mantra-oss/chains';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -36,7 +32,7 @@ export default function AboutPage() {
   const edgeType = solver.solver.graph.getEdgeType(node.type);
   console.log(edgeType); */
   return (
-    <ExplorerLayout themeOptions={{}} nav={<AppBreadcrumbs />}>
+    <ExplorerLayout>
       <AboutSection title="What Is EthGate.io?">
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
           <Box>

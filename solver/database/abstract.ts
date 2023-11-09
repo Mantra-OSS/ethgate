@@ -1,28 +1,6 @@
 import type { Time } from '@/lib-node';
 
-import type { SolverNode } from './graph/abstract';
-
-export abstract class SolverEdge<
-  Name extends string = any,
-  TailId extends string = any,
-  HeadId extends string = any,
-  Data extends object = any,
-> {
-  abstract type: Name;
-  tailId: TailId;
-  headId: HeadId;
-  data: Data;
-  time: Time;
-  constructor(tailId: TailId, headId: HeadId, data: Data, time: Time) {
-    this.tailId = tailId;
-    this.headId = headId;
-    this.data = data;
-    this.time = time;
-  }
-  get cursor() {
-    return this.headId;
-  }
-}
+import type { SolverEdge, SolverNode } from '../graph/graph/abstract';
 
 export type PageArgs<Edge extends SolverEdge> = {
   before?: Edge['cursor'];

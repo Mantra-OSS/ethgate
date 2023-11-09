@@ -1,9 +1,9 @@
 import { AppBreadcrumbs } from '@/app/client/breadcrumbs';
 import { getSolver } from '@/app/server/backend';
-import { chains } from '@mantra-oss/chains';
-import type { Theme, ThemeOptions } from '@mui/material';
+import type { ThemeOptions } from '@mui/material';
 import { notFound } from 'next/navigation';
 
+import type { SolverNode } from '../../../../solver/graph';
 import ExplorerLayout from '../../ExplorerLayout';
 
 export type Params = { path: string[] };
@@ -15,6 +15,111 @@ export type Props = { params: Params; searchParams: object };
 //     { path: [chain.meta.slug] },
 //   ]);
 // }
+
+const createNodeThemeOptions = (node: SolverNode): ThemeOptions => {
+  switch (node.meta.chainId) {
+    case 'Chain:1': {
+      return {
+        palette: {
+          primary: {
+            main: '#cec0ce',
+          },
+          background: {
+            paper: '#201320',
+            default: '#9f939f',
+          },
+        },
+      };
+    }
+    case 'Chain:10': {
+      return {
+        palette: {
+          primary: {
+            light: '#ff364c',
+            main: '#ff0420',
+            dark: '#b20216',
+          },
+          background: {
+            default: '#87787a',
+            paper: '#371f22',
+          },
+        },
+      };
+    }
+    case 'Chain:324': {
+      return {
+        palette: {
+          primary: {
+            main: '#1e69ff',
+          },
+          background: {
+            default: '#242d40',
+            paper: '#0e1118',
+          },
+        },
+      };
+    }
+    // https://github.com/base-org/brand-kit
+    case 'Chain:8453': {
+      return {
+        palette: {
+          primary: {
+            main: '#bfbfbf',
+          },
+          background: {
+            paper: '#121212',
+            default: '#303030',
+          },
+        },
+      };
+    }
+    case 'Chain:42161': {
+      return {
+        palette: {
+          primary: {
+            main: '#1e69ff',
+          },
+          background: {
+            default: '#242d40',
+            paper: '#0e1118',
+          },
+        },
+      };
+    }
+    case 'Chain:42170': {
+      return {
+        palette: {
+          primary: {
+            main: '#ff7701',
+          },
+          background: {
+            paper: '#1a0c00',
+            default: '#ffc999',
+          },
+        },
+      };
+    }
+    case 'Chain:534352': {
+      return {
+        palette: {
+          primary: {
+            light: '#d0a36d',
+            main: '#c58d49',
+            dark: '#896233',
+            contrastText: '#1d1710',
+          },
+          background: {
+            default: '#544e46',
+            paper: '#1d1710',
+          },
+        },
+      };
+    }
+    default: {
+      return {};
+    }
+  }
+};
 
 export default async function Layout({
   params,
@@ -29,126 +134,13 @@ export default async function Layout({
   switch (resolved[0]) {
     case 'node': {
       const [, node] = resolved;
-      let theme: ThemeOptions = {};
-      switch (node.meta.chainId) {
-        case 'Chain:1': {
-          theme = {
-            palette: {
-              primary: {
-                main: '#cec0ce',
-              },
-              background: {
-                paper: '#201320',
-                default: '#9f939f',
-              },
-            },
-          };
-          break;
-        }
-        case 'Chain:10': {
-          theme = {
-            palette: {
-              primary: {
-                light: '#ff364c',
-                main: '#ff0420',
-                dark: '#b20216',
-              },
-              background: {
-                default: '#87787a',
-                paper: '#371f22',
-              },
-            },
-          };
-          break;
-        }
-        case 'Chain:324': {
-          theme = {
-            palette: {
-              primary: {
-                main: '#1e69ff',
-              },
-              background: {
-                default: '#242d40',
-                paper: '#0e1118',
-              },
-            },
-          };
-          break;
-        }
-        // https://github.com/base-org/brand-kit
-        case 'Chain:8453': {
-          theme = {
-            palette: {
-              primary: {
-                main: '#bfbfbf',
-              },
-              background: {
-                paper: '#121212',
-                default: '#303030',
-              },
-            },
-          };
-          break;
-        }
-        case 'Chain:42161': {
-          theme = {
-            palette: {
-              primary: {
-                main: '#1e69ff',
-              },
-              background: {
-                default: '#242d40',
-                paper: '#0e1118',
-              },
-            },
-          };
-          break;
-        }
-        case 'Chain:42170': {
-          theme = {
-            palette: {
-              primary: {
-                main: '#ff7701',
-              },
-              background: {
-                paper: '#1a0c00',
-                default: '#ffc999',
-              },
-            },
-          };
-          break;
-        }
-        case 'Chain:534352': {
-          theme = {
-            palette: {
-              primary: {
-                light: '#d0a36d',
-                main: '#c58d49',
-                dark: '#896233',
-                contrastText: '#1d1710',
-              },
-              background: {
-                default: '#544e46',
-                paper: '#1d1710',
-              },
-            },
-          };
-          break;
-        }
-      }
-      return (
-        <ExplorerLayout nav={<AppBreadcrumbs />} themeOptions={theme}>
-          {children}
-        </ExplorerLayout>
-      );
+      const themeOptions = createNodeThemeOptions(node);
+      return <ExplorerLayout themeOptions={themeOptions}>{children}</ExplorerLayout>;
     }
     case 'connection': {
-      const [, node, edgeType] = resolved;
-      return (
-        <ExplorerLayout themeOptions={{}} nav={<AppBreadcrumbs />}>
-          {children}
-        </ExplorerLayout>
-      );
+      const [, tail, edgeType] = resolved;
+      const themeOptions = createNodeThemeOptions(tail);
+      return <ExplorerLayout themeOptions={themeOptions}>{children}</ExplorerLayout>;
     }
   }
 }
