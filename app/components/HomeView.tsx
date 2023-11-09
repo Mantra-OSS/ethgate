@@ -1,10 +1,13 @@
 'use client';
-import { useNode } from '@/app/helpers/hooks';
+
+import { useNode } from '@/app/client/backend';
 import type { Chain } from '@/lib-solver';
 import { Container, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 
 // import ChainBlockList from './ChainBlockList';
 import { FallbackBoundary } from '../components/ui';
+
+import HomeChart from './HomeChart';
 
 // import ChainDescendantBlockList from './ChainDescendantBlockList';
 // import ChainChainList from './ChainChainList';
@@ -24,7 +27,9 @@ export default function HomeView() {
                 Chain Overview
               </Typography>
               <Divider />
-              <FallbackBoundary>{/* <ChainOverview node={node} /> */}</FallbackBoundary>
+              <FallbackBoundary>
+                <HomeChart width={300} height={300} />
+              </FallbackBoundary>
             </Paper>
           </Grid>
           <Grid item xs={12}>

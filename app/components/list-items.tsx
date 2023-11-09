@@ -1,9 +1,9 @@
+import { useNode } from '@/app/client/backend';
 import type { Block, Chain, Log, Transaction } from '@/lib-solver';
 import { Link, ListItemText, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FormattedRelativeTime } from 'react-intl';
 
-import { useNode } from '../helpers/hooks';
 import { useNow } from '../viewer';
 
 export function ChainListItem({ chainId }: { chainId: Chain['id'] }) {

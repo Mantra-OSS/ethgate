@@ -80,12 +80,45 @@ export class Chain extends AksharaNode<
   `Chain:${Ethgate.AksharaChainId}`
 > {
   type = 'Chain' as const;
-  meta = {
-    name: this.data.meta.name,
-    slug: this.data.extra.meta.slug,
-    path: [this.id],
-    themeColor: 'red',
-  };
+  meta = (() => {
+    let themeColor;
+    switch (this.data.chainId) {
+      case '1': {
+        break;
+      }
+      case '10': {
+        themeColor = '#ff0000';
+        break;
+      }
+      case '324': {
+        themeColor = '#0000ff';
+        break;
+      }
+      case '8453': {
+        themeColor = '#0000ff';
+        break;
+      }
+      case '42161': {
+        themeColor = '#0000ff';
+        break;
+      }
+      case '42170': {
+        themeColor = '#ffff00';
+        break;
+      }
+      case '534352': {
+        themeColor = '#ffff00';
+        break;
+      }
+    }
+    return {
+      name: this.data.meta.name,
+      slug: this.data.extra.meta.slug,
+      path: [this.id],
+      themeColor,
+      chainId: this.id,
+    };
+  })();
   parentId: Chain['id'] | undefined = this.data.parentId
     ? (`Chain:${this.data.parentId}` as const)
     : undefined;
@@ -107,6 +140,7 @@ export class Block extends AksharaNode<
     name: this.data.number.toString(),
     slug: this.data.number.toString(),
     path: [this.chainId, this.id],
+    chainId: this.chainId,
   };
   parentId: Block['id'] = `Block:${this.data.chainId}-${this.data.number - 1}`;
   transactionIds: Transaction['id'][] = this.data.transactions
@@ -151,6 +185,7 @@ export class Transaction extends AksharaNode<
     name: this.data.transactionIndex.toString(),
     slug: this.data.transactionIndex.toString(),
     path: [this.chainId, this.blockId, this.id],
+    chainId: this.chainId,
   };
   receiptId: Receipt['id'] = `Receipt:${this.data.chainId}-${this.data.blockNumber}-${this.data.transactionIndex}r`;
   // chainId = this.data.chainId;
@@ -187,6 +222,7 @@ export class Receipt extends AksharaNode<
     name: this.data.transactionIndex.toString(),
     slug: this.data.transactionIndex.toString(),
     path: [this.chainId, this.blockId, this.transactionId, this.id],
+    chainId: this.chainId,
   };
   logIds: Log['id'][] = this.data.logs
     .map(
@@ -224,6 +260,7 @@ export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethga
     name: this.data.logIndex.toString(),
     slug: this.data.logIndex.toString(),
     path: [this.chainId, this.blockId, this.transactionId, this.receiptId, this.id],
+    chainId: this.chainId,
   };
   // chainId = this.data.chainId;
   blockHash = this.data.blockHash;

@@ -4,6 +4,8 @@ import { getSolver } from '@/app/server/backend';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import EthgateLogo from '../../EthgateLogo';
+
 import type { Props } from './layout';
 
 // // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
@@ -20,6 +22,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       return {
         title: `${node.type}: ${node.meta.name}`,
         description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+        icons: '/icon',
+        openGraph: {
+          title: `${node.type}: ${node.meta.name}`,
+          description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+          images: '/icon',
+        },
+        twitter: {
+          title: `${node.type}: ${node.meta.name}`,
+          description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+          images: '/icon',
+        },
       };
     }
     case 'connection': {
@@ -28,6 +41,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       return {
         title: `${node.type}: ${node.meta.name}`,
         description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+        icons: '/icon',
+        openGraph: {
+          title: `${node.type}: ${node.meta.name}`,
+          description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+          images: '/icon',
+        },
+        twitter: {
+          title: `${node.type}: ${node.meta.name}`,
+          description: `${node.type} page for ${node.meta.name} on ethgate.io`,
+          images: '/icon',
+        },
       };
     }
   }

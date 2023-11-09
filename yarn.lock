@@ -2490,6 +2490,8 @@ __metadata:
     "@types/react-window": "npm:^1"
     "@types/react-window-infinite-loader": "npm:^1"
     "@typescript-eslint/eslint-plugin": "npm:^6.9.1"
+    "@visx/gradient": "npm:^3.3.0"
+    "@visx/mock-data": "npm:^3.3.0"
     "@visx/xychart": "npm:^3.4.1"
     autoprefixer: "npm:^10.4.16"
     client-only: "npm:^0.0.1"
@@ -5023,6 +5025,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/d3-random@npm:^2.2.0":
+  version: 2.2.3
+  resolution: "@types/d3-random@npm:2.2.3"
+  checksum: a0f5ef08372bd3f1d48b639477418550c1ce5b8f63152edd2dff6b42431656bc6e1a85ebe7ef6c91aafb13bc032a23bb5a30cf987e55efff90d046a3b5212eae
+  languageName: node
+  linkType: hard
+
 "@types/d3-scale@npm:4.0.2":
   version: 4.0.2
   resolution: "@types/d3-scale@npm:4.0.2"
@@ -5827,6 +5836,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@visx/gradient@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@visx/gradient@npm:3.3.0"
+  dependencies:
+    "@types/react": "npm:*"
+    prop-types: "npm:^15.5.7"
+  peerDependencies:
+    react: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
+  checksum: 6e26b34a986fdbde70f4738317ae5d1ffdc4565a4b14430e89e02771ac28943676723a973d547663f2613f76f7fb43b68c1cd5306082f19d1d7c38779e5fc933
+  languageName: node
+  linkType: hard
+
 "@visx/grid@npm:3.3.0":
   version: 3.3.0
   resolution: "@visx/grid@npm:3.3.0"
@@ -5855,6 +5876,16 @@ __metadata:
   peerDependencies:
     react: ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
   checksum: 43ab4fc285cb1a0f9bae8aa5e1ac906f207163da4bd3104f431141b21e5987fe86dafee70808b074c3644aa2b117768997d35e18fe3e695008599a62759982fc
+  languageName: node
+  linkType: hard
+
+"@visx/mock-data@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@visx/mock-data@npm:3.3.0"
+  dependencies:
+    "@types/d3-random": "npm:^2.2.0"
+    d3-random: "npm:^2.2.2"
+  checksum: dffb891eb888a9e76e21c136b1469e5b2bc5448b83c1338c31d26dda52dcecf95805983bf0c5687b00b785a57228bd6ed252c2a3f54d2e7a83ce3069d3d07c9c
   languageName: node
   linkType: hard
 
@@ -8107,6 +8138,13 @@ __metadata:
   version: 1.0.9
   resolution: "d3-path@npm:1.0.9"
   checksum: e35e84df5abc18091f585725b8235e1fa97efc287571585427d3a3597301e6c506dea56b11dfb3c06ca5858b3eb7f02c1bf4f6a716aa9eade01c41b92d497eb5
+  languageName: node
+  linkType: hard
+
+"d3-random@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "d3-random@npm:2.2.2"
+  checksum: 2c7413c4c626272cf12945ff14dacffdccc531989b551f8cfdd9c0266ae902cd9ffffc9ff98b693594a5ff342fb0f22e70afcce908cc6c43fb082bd52ace5acf
   languageName: node
   linkType: hard
 
@@ -14205,7 +14243,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.10, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:

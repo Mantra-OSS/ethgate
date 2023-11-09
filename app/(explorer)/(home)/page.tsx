@@ -5,7 +5,7 @@ import ExplorerLayout from '../ExplorerLayout';
 
 export default function HomePage() {
   return (
-    <ExplorerLayout nav={<AppBreadcrumbs />}>
+    <ExplorerLayout themeOptions={{}} nav={<AppBreadcrumbs />}>
       <HomeView />
     </ExplorerLayout>
   );
