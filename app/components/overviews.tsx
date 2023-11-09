@@ -1,170 +1,82 @@
 import { useNode } from '@/app/client/backend';
-import type { Block, Chain, Log, Receipt, Transaction } from '@/lib-solver';
+import {
+  type Block,
+  type Chain,
+  ChainHasBlock,
+  type Log,
+  type Receipt,
+  type Transaction,
+} from '@/lib-solver';
 import { Avatar, Divider, Link, Stack, Typography } from '@mui/material';
+import Chip from '@mui/material/Chip';
 import { green, red } from '@mui/material/colors';
-import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from '@visx/xychart';
 import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
-import { useNow } from '../viewer/viewer';
+import ChainChart from './ChainChart';
+import { useNow } from './now';
+import { FallbackBoundary } from './ui';
+
+export const overviewComponents = {
+  Chain: ChainOverview,
+  Block: BlockOverview,
+  Transaction: TransactionOverview,
+  Receipt: ReceiptOverview,
+  Log: LogOverview,
+};
 
 export function ChainOverview({ node }: { node: Chain }) {
-  /*   const data1 = [
-    { x: '2020-01-01', y: 50 },
-    { x: '2020-01-02', y: 10 },
-    { x: '2020-01-03', y: 20 },
-  ];
-
-  const data2 = [
-    { x: '2020-01-01', y: 30 },
-    { x: '2020-01-02', y: 40 },
-    { x: '2020-01-03', y: 80 },
-  ];
-
-  const accessors = {
-    xAccessor: (d: any) => d.x,
-    yAccessor: (d: any) => d.y,
-  }; */
-
   return (
     <>
-      <Stack direction="column" padding={2} spacing={2} divider={<Divider />}>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography>Chain Name</Typography>
-          <Typography>{node.meta.name}</Typography>
-        </Stack>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography>Chain ID</Typography>
-          <Typography>{node.data.chainId}</Typography>
-        </Stack>
-        {Object.keys(node).includes('parentId') && (
-          <ParentChainOverview chainId={node.parentId as Chain['id']} />
-        )}
-      </Stack>
-      {/*       <XYChart height={300} xScale={{ type: 'band' }} yScale={{ type: 'linear' }}>
-        <AnimatedAxis orientation="bottom" />
-        <AnimatedGrid columns={false} numTicks={0} />
-        <AnimatedLineSeries dataKey="Line 1" data={data1} {...accessors} />
-        <AnimatedLineSeries dataKey="Line 2" data={data2} {...accessors} />
-        <Tooltip
-          snapTooltipToDatumX
-          snapTooltipToDatumY
-          showVerticalCrosshair
-          showSeriesGlyphs
-          renderTooltip={({ tooltipData, colorScale }: any) => (
-            <div>
-              <div style={{ color: colorScale(tooltipData.nearestDatum.key) }}>
-                {tooltipData.nearestDatum.key}
-              </div>
-              {accessors.xAccessor(tooltipData.nearestDatum.datum)}
-              {', '}
-              {accessors.yAccessor(tooltipData.nearestDatum.datum)}
-            </div>
-          )}
+      <Stack
+        direction={{ md: 'row', xs: 'column' }}
+        spacing={1}
+        justifyContent="center"
+        padding={2}
+      >
+        <Chip label={`Chain ID: ${node.data.extra.chainId}`} variant="outlined" />
+        <Chip label={`Native Currency: ${node.data.extra.currency.symbol}`} variant="outlined" />
+        <Chip
+          label={`Web Page: ${node.data.extra.meta.url}`}
+          variant="outlined"
+          component="a"
+          href={node.data.extra.meta.url}
+          target="_blank"
+          clickable
         />
-      </XYChart> */}
-      {/* <ChainChart chainId={node.id} /> */}
+        {node.data.parent &&
+          node.data.parent.bridges.length > 0 &&
+          node.data.parent.bridges.map((bridge, index) => (
+            <Chip
+              key={index}
+              label={`Bridge: ${bridge.url}`}
+              variant="outlined"
+              component="a"
+              href={bridge.url}
+              target="_blank"
+              clickable
+            />
+          ))}
+      </Stack>
+      {/* Chart */}
+      {/* <Stack direction={{ md: 'row', xs: 'column' }} spacing={1} paddingX={2}>
+        <Stack flex={1} p={1}>
+          <FallbackBoundary>
+            <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
+          </FallbackBoundary>
+        </Stack>
+        <Stack flex={1} p={1}>
+          <FallbackBoundary>
+            <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
+          </FallbackBoundary>
+        </Stack>
+        <Stack flex={1} p={1}>
+          <FallbackBoundary>
+            <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
+          </FallbackBoundary>
+        </Stack>
+      </Stack> */}
     </>
-  );
-}
-
-function ParentChainOverview({ chainId }: { chainId: Chain['id'] }) {
-  const chain = useNode<Chain>(chainId);
-
-  return (
-    <Stack direction="row" justifyContent="space-between">
-      <Typography>Parent Chain</Typography>
-      <Link href={`/${chain.meta.slug}`}>
-        <Typography>{chain.meta.name}</Typography>
-      </Link>
-    </Stack>
-  );
-}
-
-// function ChainChart({ chainId }: { chainId: Chain['id'] }) {
-//   const [, startTransition] = useTransition();
-//   const [blocks, loadNext, refetch] = useConnection<ChainHasBlock>('ChainHasBlock', chainId, {
-//     first: 10,
-//   });
-//   const onLoadNext = useCallback(() => {
-//     startTransition(() => {
-//       loadNext();
-//     });
-//   }, [loadNext]);
-
-//   useEffect(() => {
-//     let abort = false;
-
-//     (async () => {
-//       const database = (await solverPromise).solver.database;
-//       const update = await database.networkUpdates(chainId).next();
-//       if (update.done) return;
-//       if (abort) return;
-//       startTransition(() => {
-//         refetch();
-//       });
-//       // const { headId } = update.value;
-//     })();
-
-//     return () => {
-//       abort = true;
-//     };
-//   });
-//   /*   const data = blocks.edges.map((block) => ({
-//     x: block.data.number,
-//     y: block.data.transactions.length,
-//   })); */
-//   const data = [
-//     { x: '111853870', y: 50 },
-//     { x: '111853871', y: 10 },
-//     { x: '111853872', y: 20 },
-//     { x: '111853873', y: 42 },
-//     { x: '111853874', y: 75 },
-//     { x: '111853875', y: 57 },
-//     { x: '111853876', y: 32 },
-//   ];
-//   return (
-//     <>
-//       <InfiniteList
-//       // startSubscriptionConfig={subscriptionConfig}
-//       // loadPrevious={hasPrevious && onLoadPrevious}
-//       // loadNext={blocks?.pageInfo.hasNextPage && onLoadNext}
-//       >
-//         <Chart data={data} />
-//       </InfiniteList>
-//     </>
-//   );
-// }
-
-function Chart({ data }: { data: any[] }) {
-  const accessors = {
-    xAccessor: (d: any) => d.x,
-    yAccessor: (d: any) => d.y,
-  };
-
-  return (
-    <XYChart height={300} xScale={{ type: 'band' }} yScale={{ type: 'linear' }}>
-      <AnimatedAxis orientation="bottom" />
-      <AnimatedAxis orientation="right" />
-      <AnimatedGrid columns={false} numTicks={0} />
-      <AnimatedLineSeries dataKey="Line 1" data={data} {...accessors} />
-      <Tooltip
-        snapTooltipToDatumX
-        snapTooltipToDatumY
-        showVerticalCrosshair
-        showSeriesGlyphs
-        renderTooltip={({ tooltipData, colorScale }: any) => (
-          <div>
-            <div style={{ color: colorScale(tooltipData.nearestDatum.key) }}>
-              {tooltipData.nearestDatum.key}
-            </div>
-            {accessors.xAccessor(tooltipData.nearestDatum.datum)}
-            {', '}
-            {accessors.yAccessor(tooltipData.nearestDatum.datum)}
-          </div>
-        )}
-      />
-    </XYChart>
   );
 }
 
@@ -186,29 +98,50 @@ export function BlockOverview({ node }: { node: Block }) {
           </Avatar>
         </Link>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>Block Hash</Typography>
-        <Typography>{node.data.hash}</Typography>
+        <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+          {node.data.hash}
+        </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Block Number</Typography>
-        <Typography>{<FormattedNumber value={node.data.number} />}</Typography>
+        <Typography>
+          <FormattedNumber value={node.data.number} />
+        </Typography>
+      </Stack>
+      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+        <Typography>Parent Block</Typography>
+        <Typography>
+          <Link href={`/${chain.meta.slug}/blocks/${node.data.number - 1}`}>
+            <FormattedNumber value={node.data.number - 1} />
+          </Link>
+        </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Gas Used</Typography>
-        <Typography>{<FormattedNumber value={node.data.gasUsed} />}</Typography>
+        <Typography>
+          <FormattedNumber value={node.data.gasUsed} />
+        </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Gas Limit</Typography>
-        <Typography>{<FormattedNumber value={node.data.gasLimit} />}</Typography>
+        <Typography>
+          <FormattedNumber value={node.data.gasLimit} />
+        </Typography>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      {/* <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Logs Bloom</Typography>
         <Typography
           textAlign={'right'}
           dangerouslySetInnerHTML={{ __html: node.data.logsBloom.replace(/(.{20})/g, '$1<wbr />') }}
         />
-      </Stack>
+      </Stack> */}
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Size</Typography>
         <Typography>
@@ -225,18 +158,17 @@ export function BlockOverview({ node }: { node: Block }) {
           />
         </Typography>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Miner</Typography>
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
+        <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+          Miner
+        </Typography>
         <Typography>
           <Link href={`https://etherscan.io/address/${node.data.miner}`}>{node.data.miner}</Link>
-        </Typography>
-      </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
-        <Typography>Parent</Typography>
-        <Typography>
-          <Link href={`/${chain.meta.slug}/blocks/${node.data.number - 1}`}>
-            <FormattedNumber value={node.data.number - 1} />
-          </Link>
         </Typography>
       </Stack>
     </Stack>
@@ -260,10 +192,17 @@ export function TransactionOverview({ node }: { node: Transaction }) {
           </Avatar>
         </Link>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>Block Hash</Typography>
         <Link href={`/${chain.meta.slug}/blocks/${node.data.blockNumber}`}>
-          <Typography>{node.data.blockHash}</Typography>
+          <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+            {node.data.blockHash}
+          </Typography>
         </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
@@ -274,24 +213,45 @@ export function TransactionOverview({ node }: { node: Transaction }) {
           </Typography>
         </Link>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>Transaction Hash</Typography>
-        <Typography>{node.data.hash}</Typography>
+        <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+          {node.data.hash}
+        </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
         <Typography>Transaction Index</Typography>
         <Typography>{<FormattedNumber value={node.data.transactionIndex} />}</Typography>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>From Address</Typography>
-        <Typography>
+        <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
           {<Link href={`https://etherscan.io/address/${node.data.from}`}>{node.data.from}</Link>}
         </Typography>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>To Address</Typography>
-        <Typography>
-          {<Link href={`https://etherscan.io/address/${node.data.to}`}>{node.data.to}</Link>}
+        <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+          {node.data.to ? (
+            <Link href={`https://etherscan.io/address/${node.data.to}`}>{node.data.to}</Link>
+          ) : (
+            'Contract Creation'
+          )}
         </Typography>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
@@ -306,7 +266,7 @@ export function TransactionOverview({ node }: { node: Transaction }) {
         <Typography>Input</Typography>
         <Typography
           textAlign={'right'}
-          dangerouslySetInnerHTML={{ __html: node.data.input.replace(/(.{20})/g, '$1<wbr />') }}
+          dangerouslySetInnerHTML={{ __html: node.data.input.replace(/(.{30})/g, '$1<wbr />') }}
         />
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
@@ -333,7 +293,7 @@ export function ReceiptOverview({ receipt: node }: { receipt: Receipt }) {
         <Typography>Logs Bloom</Typography>
         <Typography
           textAlign={'right'}
-          dangerouslySetInnerHTML={{ __html: node.data.logsBloom.replace(/(.{20})/g, '$1<wbr />') }}
+          dangerouslySetInnerHTML={{ __html: node.data.logsBloom.replace(/(.{30})/g, '$1<wbr />') }}
         />
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
@@ -361,10 +321,17 @@ export function LogOverview({ node }: { node: Log }) {
           </Avatar>
         </Link>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>Block Hash</Typography>
         <Link href={`/${chain.meta.slug}/blocks/${node.data.blockNumber}`}>
-          <Typography>{node.data.blockHash}</Typography>
+          <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+            {node.data.blockHash}
+          </Typography>
         </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
@@ -375,12 +342,19 @@ export function LogOverview({ node }: { node: Log }) {
           </Typography>
         </Link>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>Transaction Hash</Typography>
         <Link
           href={`/${chain.meta.slug}/blocks/${node.data.blockNumber}/transactions/${node.data.transactionIndex}`}
         >
-          <Typography>{node.data.transactionHash}</Typography>
+          <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+            {node.data.transactionHash}
+          </Typography>
         </Link>
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
@@ -395,19 +369,30 @@ export function LogOverview({ node }: { node: Log }) {
         <Typography>Log Index</Typography>
         <Typography>{<FormattedNumber value={node.data.logIndex} />}</Typography>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>Address</Typography>
-        <Typography>
-          {
-            <Link href={`https://etherscan.io/address/${node.data.address}`}>
-              {node.data.address}
-            </Link>
-          }
-        </Typography>
+        <Link href={`https://etherscan.io/address/${node.data.address}`}>
+          <Typography whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+            {node.data.address}
+          </Typography>
+        </Link>
       </Stack>
-      <Stack width="100%" direction="row" padding={2} justifyContent="space-between">
+      <Stack
+        width="100%"
+        direction={{ md: 'row', xs: 'column' }}
+        padding={2}
+        justifyContent="space-between"
+      >
         <Typography>Topics</Typography>
         <Typography
+          whiteSpace="nowrap"
+          overflow="hidden"
+          textOverflow="ellipsis"
           textAlign={'right'}
           dangerouslySetInnerHTML={{ __html: node.data.topics.join('<br />') }}
         />
@@ -416,7 +401,7 @@ export function LogOverview({ node }: { node: Log }) {
         <Typography>Data</Typography>
         <Typography
           textAlign={'right'}
-          dangerouslySetInnerHTML={{ __html: node.data.data.replace(/(.{20})/g, '$1<wbr />') }}
+          dangerouslySetInnerHTML={{ __html: node.data.data.replace(/(.{30})/g, '$1<wbr />') }}
         />
       </Stack>
       <Stack width="100%" direction="row" padding={2} justifyContent="space-between">

@@ -1,34 +1,37 @@
 import 'server-only';
-import {
-  type PageArgs,
-  type PageInfo,
-  Solver,
-  type SolverEdge,
-  type SolverNode,
-} from '@/lib-solver';
-import { memoize } from 'lodash';
+import { type PageInfo, Solver, type SolverEdge } from '@/lib-solver';
+import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
+import { cache } from 'react';
 
-import { createAkshara } from './akshara.server';
+import { AksharaDatabase } from '../../akshara/database';
+import { Akshara } from '../../akshara/node';
 
-export class EthgateSolver {
-  solver: Solver;
+import { serverChains } from './chains';
 
-  static async create() {
-    const node = await createAkshara();
-    const solver = await Solver.create({ node });
-    return new EthgateSolver(solver);
-  }
-
-  private constructor(solver: Solver) {
-    this.solver = solver;
+class ServerAkshara extends Akshara {
+  constructor() {
+    const database = new AksharaDatabase({
+      name: 'akshara-server',
+      indexedDB: new IDBFactory(),
+      IDBKeyRange,
+    });
+    const fetchFn = globalThis.fetch.bind(globalThis);
+    // TODO: No batch
+    // TODO: No cache
+    super({ chains: serverChains, fetchFn, database, daBatchScheduleFn: undefined as any });
   }
 }
 
-const solverPromise = EthgateSolver.create();
-
-export async function getSolver() {
-  return solverPromise;
+class ServerSolver extends Solver {
+  constructor() {
+    const node = new ServerAkshara();
+    super({ node });
+  }
 }
+
+export const getSolver = cache(() => {
+  return new ServerSolver();
+});
 
 export interface Connection<Edge extends SolverEdge> {
   edges: Edge[];

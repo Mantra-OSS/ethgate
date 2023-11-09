@@ -4,7 +4,7 @@ import EthgateLogo from './(explorer)/EthgateLogo';
 
 export const runtime = 'edge';
 
-export const alt = 'EthGate.io | Ethereum & L2 explorer';
+export const alt = 'ethgate.io | Ethereum & L2 explorer';
 export const size = {
   width: 1200,
   height: 630,
@@ -29,7 +29,7 @@ export default async function Image() {
         }}
       >
         <EthgateLogo width={400} height={400} color="#FFC107" />
-        <p>EthGate.io</p>
+        <p>ethgate.io</p>
       </div>
     ),
     {

@@ -1,32 +1,10 @@
 import 'server-only';
 
-import { Akshara, AksharaDatabase } from '@/lib-node';
-import type { AksharaObjectKey, AksharaObjects } from '@/lib-node';
-import type { AksharaNode, SolverNode } from '@/lib-solver';
-import { blockType, chainType, logType, receiptType, transactionType } from '@/lib-solver';
 import { chains } from '@mantra-oss/chains';
-import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
-import { memoize } from 'lodash';
 
 const { ANKR_KEY } = process.env;
 
-class AksharaServer extends Akshara {
-  constructor() {
-    const database = new AksharaDatabase({
-      name: 'akshara-server',
-      indexedDB: new IDBFactory(),
-      IDBKeyRange,
-    });
-    const fetchFn = globalThis.fetch.bind(globalThis);
-    // TODO: No batch
-    // TODO: No cache
-    super({ chains: serverChains, fetchFn, database, daBatchScheduleFn: undefined as any });
-  }
-}
-
-export const createAkshara = memoize(async () => new AksharaServer());
-
-const serverChains = {
+export const serverChains = {
   '1': {
     ...chains['1'],
     rpcs: [

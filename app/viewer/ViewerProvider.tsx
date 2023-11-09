@@ -4,17 +4,17 @@ import { useCallback } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { viewerStorageState } from './storage';
-import useKonamiCode from './useKonamiCode';
-import { isDeveloperState } from './viewer';
+// import useKonamiCode from './useKonamiCode';
+// import { isDeveloperState } from './viewer';
 
-function KonamiManager() {
-  const setIsDeveloper = useSetRecoilState(isDeveloperState);
-  const onKonami = useCallback(() => {
-    setIsDeveloper((isDeveloper) => !isDeveloper);
-  }, [setIsDeveloper]);
-  useKonamiCode(onKonami);
-  return null;
-}
+// function KonamiManager() {
+//   const setIsDeveloper = useSetRecoilState(isDeveloperState);
+//   const onKonami = useCallback(() => {
+//     setIsDeveloper((isDeveloper) => !isDeveloper);
+//   }, [setIsDeveloper]);
+//   useKonamiCode(onKonami);
+//   return null;
+// }
 
 function TimeManager() {
   const [storage, setStorage] = useRecoilState(viewerStorageState);
@@ -31,7 +31,7 @@ function TimeManager() {
 export default function ViewerProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <KonamiManager />
+      {/* <KonamiManager /> */}
       <TimeManager />
       {children}
     </>

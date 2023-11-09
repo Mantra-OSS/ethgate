@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       <EthgateLogo
         width={width}
         height={height}
-        color={searchParams.get('color') ? `#${searchParams.get('color')}` : '#FFC107'}
+        color={searchParams.get('color') ? `#${searchParams.get('color')}` : '#F9FDFF'}
       />
     ),
     {

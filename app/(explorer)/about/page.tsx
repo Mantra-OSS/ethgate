@@ -33,7 +33,7 @@ export default function AboutPage() {
   console.log(edgeType); */
   return (
     <ExplorerLayout>
-      <AboutSection title="What Is EthGate.io?">
+      <AboutSection title="What Is ethgate.io?">
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
           <Box>
             <EthgateLogo width={300} height={300} />
@@ -44,7 +44,7 @@ export default function AboutPage() {
             your fingertips.
           </Typography>
         </Stack>
-        <Image src="/icon" width={128} height={128} alt="Ethgate Icon" />
+        <Image src="/opengraph-image" alt="tatam" width={1200} height={630} />
         {/* <Image src="/_next/image?url=%2Ficon&w=128&q=75" width={128} height={128} alt="dadsa" /> */}
       </AboutSection>
       <AboutSection title="We Support Multiple Chains">

@@ -4,9 +4,20 @@ import { Link, ListItemText, Stack, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { FormattedRelativeTime } from 'react-intl';
 
-import { useNow } from '../viewer';
+import { useNow } from './now';
+import { FormattedHex } from './ui';
 
-export function ChainListItem({ chainId }: { chainId: Chain['id'] }) {
+export const listItemComponents = {
+  ChainHasChain: ChainListItem,
+  ChainHasDescendantBlock: BlockListItem,
+  ChainHasBlock: BlockListItem,
+  ChainHasTransaction: TransactionListItem,
+  BlockHasTransaction: TransactionListItem,
+  BlockHasLog: LogListItem,
+  TransactionHasLog: LogListItem,
+};
+
+export function ChainListItem({ nodeId: chainId }: { nodeId: Chain['id'] }) {
   const node = useNode<Chain>(chainId);
 
   return (
@@ -27,28 +38,27 @@ export function ChainListItem({ chainId }: { chainId: Chain['id'] }) {
   );
 }
 
-export function BlockListItem({ blockId }: { blockId: Block['id'] }) {
+export function BlockListItem({ nodeId: blockId }: { nodeId: Block['id'] }) {
   const node = useNode<Block>(blockId);
 
   const timestamp = DateTime.fromMillis(node.data.timestamp * 1000);
   const now = useNow();
 
-  // throw new Promise(() => {});
   return (
     <ListItemText>
       <Stack direction="row" spacing={1} justifyContent="space-between">
-        <Stack direction="column">
+        <Stack direction="column" flex={1}>
           <Typography>{node.data.number}</Typography>
         </Stack>
-        <Stack direction="column">
+        <Stack direction="column" flex={2}>
           <Typography>
-            Block Hash: {node.data.hash.slice(0, 4)}...{node.data.hash.slice(-4)}
+            Block Hash: <FormattedHex value={node.data.hash} />
           </Typography>
           <Typography>
-            Miner: {node.data.miner.slice(0, 4)}...{node.data.miner.slice(-4)}
+            Miner: <FormattedHex value={node.data.miner} />
           </Typography>
         </Stack>
-        <Stack direction="column">
+        <Stack direction="column" flex={1} textAlign="right">
           <Typography>{node.data.transactions.length} txns</Typography>
           <Typography variant="caption">
             <FormattedRelativeTime
@@ -63,7 +73,7 @@ export function BlockListItem({ blockId }: { blockId: Block['id'] }) {
   );
 }
 
-export function TransactionListItem({ transactionId }: { transactionId: Transaction['id'] }) {
+export function TransactionListItem({ nodeId: transactionId }: { nodeId: Transaction['id'] }) {
   const node = useNode<Transaction>(transactionId);
   const block = useNode<Block>(node.blockId);
 
@@ -73,21 +83,22 @@ export function TransactionListItem({ transactionId }: { transactionId: Transact
   return (
     <ListItemText>
       <Stack direction="row" spacing={1} justifyContent="space-between">
-        <Stack direction="column">
+        <Stack direction="column" flex={1}>
           <Typography>
-            {node.data.hash.slice(0, 4)}...{node.data.hash.slice(-4)}
+            <FormattedHex value={node.data.hash} />
           </Typography>
           <Typography>{node.data.blockNumber}</Typography>
         </Stack>
-        <Stack direction="column">
+        <Stack direction="column" flex={2}>
           <Typography>
-            From: {node.data.from.slice(0, 4)}...{node.data.from.slice(-4)}
+            From: <FormattedHex value={node.data.from} />
           </Typography>
           <Typography>
-            To: {node.data.to.slice(0, 4)}...{node.data.from.slice(-4)}
+            To:
+            {node.data.to && <FormattedHex value={node.data.to} />}
           </Typography>
         </Stack>
-        <Stack direction="column">
+        <Stack direction="column" flex={1} textAlign="right">
           <Typography>{(parseInt(node.data.value, 16) / 10 ** 18).toFixed(2)} ETH</Typography>
           <Typography variant="caption">
             <FormattedRelativeTime
@@ -102,25 +113,23 @@ export function TransactionListItem({ transactionId }: { transactionId: Transact
   );
 }
 
-export function LogListItem({ logId }: { logId: Log['id'] }) {
+export function LogListItem({ nodeId: logId }: { nodeId: Log['id'] }) {
   const node = useNode<Log>(logId);
   return (
     <ListItemText>
       <Stack direction="row" spacing={1} justifyContent="space-between">
-        <Stack direction="column">
+        <Stack direction="column" flex={1}>
           <Typography>Tx Index: {node.data.transactionIndex}</Typography>
           <Typography>
-            Tx Hash: {node.data.transactionHash.slice(0, 6)}...
-            {node.data.transactionHash.slice(-6)}
+            Tx Hash: <FormattedHex value={node.data.transactionHash} />
           </Typography>
         </Stack>
-        <Stack direction="column">
+        <Stack direction="column" flex={1}>
           <Typography>
-            Address: {node.data.address.slice(0, 6)}...{node.data.address.slice(-6)}
+            Address: <FormattedHex value={node.data.address} />
           </Typography>
           <Typography>Topics Count: {node.data.topics.length}</Typography>
         </Stack>
-        <Typography>Removed: {node.data.removed.toString()}</Typography>
       </Stack>
     </ListItemText>
   );
