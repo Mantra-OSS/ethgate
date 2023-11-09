@@ -155,18 +155,6 @@ export class Block extends AksharaNode<
         `Receipt:${this.data.chainId}-${this.data.number}-${transactionIndex}r` satisfies Receipt['id'],
     )
     .reverse();
-  number = this.data.number;
-  // chainId = this.data.chainId;
-  gasUsed = this.data.gasUsed;
-  logsBloom = this.data.logsBloom;
-  timestamp = this.data.timestamp;
-  hash = this.data.hash;
-  parentHash = this.data.parentHash;
-  gasLimit = this.data.gasLimit;
-  baseFeePerGas = this.data.baseFeePerGas;
-  miner = this.data.miner;
-  size = this.data.size;
-  transactions = this.data.transactions;
 }
 
 export const transactionType = new AksharaNodeType<Transaction>(
@@ -188,21 +176,6 @@ export class Transaction extends AksharaNode<
     chainId: this.chainId,
   };
   receiptId: Receipt['id'] = `Receipt:${this.data.chainId}-${this.data.blockNumber}-${this.data.transactionIndex}r`;
-  // chainId = this.data.chainId;
-  value = this.data.value;
-  hash = this.data.hash;
-  blockHash = this.data.blockHash;
-  blockNumber = this.data.blockNumber;
-  from = this.data.from;
-  gas = this.data.gas;
-  gasPrice = this.data.gasPrice;
-  input = this.data.input;
-  nonce = this.data.nonce;
-  to = this.data.to;
-  transactionIndex = this.data.transactionIndex;
-  v = this.data.v;
-  r = this.data.r;
-  s = this.data.s;
 }
 
 export const receiptType = new AksharaNodeType<Receipt>(
@@ -231,19 +204,6 @@ export class Receipt extends AksharaNode<
     )
     .reverse();
   logs: Log[] = this.data.logs.map((log) => logType.create(log)).reverse();
-  contractAddress = this.data.contractAddress;
-  // chainId = this.data.chainId;
-  gasUsed = this.data.gasUsed;
-  logsBloom = this.data.logsBloom;
-  blockHash = this.data.blockHash;
-  blockNumber = this.data.blockNumber;
-  from = this.data.from;
-  to = this.data.to;
-  transactionIndex = this.data.transactionIndex;
-  transactionHash = this.data.transactionHash;
-  cumulativeGasUsed = this.data.cumulativeGasUsed;
-  // logs = this.data.logs;
-  status = this.data.status;
 }
 
 export const logType = new AksharaNodeType<Log>(
@@ -262,16 +222,6 @@ export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethga
     path: [this.chainId, this.blockId, this.transactionId, this.receiptId, this.id],
     chainId: this.chainId,
   };
-  // chainId = this.data.chainId;
-  blockHash = this.data.blockHash;
-  blockNumber = this.data.blockNumber;
-  transactionIndex = this.data.transactionIndex;
-  address = this.data.address;
-  topics = this.data.topics;
-  // data = this.data.data;
-  transactionHash = this.data.transactionHash;
-  logIndex = this.data.logIndex;
-  removed = this.data.removed;
 }
 
 export class ChainHasChain extends AksharaEdge<'ChainHasChain', Chain['id'], Chain['id'], object> {
