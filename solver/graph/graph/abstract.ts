@@ -1,5 +1,7 @@
 import type { Akshara, Time } from '@/lib-node';
 
+import type { Chain } from '../akshara';
+
 export type GraphTypeContext = {
   aks: Akshara;
 };
@@ -12,7 +14,7 @@ export type GraphNodeMeta = {
   slug: string;
   path: ObjectId<any>[];
   themeColor?: string;
-  chainId?: string;
+  chainId?: Chain['id'];
 };
 
 export interface SolverNode<

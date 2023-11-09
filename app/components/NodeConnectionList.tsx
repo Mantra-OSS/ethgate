@@ -1,13 +1,14 @@
 'use client';
 
-import { useNode } from '@/app/client/backend';
+import { nodeSubscriptionFetcher, useNode, useSolver } from '@/app/client/backend';
 import type { ConnectionBlah, Log, SolverEdge, SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
-import { useCallback, useTransition } from 'react';
+import { useCallback, useEffect, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
+import useSWRSubscription from 'swr/subscription';
 
 import { connectionFetcher } from '../client/backend';
 
@@ -49,12 +50,15 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
     },
     [edgeType.name, node.id],
   );
-
+  const subscription = useSWRSubscription(node.meta.chainId ?? 'Chain:1', nodeSubscriptionFetcher);
   const { data, error, isLoading, isValidating, mutate, size, setSize } = useSWRInfinite(
     getKey,
     connectionFetcher,
     { suspense: true },
   );
+  useEffect(() => {
+    mutate();
+  }, [mutate, subscription.data]);
   const pages = data ?? [];
   const lastPage = pages[pages.length - 1];
   const edges = pages.flatMap((page) => page.edges);
