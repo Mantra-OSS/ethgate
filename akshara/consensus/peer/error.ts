@@ -1,4 +1,4 @@
-import { EthereumPeerError } from '@ethgate/spec-node';
+import { EthereumPeerError } from '@/spec-node';
 
 export class EthereumPeerFetchError extends EthereumPeerError {
   readonly name = `EthereumPeerFetchError`;

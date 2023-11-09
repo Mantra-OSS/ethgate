@@ -1,13 +1,12 @@
-import type { AksharaBlockData, AksharaChainId } from '@ethgate/spec-node';
-import { describe, expect, it, jest } from '@jest/globals';
-import fetch from 'cross-fetch';
+import type { AksharaBlockData, AksharaChainId } from '@/spec-node';
+import { beforeAll, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { type Mock } from 'jest-mock';
 
-import { AksharaDatabase } from '../database/index.js';
-import { ETHGATE_NODE_TEST_CHAINS } from '../testing/index.js';
+import { AksharaDatabase } from '../database';
+import { ETHGATE_NODE_TEST_CHAINS } from '../testing';
 
-import { Akshara } from './index.js';
+import { Akshara } from '.';
 
 describe('Akshara', () => {
   let fetchFn: Mock<typeof fetch>;
@@ -21,7 +20,12 @@ describe('Akshara', () => {
       IDBKeyRange,
     });
     const fetchFn = fetch;
-    const node = new Akshara({ chains: ETHGATE_NODE_TEST_CHAINS, fetchFn, database });
+    const node = new Akshara({
+      chains: ETHGATE_NODE_TEST_CHAINS,
+      fetchFn,
+      database,
+      daBatchScheduleFn: undefined as any,
+    });
     chainIds = ['1', ...(await node.execute('GetChains', [{ chainId: '1' }]))];
     latestBlocks = new Map(
       await Promise.all(
@@ -40,7 +44,12 @@ describe('Akshara', () => {
       IDBKeyRange,
     });
     fetchFn = jest.fn(fetch);
-    node = new Akshara({ chains: ETHGATE_NODE_TEST_CHAINS, fetchFn, database });
+    node = new Akshara({
+      chains: ETHGATE_NODE_TEST_CHAINS,
+      fetchFn,
+      database,
+      daBatchScheduleFn: undefined as any,
+    });
     chainIds.forEach((chainId) => {
       const client = node.getDaClient(chainId);
       client.latestBlocks = latestBlocks;

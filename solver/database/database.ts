@@ -1,105 +1,74 @@
-import type {
-  Akshara,
-  AksharaAbstract,
-  AksharaBlockData,
-  AksharaChainId,
-} from "@/akshara/index.js";
-import { parseGlobalId } from "@ethgate/spec-solver";
+import type { Akshara, AksharaAbstract, AksharaBlockData, AksharaChainId } from '@/lib-node';
+import { parseGlobalId } from '@/spec-solver';
 
-import type {
-  Chain,
-  ConnectionGenerator,
-  EdgeAbstract,
-  NodeAbstract,
-  PageArgs,
-  PageInfo,
-} from "../data/index.js";
-import {
-  Block,
-  ChainHasBlock,
-  Connection,
-  DatabaseAbstract,
-} from "../data/index.js";
-import { SolverGraph } from "../graph/index.js";
-
-const graph = new SolverGraph();
+import type { Chain, ConnectionGenerator, PageArgs, PageInfo, SolverEdge } from '../graph';
+import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../graph';
+import type { SolverNode } from '../graph/graph/abstract';
+import type { SolverGraph } from '../solver';
 
 export type EthgateSolverDatabaseConfig = {
   node: AksharaAbstract;
+  graph: SolverGraph;
 };
 
-export class EthgateSolverDatabase extends DatabaseAbstract<
-  NodeAbstract,
-  EdgeAbstract
-> {
-  #node: AksharaAbstract;
+export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEdge> {
+  node: AksharaAbstract;
+  graph: SolverGraph;
 
   /**
    * @deprecated
    */
   get provider(): AksharaAbstract {
-    return this.#node;
+    return this.node;
   }
   get aks(): Akshara {
-    return this.#node as any;
+    return this.node as any;
   }
 
   constructor(config: EthgateSolverDatabaseConfig) {
     super();
-    this.#node = config.node;
+    this.node = config.node;
+    this.graph = config.graph;
   }
 
-  async *getBlocksByTag(
-    chainId: AksharaChainId
-  ): AsyncGenerator<AksharaBlockData, never, void> {
+  async *getBlocksByTag(chainId: AksharaChainId): AsyncGenerator<AksharaBlockData, never, void> {
     while (true) {
-      const block = await this.#node.execute("GetLatestBlock", [{ chainId }]);
+      const block = await this.node.execute('GetLatestBlock', [{ chainId }]);
       if (!block) continue;
       yield block;
     }
   }
 
-  async *networkUpdates(networkId: Chain["id"]): AsyncGenerator<ChainHasBlock> {
+  async *networkUpdates(networkId: Chain['id']): AsyncGenerator<ChainHasBlock> {
     const [, chainId] = parseGlobalId(networkId);
     const latestBlocks = this.getBlocksByTag(chainId);
     let last;
     for await (const providerBlock of latestBlocks) {
-      const block = new Block(providerBlock);
+      const block = blockType.create(providerBlock);
       if (last && last.id === block.id) continue;
       last = block;
-      const edge = new ChainHasBlock(
-        networkId,
-        block.id,
-        {},
-        block.data.timestamp
-      );
+      const edge = new ChainHasBlock(networkId, block.id, {}, block.data.timestamp);
       yield edge;
     }
   }
 
-  async getNode<Node extends NodeAbstract>(
-    id: Node["id"]
-  ): Promise<Node | undefined> {
+  async getNode<Node extends SolverNode>(id: Node['id']): Promise<Node | undefined> {
     const [type] = parseGlobalId(id);
-    const nodeType = graph.nodeTypes.find(
-      (nodeType) => nodeType.schema.aksharaType === type
-    )!;
+    const nodeType = this.graph.nodeTypes.find((nodeType) => nodeType.name === type)!;
     return nodeType.get(id, this);
   }
-  async *#getConnection<Edge extends EdgeAbstract>(
-    type: Edge["type"],
-    tailId: Edge["tailId"],
-    args: PageArgs<Edge>
+  async *_getConnection<Edge extends SolverEdge>(
+    type: Edge['type'],
+    tailId: Edge['tailId'],
+    args: PageArgs<Edge>,
   ): ConnectionGenerator<Edge> {
     if (args.first && args.last) {
-      throw new Error("Cannot specify both first and last");
+      throw new Error('Cannot specify both first and last');
     }
     const isForward = !args.last;
     const limit = isForward ? args.first! : args.last!;
 
-    const edgeType = graph.edgeTypes.find(
-      (edgeType) => edgeType.name === type
-    )!;
+    const edgeType = this.graph.edgeTypes.find((edgeType) => edgeType.name === type)!;
     const edges = edgeType.get(
       tailId,
       {
@@ -108,7 +77,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
         isForward,
         limit: limit + 1,
       },
-      this
+      this,
     );
 
     const pageInfo: PageInfo<Edge> = {
@@ -143,14 +112,12 @@ export class EthgateSolverDatabase extends DatabaseAbstract<
 
     return pageInfo;
   }
-  getConnection<Edge extends EdgeAbstract>(
-    type: Edge["type"],
-    tailId_: Edge["tailId"],
-    args_: PageArgs<Edge>
+  getConnection<Edge extends SolverEdge>(
+    type: Edge['type'],
+    tailId_: Edge['tailId'],
+    args_: PageArgs<Edge>,
   ): Connection<Edge> {
-    const connection = new Connection<Edge>(
-      this.#getConnection(type, tailId_, args_)
-    );
+    const connection = new Connection<Edge>(this._getConnection(type, tailId_, args_));
     return connection;
   }
 }

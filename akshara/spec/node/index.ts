@@ -1,3 +1,3 @@
-export * from './methods.js';
-export * from './node.js';
-export * from './error.js';
+export * from './methods';
+export * from './node';
+export * from './error';

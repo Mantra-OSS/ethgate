@@ -1,8 +1,8 @@
-import type { AksharaObjectSchema } from './object.js';
-import type { AksharaScalarSchema } from './types.js';
+import type { AksharaObjectSchema } from './object';
+import type { AksharaScalarSchema } from './types';
 
-export * from './database.js';
-export * from './types.js';
-export * from './object.js';
+export * from './database';
+export * from './types';
+export * from './object';
 
 export type EthgateSchema = AksharaScalarSchema | AksharaObjectSchema;

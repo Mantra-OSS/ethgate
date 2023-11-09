@@ -10,7 +10,7 @@ import type {
   AksharaReceiptKey,
   AksharaTransactionData,
   AksharaTransactionKey,
-} from './object.js';
+} from './object';
 
 export abstract class AksharaDatabaseAbstract {
   abstract _get(key: AksharaObjectKey): Promise<AksharaObjectData | void>;
@@ -24,7 +24,7 @@ export abstract class AksharaDatabaseAbstract {
   abstract _delete(key: AksharaObjectKey): Promise<void>;
   abstract clear(): Promise<void>;
 
-  async #_get(key: AksharaObjectKey): Promise<AksharaObjectData | void> {
+  async __get(key: AksharaObjectKey): Promise<AksharaObjectData | void> {
     try {
       return this._get(key);
     } catch (error) {
@@ -33,7 +33,7 @@ export abstract class AksharaDatabaseAbstract {
       throw error;
     }
   }
-  async #_put(data: Pick<AksharaObjectKey, 'type'> & AksharaObjectData): Promise<void> {
+  async __put(data: Pick<AksharaObjectKey, 'type'> & AksharaObjectData): Promise<void> {
     try {
       return this._put(data);
     } catch (error) {
@@ -44,28 +44,28 @@ export abstract class AksharaDatabaseAbstract {
   }
 
   getBlock(key: AksharaBlockKey): Promise<AksharaBlockData | void> {
-    return this.#_get({ type: 'Block', ...key }) as any;
+    return this.__get({ type: 'Block', ...key }) as any;
   }
   getTransaction(key: AksharaTransactionKey): Promise<AksharaTransactionData | void> {
-    return this.#_get({ type: 'Transaction', ...key }) as any;
+    return this.__get({ type: 'Transaction', ...key }) as any;
   }
   getReceipt(key: AksharaReceiptKey): Promise<AksharaReceiptData | void> {
-    return this.#_get({ type: 'Receipt', ...key }) as any;
+    return this.__get({ type: 'Receipt', ...key }) as any;
   }
   getLog(key: AksharaLogKey): Promise<AksharaLogData | void> {
-    return this.#_get({ type: 'Log', ...key }) as any;
+    return this.__get({ type: 'Log', ...key }) as any;
   }
   putBlock(data: AksharaBlockData): Promise<void> {
-    return this.#_put({ type: 'Block', ...data });
+    return this.__put({ type: 'Block', ...data });
   }
   putTransaction(data: AksharaTransactionData): Promise<void> {
-    return this.#_put({ type: 'Transaction', ...data });
+    return this.__put({ type: 'Transaction', ...data });
   }
   putReceipt(data: AksharaReceiptData): Promise<void> {
-    return this.#_put({ type: 'Receipt', ...data });
+    return this.__put({ type: 'Receipt', ...data });
   }
   putLog(data: AksharaLogData): Promise<void> {
-    return this.#_put({ type: 'Log', ...data });
+    return this.__put({ type: 'Log', ...data });
   }
   async putBlocks(datas: AksharaBlockData[]): Promise<void> {
     await Promise.all(datas.map((data) => this.putBlock(data)));

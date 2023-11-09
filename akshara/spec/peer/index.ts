@@ -1,4 +1,4 @@
-export * as PeerTypes from './types.js';
-export * from './methods.js';
-export * from './peer.js';
-export * from './error.js';
+export * as PeerTypes from './types';
+export * from './methods';
+export * from './peer';
+export * from './error';
