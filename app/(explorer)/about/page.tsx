@@ -101,26 +101,27 @@ export default function AboutPage() {
         <Typography variant="body1" padding={1} textAlign="center">
           You can contact us on Twitter, GitHub, or Telegram. You can also fill out the form on our
           website.
-          {/*           <TextField required id="outlined-name" label="Name" placeholder="Hello World" fullWidth />
-          <TextField
-            required
-            id="outlined-mail"
-            label="Mail"
-            placeholder="hello@mail.com"
-            fullWidth
-          />
-          <TextField
-            required
-            id="outlined-message"
-            label="Message"
-            placeholder="Your message here"
-            fullWidth
-          />
-          <Button variant="outlined" color="primary" fullWidth>
-            Submit
-          </Button> */}
-          <Image src="/qr" width={128} height={128} alt="QR code for ethgate.io" />
         </Typography>
+
+        <Box component="form" noValidate autoComplete="off" margin={2}>
+          <Stack direction="column" spacing={2}>
+            <TextField id="name" label="Name" variant="outlined" fullWidth />
+            <TextField id="mail" label="Mail" variant="outlined" fullWidth />
+            <TextField
+              id="message"
+              label="Message"
+              multiline
+              rows={4}
+              placeholder="Your Message..."
+              fullWidth
+            />
+            <Button variant="outlined" color="primary" fullWidth>
+              Submit
+            </Button>
+          </Stack>
+        </Box>
+
+        <Image src="/qr" width={128} height={128} alt="QR code for ethgate.io" />
       </AboutSection>
     </ExplorerLayout>
   );
