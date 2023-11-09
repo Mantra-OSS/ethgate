@@ -1,7 +1,7 @@
 'use client';
 
-import { nodeSubscriptionFetcher, useConnection, useNode, useSolver } from '@/app/client/backend';
-import type { ConnectionBlah, Log, SolverEdge, SolverNode } from '@/lib-solver';
+import { useConnection, useNode, usePagination, useSolver } from '@/app/client/backend';
+import type { ConnectionBlah, Log, SolverEdge, SolverNode, Transaction } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import { memo, useCallback, useEffect, useTransition } from 'react';
@@ -13,25 +13,23 @@ import InfiniteList from './InfiniteList';
 import { FallbackBoundary, NodeAvatar, SuspenseFallback } from './ui';
 
 export default function NodeConnectionList<TEdge extends SolverEdge>({
-  node,
+  baseHref,
+  tailId,
   edgeType,
   renderItem,
+  paginate,
 }: {
-  node: SolverNode;
+  baseHref: string;
+  tailId: SolverNode['id'];
   edgeType: EdgeType<TEdge>;
   renderItem: (edge: TEdge) => React.ReactNode;
+  paginate?: boolean;
 }) {
-  const { data, error, isLoading, isValidating, mutate, size, setSize } = useConnection(
-    edgeType,
-    node,
-  );
-  const pages = data ?? [];
-  const lastPage = pages[pages.length - 1];
-  const edges = pages.flatMap((page) => page.edges);
+  const { edges, loadNext } = usePagination(edgeType, tailId, { first: 10 });
 
-  const onLoadNext = useCallback(() => {
-    setSize((size) => size + 1);
-  }, [setSize]);
+  // const onLoadNext = useCallback(() => {
+  //   setSize((size) => size + 1);
+  // }, [setSize]);
 
   const itemCount = edges.length + 1;
 
@@ -93,7 +91,7 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
       </InfiniteLoader> */}
       <InfiniteList
         // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={lastPage.pageInfo.hasNextPage && onLoadNext}
+        loadNext={paginate && loadNext}
       >
         <List>
           <TransitionGroup>
@@ -104,12 +102,17 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
                     suspenseFallback={
                       <ListItemButton>
                         <ListItemAvatar>
-                          <NodeAvatar node={node} />
+                          <NodeAvatar nodeId={edge.headId} />
                         </ListItemAvatar>
                       </ListItemButton>
                     }
                   >
-                    <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
+                    <NodeConnectionListItem
+                      baseHref={baseHref}
+                      edgeType={edgeType}
+                      tailId={tailId}
+                      edge={edge}
+                    >
                       {renderItem(edge as any)}
                     </NodeConnectionListItem>
                   </FallbackBoundary>
@@ -123,32 +126,48 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
   );
 }
 
-const NodeConnectionListItem = memo(function NodeConnectionListItem<TEdge extends SolverEdge>({
+const nodeConnectionListItemHeight: number = 22;
+
+const NodeConnectionListItem = memo(function ConnectionListItem<TEdge extends SolverEdge>({
+  baseHref,
   edgeType,
-  tail,
+  tailId,
   edge,
   children,
 }: {
+  baseHref: string;
   edgeType: EdgeType<TEdge>;
-  tail: SolverNode;
+  tailId: SolverNode['id'];
   edge: TEdge;
   children: React.ReactNode;
 }) {
+  const tail = useNode(tailId);
   const node = useNode(edge.headId);
+  // console.log('tail', tail);
+  // console.log('node', node);
 
-  let href = `${tail.meta.slug}/${edgeType.connectionName}/${node.meta.slug}`;
+  const prefix = `${baseHref}${tail.meta.slug}`;
+  const suffix = `${edgeType.connectionName}/${node.meta.slug}`;
+  let href;
   switch (edgeType.name) {
+    case 'ChainHasTransaction': {
+      href = `${prefix}/blocks/${(node as Transaction).data.blockNumber}/${suffix}`;
+      break;
+    }
     case 'BlockHasLog': {
-      href = `${tail.meta.slug}/transactions/${(node as Log).data.transactionIndex}/${
-        edgeType.connectionName
-      }/${node.meta.slug}`;
+      href = `${prefix}/transactions/${(node as Log).data.transactionIndex}/${suffix}`;
+      break;
+    }
+    default: {
+      href = `${prefix}/${suffix}`;
+      break;
     }
   }
 
   return (
     <ListItemButton href={href}>
       <ListItemAvatar>
-        <NodeAvatar node={node} />
+        <NodeAvatar nodeId={edge.headId} />
       </ListItemAvatar>
       {children}
     </ListItemButton>

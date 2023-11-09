@@ -1,10 +1,8 @@
-import NodeConnectionPage from '@/app/components/NodeConnectionPage';
+import ConnectionPage from '@/app/components/ConnectionPage';
 import NodePage from '@/app/components/NodePage';
 import { getSolver } from '@/app/server/backend';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-
-import EthgateLogo from '../../EthgateLogo';
 
 import type { Props } from './layout';
 
@@ -14,7 +12,7 @@ import type { Props } from './layout';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const solver = await getSolver();
-  const resolved = await solver.solver.resolvePath(['chains', ...params.path]);
+  const resolved = await solver.resolvePath(['chains', params.chain, ...(params.path ?? [])]);
   if (!resolved) notFound();
   switch (resolved[0]) {
     case 'node': {
@@ -26,12 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         openGraph: {
           title: `${node.type}: ${node.meta.name}`,
           description: `${node.type} page for ${node.meta.name} on ethgate.io`,
-          images: '/icon',
         },
         twitter: {
           title: `${node.type}: ${node.meta.name}`,
           description: `${node.type} page for ${node.meta.name} on ethgate.io`,
-          images: '/icon',
         },
       };
     }
@@ -45,12 +41,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         openGraph: {
           title: `${node.type}: ${node.meta.name}`,
           description: `${node.type} page for ${node.meta.name} on ethgate.io`,
-          images: '/icon',
         },
         twitter: {
           title: `${node.type}: ${node.meta.name}`,
           description: `${node.type} page for ${node.meta.name} on ethgate.io`,
-          images: '/icon',
         },
       };
     }
@@ -59,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const solver = await getSolver();
-  const resolved = await solver.solver.resolvePath(['chains', ...params.path]);
+  const resolved = await solver.resolvePath(['chains', params.chain, ...(params.path ?? [])]);
   if (!resolved) notFound();
   switch (resolved[0]) {
     case 'node': {
@@ -68,7 +62,7 @@ export default async function Page({ params }: Props) {
     }
     case 'connection': {
       const [, node, edgeType] = resolved;
-      return <NodeConnectionPage node={{ ...node }} edgeTypeName={edgeType.name} />;
+      return <ConnectionPage node={{ ...node }} edgeTypeName={edgeType.name} />;
     }
   }
 }

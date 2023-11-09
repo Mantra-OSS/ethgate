@@ -6,7 +6,7 @@ import type { EdgeGenerator } from '../database/abstract';
 import type { Block } from './akshara';
 import { type Chain, blockType, chainType } from './akshara';
 import { EdgeType2, NodeType, SolverEdge } from './graph/abstract';
-import type { GraphTypeContext, ProperPageArgs } from './graph/abstract';
+import type { GraphTypeContext, ProperPageArgs, SolverEdgeTypeMeta } from './graph/abstract';
 import type { SolverNode } from './graph/abstract';
 
 export const explorerType = new NodeType<Explorer>(
@@ -20,7 +20,7 @@ export const explorerType = new NodeType<Explorer>(
     meta: {
       name: '',
       slug: '',
-      path: [],
+      nodePath: [],
     },
     data,
   }),
@@ -33,12 +33,12 @@ export type Explorer = SolverNode<
   `Explorer:`
 >;
 
-export const explorerHasChainType = new EdgeType2<ExplorerHasChain>(
-  'ExplorerHasChain',
-  { name: 'Chains', slug: 'chains' },
-  explorerType,
-  chainType,
-  async function* get(
+export class ExplorerHasChainType extends EdgeType2<ExplorerHasChain> {
+  name = 'ExplorerHasChain' as const;
+  tail = explorerType;
+  head = chainType;
+  meta = { name: 'Chains', slug: 'chains' };
+  get = async function* get(
     tailId: ExplorerHasChain['tailId'],
     args: ProperPageArgs<ExplorerHasChain>,
     ctx: GraphTypeContext,
@@ -48,8 +48,10 @@ export const explorerHasChainType = new EdgeType2<ExplorerHasChain>(
       const edge = new ExplorerHasChain(tailId, `Chain:${chain.chainId}`, {}, 0);
       yield edge;
     }
-  },
-);
+  };
+}
+
+export const explorerHasChainType = new ExplorerHasChainType();
 
 export class ExplorerHasChain extends SolverEdge<
   'ExplorerHasChain',

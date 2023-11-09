@@ -6,7 +6,7 @@ type Props = { params: Params; searchParams: object };
 
 export async function GET(request: Request, { params }: Props) {
   const solver = await getSolver();
-  const node = await solver.solver.resolvePath(['chains', params.chain, ...(params.path ?? [])]);
-
+  const node = await solver.resolvePath(['chains', params.chain, ...(params.path ?? [])]);
+  // TODO: connection args handling
   return NextResponse.json(node);
 }

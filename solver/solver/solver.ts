@@ -57,26 +57,15 @@ export class Solver {
   graph: SolverGraph;
   database: SolverDatabase;
 
-  static async create(config: SolverConfig): Promise<Solver> {
-    const networks = chains as any;
-    const graph = new SolverGraph();
-    const database =
+  constructor(config: SolverConfig) {
+    this.chains = chains as any;
+    this.graph = new SolverGraph();
+    this.database =
       config.database ??
       new SolverDatabase({
         node: config.node,
-        graph,
+        graph: this.graph,
       });
-    return new Solver(graph, database, networks);
-  }
-
-  private constructor(
-    graph: SolverGraph,
-    database: SolverDatabase,
-    chains: AksharaConfig['chains'],
-  ) {
-    this.graph = graph;
-    this.chains = chains;
-    this.database = database;
   }
 
   async getRoot(): Promise<Explorer> {

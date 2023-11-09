@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og';
 
-import EthgateLogo from './(explorer)/EthgateLogo';
+import EthgateLogo from '../../(explorer)/EthgateLogo';
 
 export const runtime = 'edge';
 

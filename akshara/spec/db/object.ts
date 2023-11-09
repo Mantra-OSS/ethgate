@@ -183,7 +183,6 @@ export const transactionSchema = {
     'hash',
     'input',
     'nonce',
-    'to',
     'transactionIndex',
     'value',
     'v',

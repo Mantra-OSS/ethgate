@@ -1,6 +1,8 @@
 import type { Akshara, Time } from '@/lib-node';
 
-import type { Chain } from '../akshara';
+import type { GlobalId } from '../../spec/database';
+import { parseGlobalId } from '../../spec/database';
+import type { Block, Chain } from '../akshara';
 
 export type GraphTypeContext = {
   aks: Akshara;
@@ -12,9 +14,11 @@ export type SolverNodeMeta = {
   name: string;
   imageUrl?: string;
   slug: string;
-  path: ObjectId<any>[];
+  // path: string;
+  nodePath: ObjectId<any>[];
   themeColor?: string;
   chainId?: Chain['id'];
+  blockId?: Block['id'];
 };
 
 export interface SolverNode<
@@ -129,27 +133,14 @@ export type EdgeGetFn<T extends GraphEdge> = (
   ctx: GraphTypeContext,
 ) => GraphEdgeGenerator<T>;
 
-export class EdgeType2<T extends GraphEdge> {
-  name: T['type'];
-  meta: SolverEdgeTypeMeta;
-  tail: NodeType<any>;
-  head: NodeType<any>;
+export abstract class EdgeType2<T extends GraphEdge> {
+  abstract name: T['type'];
+  abstract meta: SolverEdgeTypeMeta;
+  abstract tail: NodeType<any>;
+  abstract head: NodeType<any>;
+  abstract get: EdgeGetFn<T>;
   get connectionName() {
     return this.meta.slug;
-  }
-  get: EdgeGetFn<T>;
-  constructor(
-    name: T['type'],
-    meta: SolverEdgeTypeMeta,
-    tail: NodeType<any>,
-    head: NodeType<any>,
-    get: EdgeGetFn<T>,
-  ) {
-    this.name = name;
-    this.meta = meta;
-    this.tail = tail;
-    this.head = head;
-    this.get = get;
   }
 }
 
@@ -164,6 +155,11 @@ export abstract class SolverGraphAbstract {
   // registerEdgeType(edgeType: EdgeConstructor<any>) {
   //   this.edgeTypes.push(edgeType);
   // }
+
+  getNodeTypeById(id: GlobalId<any>): NodeType<any> {
+    const [type] = parseGlobalId(id);
+    return this.nodeTypes.find((nodeType) => nodeType.name === type)!;
+  }
 
   getNodeType(type: string): NodeType<any> {
     return this.nodeTypes.find((nodeType) => nodeType.name === type)!;

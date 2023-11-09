@@ -1,36 +1,35 @@
-import { GitHub, NavigateNext, Telegram, Twitter } from '@mui/icons-material';
-import type { Theme, ThemeOptions } from '@mui/material';
+'use client';
+
+import { GitHub, Telegram, Twitter } from '@mui/icons-material';
 import {
   Alert,
   AppBar,
   Box,
-  Breadcrumbs,
   Button,
   IconButton,
   Link,
-  Paper,
   Stack,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { usePathname } from 'next/navigation';
 
 import ClientProvider from '../client/AppProvider';
 import { AppBreadcrumbs } from '../client/breadcrumbs';
 
 import EthgateLogo from './EthgateLogo';
 
-export default async function ExplorerLayout({
-  themeOptions,
+export default function ExplorerLayout({
   children,
   nav,
 }: {
-  themeOptions?: ThemeOptions;
   children: React.ReactNode;
   nav?: React.ReactNode;
 }) {
+  const isMobile = useMediaQuery('(max-width: 600px)');
+
   return (
-    <ClientProvider themeOptions={themeOptions}>
+    <ClientProvider>
       <Stack role="banner" style={{ minHeight: '100vh' }}>
         <AppBar position="sticky">
           <Toolbar>
@@ -41,8 +40,8 @@ export default async function ExplorerLayout({
             </Box>
             {nav ?? <AppBreadcrumbs />}
             <Box flex={1} />
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Button href="/about">About</Button>
+            <Stack direction="row" spacing={{ md: 2, xs: 0 }} alignItems="center">
+              {/* {isMobile ? null : <Button href="/about">About</Button>} */}
               <Socials />
               {/* <ChangeLanguage /> */}
             </Stack>
@@ -56,12 +55,12 @@ export default async function ExplorerLayout({
         </AppBar>
         {children}
       </Stack>
-      <Box m={1} mt="auto">
-        <Paper>
-          <Stack width="100%" direction="row" justifyContent="flex-end" padding={1}>
-            <Socials />
-          </Stack>
-        </Paper>
+      <Box p={1} pt={4} mt="auto">
+        {/* <Paper> */}
+        <Stack width="100%" direction="row" justifyContent="flex-end" padding={1}>
+          <Socials />
+        </Stack>
+        {/* </Paper> */}
       </Box>
     </ClientProvider>
   );

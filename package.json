@@ -25,6 +25,7 @@
     "@react-hookz/web": "^23.1.0",
     "@react-spring/web": "^9.7.3",
     "@visx/gradient": "^3.3.0",
+    "@visx/marker": "^3.3.0",
     "@visx/mock-data": "^3.3.0",
     "@visx/xychart": "^3.4.1",
     "client-only": "^0.0.1",

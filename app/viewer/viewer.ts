@@ -4,69 +4,69 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil';
 
 // import { localStorageEffect } from '../helpers/recoil';
 
-import { viewerStorageState } from './storage';
+// import { viewerStorageState } from './storage';
 
-export interface Viewer {
-  account: string | null;
-  locale: string;
-  isDeveloper: boolean;
-  now: number;
-  nowUpdateFrequency?: number;
-}
+// export const useNow = () => {
+//   const { now } = useRecoilValue(viewerStorageState);
+//   const dateTime = useMemo(() => DateTime.fromMillis(now), [now]);
+//   return dateTime;
+// };
 
-export type Notification = {
-  type: 'alert';
-} & (
-  | { severity: 'error'; error: Error }
-  | { severity: 'warning'; message: string }
-  | { severity: 'info'; message: string }
-  | { severity: 'success'; message: string }
-);
+// export interface Viewer {
+//   account: string | null;
+//   locale: string;
+//   isDeveloper: boolean;
+//   now: number;
+//   nowUpdateFrequency?: number;
+// }
 
-export type PushNotificationFn = (notification: Notification) => void;
+// export type Notification = {
+//   type: 'alert';
+// } & (
+//   | { severity: 'error'; error: Error }
+//   | { severity: 'warning'; message: string }
+//   | { severity: 'info'; message: string }
+//   | { severity: 'success'; message: string }
+// );
 
-export const notificationsState = atom<Notification[]>({
-  key: 'notifications',
-  default: [],
-});
+// export type PushNotificationFn = (notification: Notification) => void;
 
-export const usePushNotification = (): PushNotificationFn => {
-  const setNotifications = useSetRecoilState(notificationsState);
-  const pushNotification = useCallback(
-    (notification: Notification) => {
-      setNotifications((notifications) => [...notifications, notification]);
-    },
-    [setNotifications],
-  );
-  return pushNotification;
-};
+// export const notificationsState = atom<Notification[]>({
+//   key: 'notifications',
+//   default: [],
+// });
 
-export const useOnError = (): ((error: Error) => void) => {
-  const pushNotification = usePushNotification();
-  const onError = useCallback(
-    (error: Error) => {
-      pushNotification({ type: 'alert', severity: 'error', error });
-    },
-    [pushNotification],
-  );
-  return onError;
-};
+// export const usePushNotification = (): PushNotificationFn => {
+//   const setNotifications = useSetRecoilState(notificationsState);
+//   const pushNotification = useCallback(
+//     (notification: Notification) => {
+//       setNotifications((notifications) => [...notifications, notification]);
+//     },
+//     [setNotifications],
+//   );
+//   return pushNotification;
+// };
 
-export const isDeveloperState = atom<boolean>({
-  key: 'isDeveloper',
-  default: false,
-  // effects: [localStorageEffect('isDeveloper')],
-});
+// export const useOnError = (): ((error: Error) => void) => {
+//   const pushNotification = usePushNotification();
+//   const onError = useCallback(
+//     (error: Error) => {
+//       pushNotification({ type: 'alert', severity: 'error', error });
+//     },
+//     [pushNotification],
+//   );
+//   return onError;
+// };
 
-export const useViewer = (): Viewer => {
-  const isDeveloper = useRecoilValue(isDeveloperState);
-  const storage = useRecoilValue(viewerStorageState);
-  const viewer = useMemo(() => ({ ...storage, isDeveloper }), [storage, isDeveloper]);
-  return viewer;
-};
+// export const isDeveloperState = atom<boolean>({
+//   key: 'isDeveloper',
+//   default: false,
+//   // effects: [localStorageEffect('isDeveloper')],
+// });
 
-export const useNow = () => {
-  const { now } = useRecoilValue(viewerStorageState);
-  const dateTime = useMemo(() => DateTime.fromMillis(now), [now]);
-  return dateTime;
-};
+// export const useViewer = (): Viewer => {
+//   const isDeveloper = useRecoilValue(isDeveloperState);
+//   const storage = useRecoilValue(viewerStorageState);
+//   const viewer = useMemo(() => ({ ...storage, isDeveloper }), [storage, isDeveloper]);
+//   return viewer;
+// };

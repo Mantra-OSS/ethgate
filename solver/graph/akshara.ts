@@ -84,6 +84,7 @@ export class Chain extends AksharaNode<
     let themeColor;
     switch (this.data.chainId) {
       case '1': {
+        themeColor = '#404040';
         break;
       }
       case '10': {
@@ -114,7 +115,7 @@ export class Chain extends AksharaNode<
     return {
       name: this.data.meta.name,
       slug: this.data.extra.meta.slug,
-      path: [this.id],
+      nodePath: [this.id],
       themeColor,
       chainId: this.id,
     };
@@ -139,8 +140,9 @@ export class Block extends AksharaNode<
   meta = {
     name: this.data.number.toString(),
     slug: this.data.number.toString(),
-    path: [this.chainId, this.id],
+    nodePath: [this.chainId, this.id],
     chainId: this.chainId,
+    blockId: this.id,
   };
   parentId: Block['id'] = `Block:${this.data.chainId}-${this.data.number - 1}`;
   transactionIds: Transaction['id'][] = this.data.transactions
@@ -172,8 +174,9 @@ export class Transaction extends AksharaNode<
   meta = {
     name: this.data.transactionIndex.toString(),
     slug: this.data.transactionIndex.toString(),
-    path: [this.chainId, this.blockId, this.id],
+    nodePath: [this.chainId, this.blockId, this.id],
     chainId: this.chainId,
+    blockId: this.blockId,
   };
   receiptId: Receipt['id'] = `Receipt:${this.data.chainId}-${this.data.blockNumber}-${this.data.transactionIndex}r`;
 }
@@ -194,8 +197,9 @@ export class Receipt extends AksharaNode<
   meta = {
     name: this.data.transactionIndex.toString(),
     slug: this.data.transactionIndex.toString(),
-    path: [this.chainId, this.blockId, this.transactionId, this.id],
+    nodePath: [this.chainId, this.blockId, this.transactionId, this.id],
     chainId: this.chainId,
+    blockId: this.blockId,
   };
   logIds: Log['id'][] = this.data.logs
     .map(
@@ -219,8 +223,9 @@ export class Log extends AksharaNode<'Log', Ethgate.AksharaLogData, `Log:${Ethga
   meta = {
     name: this.data.logIndex.toString(),
     slug: this.data.logIndex.toString(),
-    path: [this.chainId, this.blockId, this.transactionId, this.receiptId, this.id],
+    nodePath: [this.chainId, this.blockId, this.transactionId, this.receiptId, this.id],
     chainId: this.chainId,
+    blockId: this.blockId,
   };
 }
 
