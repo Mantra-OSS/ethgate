@@ -13,7 +13,7 @@ import useSWRSubscription from 'swr/subscription';
 import { connectionFetcher } from '../client/backend';
 
 import InfiniteList from './InfiniteList';
-import { FallbackBoundary, NodeAvatar } from './ui';
+import { FallbackBoundary, NodeAvatar, SuspenseFallback } from './ui';
 
 export default function NodeConnectionList<TEdge extends SolverEdge>({
   node,
@@ -80,9 +80,18 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
             {edges.map((edge) => (
               <Collapse key={edge.headId}>
                 <ListItem dense disablePadding>
-                  <FallbackBoundary>
+                  <FallbackBoundary
+                    suspenseFallback={
+                      <ListItemButton>
+                        <ListItemAvatar>
+                          <NodeAvatar node={node} />
+                        </ListItemAvatar>
+                        <SuspenseFallback />
+                      </ListItemButton>
+                    }
+                  >
                     <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
-                      {renderItem(edge as any)}
+                      <FallbackBoundary>{renderItem(edge as any)}</FallbackBoundary>
                     </NodeConnectionListItem>
                   </FallbackBoundary>
                 </ListItem>
@@ -95,7 +104,7 @@ export default function NodeConnectionList<TEdge extends SolverEdge>({
   );
 }
 
-export function NodeConnectionListItem<TEdge extends SolverEdge>({
+function NodeConnectionListItem<TEdge extends SolverEdge>({
   edgeType,
   tail,
   edge,
