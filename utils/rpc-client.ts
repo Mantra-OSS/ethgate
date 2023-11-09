@@ -1,34 +1,34 @@
 import type { Result } from './result';
 
 export type RpcClientMethod<
-  Name extends string = any,
-  Params extends unknown[] = any,
-  Value = any,
+  TName extends string = any,
+  TParams extends unknown[] = any,
+  TValue = any,
 > = {
-  Name: Name;
-  Params: Params;
-  Value: Value;
-  Call: [Name, Params];
-  Result: Result<Value, Error>;
+  Name: TName;
+  Params: TParams;
+  Value: TValue;
+  Call: [TName, TParams];
+  Result: Result<TValue, Error>;
 };
 
-export abstract class RpcClient<Method extends RpcClientMethod> {
-  abstract executeBatch(calls: Method['Call'][]): Promise<Method['Result'][]>;
+export abstract class RpcClient<TMethod extends RpcClientMethod> {
+  abstract executeBatch(calls: TMethod['Call'][]): Promise<TMethod['Result'][]>;
 
   async executeMany<
-    Calls extends Method['Call'][],
-    Results extends Method['Result'][] = {
-      [P in keyof Calls]: Extract<Method, { Name: Calls[P][0] }>['Result'];
+    TCalls extends TMethod['Call'][],
+    TResults extends TMethod['Result'][] = {
+      [P in keyof TCalls]: Extract<TMethod, { Name: TCalls[P][0] }>['Result'];
     },
-  >(calls: Calls): Promise<Results> {
+  >(calls: TCalls): Promise<TResults> {
     return this.executeBatch(calls as any) as any;
   }
 
   async execute<
-    MethodName extends Method['Name'],
-    Call extends Method['Call'] = Extract<Method, { Name: MethodName }>['Call'],
-    Value extends Method['Value'] = Extract<Method, { Name: MethodName }>['Value'],
-  >(method: MethodName, params: Call[1]): Promise<Value> {
+    TMethodName extends TMethod['Name'],
+    TCall extends TMethod['Call'] = Extract<TMethod, { Name: TMethodName }>['Call'],
+    TValue extends TMethod['Value'] = Extract<TMethod, { Name: TMethodName }>['Value'],
+  >(method: TMethodName, params: TCall[1]): Promise<TValue> {
     const [result] = await this.executeBatch([[method, params]]);
     if (result.isErr) {
       throw new Error(result.error.message);

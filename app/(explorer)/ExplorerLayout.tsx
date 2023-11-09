@@ -16,8 +16,10 @@ import {
 
 import ClientProvider from '../client/AppProvider';
 import { AppBreadcrumbs } from '../client/breadcrumbs';
+import { FallbackBoundary } from '../components/ui';
 
 import EthgateLogo from './EthgateLogo';
+import Loading from './loading';
 
 export default function ExplorerLayout({
   children,
@@ -35,7 +37,9 @@ export default function ExplorerLayout({
           <Toolbar>
             <Box pr={2}>
               <Typography color="primary">
-                <EthgateLogo width={32} height={32} />
+                <Link href="/">
+                  <EthgateLogo width={32} height={32} color="#FFC107" />
+                </Link>
               </Typography>
             </Box>
             {nav ?? <AppBreadcrumbs />}
@@ -53,7 +57,7 @@ export default function ExplorerLayout({
             </Link>
           </Alert>
         </AppBar>
-        {children}
+        <FallbackBoundary>{children}</FallbackBoundary>
       </Stack>
       <Box p={1} pt={4} mt="auto">
         {/* <Paper> */}
@@ -90,13 +94,13 @@ export default function ExplorerLayout({
 function Socials() {
   return (
     <>
-      <IconButton href="https://github.com/mantra-oss/" target="_blank" color={'primary'}>
+      <IconButton href="https://github.com/mantra-oss/" target="_blank" color="secondary">
         <GitHub />
       </IconButton>
-      <IconButton href="https://t.me/ethgate_io" target="_blank" color={'primary'}>
+      <IconButton href="https://t.me/ethgate_io" target="_blank" color="secondary">
         <Telegram />
       </IconButton>
-      <IconButton href="https://twitter.com/ethgate_io" target="_blank" color={'primary'}>
+      <IconButton href="https://twitter.com/ethgate_io" target="_blank" color="secondary">
         <Twitter />
       </IconButton>
     </>

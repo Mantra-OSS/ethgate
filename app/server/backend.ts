@@ -33,7 +33,7 @@ export const getSolver = cache(() => {
   return new ServerSolver();
 });
 
-export interface Connection<Edge extends SolverEdge> {
-  edges: Edge[];
-  pageInfo: PageInfo<Edge>;
+export interface Connection<TEdge extends SolverEdge> {
+  edges: TEdge[];
+  pageInfo: PageInfo<TEdge>;
 }

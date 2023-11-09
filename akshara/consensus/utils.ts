@@ -1,16 +1,16 @@
 import DataLoader from 'dataloader';
 
-export type BatchLoaderConfig<K, V, C = K> = {
-  batchLoadFn: DataLoader.BatchLoadFn<K, V>;
-  cacheKeyFn?: DataLoader.Options<K, V, C>['cacheKeyFn'];
-  batchScheduleFn?: DataLoader.Options<K, V, C>['batchScheduleFn'];
-  cacheMap: DataLoader.CacheMap<C, Promise<V>>;
+export type BatchLoaderConfig<TKey, TValue, TCacheKey = TKey> = {
+  batchLoadFn: DataLoader.BatchLoadFn<TKey, TValue>;
+  cacheKeyFn?: DataLoader.Options<TKey, TValue, TCacheKey>['cacheKeyFn'];
+  batchScheduleFn?: DataLoader.Options<TKey, TValue, TCacheKey>['batchScheduleFn'];
+  cacheMap: DataLoader.CacheMap<TCacheKey, Promise<TValue>>;
   persistCache: boolean;
 };
-export class BatchLoader<K, V, C = K> {
-  loader: DataLoader<K, V, C>;
+export class BatchLoader<TKey, TValue, TCacheKey = TKey> {
+  loader: DataLoader<TKey, TValue, TCacheKey>;
 
-  constructor(config: BatchLoaderConfig<K, V, C>) {
+  constructor(config: BatchLoaderConfig<TKey, TValue, TCacheKey>) {
     this.loader = new DataLoader(
       (keys) => {
         if (!config.persistCache) {
@@ -28,6 +28,6 @@ export class BatchLoader<K, V, C = K> {
     this.loadMany = this.loader.loadMany.bind(this.loader);
   }
 
-  loadMany: DataLoader<K, V, C>['loadMany'];
-  clearAll: DataLoader<K, V, C>['clearAll'];
+  loadMany: DataLoader<TKey, TValue, TCacheKey>['loadMany'];
+  clearAll: DataLoader<TKey, TValue, TCacheKey>['clearAll'];
 }

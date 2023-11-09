@@ -1,8 +1,10 @@
 import type { Akshara, AksharaAbstract, AksharaBlockData, AksharaChainId } from '@/lib-node';
-import { parseGlobalId } from '@/spec-solver';
+import type { ConnectionGenerator, PageArgs, PageInfo } from '@/spec-solver';
+import { Connection } from '@/spec-solver';
+import { DatabaseAbstract, parseGlobalId } from '@/spec-solver';
 
-import type { Chain, ConnectionGenerator, PageArgs, PageInfo, SolverEdge } from '../graph';
-import { ChainHasBlock, Connection, DatabaseAbstract, blockType } from '../graph';
+import type { Chain, SolverEdge } from '../graph';
+import { ChainHasBlock, blockType } from '../graph';
 import type { SolverNode } from '../graph/graph/abstract';
 import type { SolverGraph } from '../solver';
 
@@ -52,23 +54,24 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
     }
   }
 
-  async getNode<Node extends SolverNode>(id: Node['id']): Promise<Node | undefined> {
+  async getNode<TNode extends SolverNode>(id: TNode['id']): Promise<TNode | undefined> {
     const [type] = parseGlobalId(id);
     const nodeType = this.graph.nodeTypes.find((nodeType) => nodeType.name === type)!;
     return nodeType.get(id, this);
   }
-  async *_getConnection<Edge extends SolverEdge>(
-    type: Edge['type'],
-    tailId: Edge['tailId'],
-    args: PageArgs<Edge>,
-  ): ConnectionGenerator<Edge> {
+  async *_getConnection<TEdge extends SolverEdge>(
+    type: TEdge['type'],
+    tailId: TEdge['tailId'],
+    args: PageArgs<TEdge>,
+  ): ConnectionGenerator<TEdge> {
     if (args.first && args.last) {
       throw new Error('Cannot specify both first and last');
     }
     const isForward = !args.last;
     const limit = isForward ? args.first! : args.last!;
 
-    const edgeType = this.graph.edgeTypes.find((edgeType) => edgeType.name === type)!;
+    const edgeType = this.graph.edgeTypes.find((edgeType) => edgeType.name === type);
+    if (!edgeType) throw new Error(`edge type not found: ${type}`);
     const edges = edgeType.get(
       tailId,
       {
@@ -80,7 +83,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
       this,
     );
 
-    const pageInfo: PageInfo<Edge> = {
+    const pageInfo: PageInfo<TEdge> = {
       hasNextPage: false,
       hasPreviousPage: false,
     };
@@ -112,12 +115,12 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
 
     return pageInfo;
   }
-  getConnection<Edge extends SolverEdge>(
-    type: Edge['type'],
-    tailId_: Edge['tailId'],
-    args_: PageArgs<Edge>,
-  ): Connection<Edge> {
-    const connection = new Connection<Edge>(this._getConnection(type, tailId_, args_));
+  getConnection<TEdge extends SolverEdge>(
+    type: TEdge['type'],
+    tailId_: TEdge['tailId'],
+    args_: PageArgs<TEdge>,
+  ): Connection<TEdge> {
+    const connection = new Connection<TEdge>(this._getConnection(type, tailId_, args_));
     return connection;
   }
 }

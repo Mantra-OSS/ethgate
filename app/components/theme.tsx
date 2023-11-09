@@ -135,7 +135,10 @@ export const createBaseThemeOptions = (): ThemeOptions => ({
       default: '#1f1f1f',
     },
     primary: {
-      main: '#cffbf6',
+      main: '#FFC107',
+    },
+    secondary: {
+      main: '#FFC107',
     },
   },
   // https://mui.com/material-ui/customization/typography/

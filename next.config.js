@@ -1,5 +1,7 @@
 const withMDX = require('@next/mdx')();
 
+// const relayConfig = require('./relay.config');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
@@ -15,6 +17,15 @@ const nextConfig = {
     typedRoutes: true,
   },
   transpilePackages: ['@mantra-oss/chains'],
+  compiler: {
+    // https://nextjs.org/docs/architecture/nextjs-compiler#relay
+    // relay: {
+    //   // This should match relay.config.js
+    //   ...relayConfig,
+    // },
+    // https://nextjs.org/docs/architecture/nextjs-compiler#remove-react-properties
+    reactRemoveProperties: true,
+  },
 };
 
 module.exports = withMDX(nextConfig);

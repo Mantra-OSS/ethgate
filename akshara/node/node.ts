@@ -166,6 +166,15 @@ export class Akshara extends AksharaAbstract {
               .map((chain) => chain.chainId);
             return Result.ok(chains) satisfies CallResult;
           }
+          case 'GetChainHasBlockRange': {
+            const [key, pos, limit] = call[1];
+            return this.execute('GetBlockRange', [key, pos, limit]).then((blocks) =>
+              blocks.map((block) => ({
+                chainId: block.chainId,
+                number: block.number,
+              })),
+            );
+          }
           case 'GetBlockRange': {
             type CallResult = AksharaResult<'GetBlockRange'>;
 

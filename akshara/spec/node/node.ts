@@ -1,47 +1,48 @@
 import { RpcClient } from '@/lib-utils';
-import { maxTime, minTime } from '@/spec-node';
 
-import type {
-  AksharaBlockData,
-  AksharaBlockId,
-  AksharaBlockKey,
-  AksharaChainData,
-  AksharaChainId,
-  AksharaChainKey,
-  AksharaLogData,
-  AksharaLogId,
-  AksharaLogKey,
-  AksharaObjectData,
-  AksharaObjectId,
-  AksharaObjectKey,
-  AksharaReceiptData,
-  AksharaReceiptId,
-  AksharaReceiptKey,
-  AksharaTransactionData,
-  AksharaTransactionId,
-  AksharaTransactionKey,
-  Time,
+import {
+  type AksharaBlockData,
+  type AksharaBlockId,
+  type AksharaBlockKey,
+  type AksharaChainData,
+  type AksharaChainId,
+  type AksharaChainKey,
+  type AksharaLogData,
+  type AksharaLogId,
+  type AksharaLogKey,
+  type AksharaObjectData,
+  type AksharaObjectId,
+  type AksharaObjectKey,
+  type AksharaReceiptData,
+  type AksharaReceiptId,
+  type AksharaReceiptKey,
+  type AksharaTransactionData,
+  type AksharaTransactionId,
+  type AksharaTransactionKey,
+  type Time,
+  maxTime,
+  minTime,
 } from '../db';
 
 import type { AksharaMethod } from './methods';
 
 // import type { EthgateAksharaDaAbstract } from '../da';
 
-export type AksharaCall<Name extends AksharaMethod['Name'] = AksharaMethod['Name']> = Extract<
+export type AksharaCall<TName extends AksharaMethod['Name'] = AksharaMethod['Name']> = Extract<
   AksharaMethod,
-  { Name: Name }
+  { Name: TName }
 >['Call'];
 
-export type AksharaResult<Name extends AksharaMethod['Name'] = AksharaMethod['Name']> = Extract<
+export type AksharaResult<TName extends AksharaMethod['Name'] = AksharaMethod['Name']> = Extract<
   AksharaMethod,
-  { Name: Name }
+  { Name: TName }
 >['Result'];
 
-export type AksharaPageArgs<Cursor extends string> = {
+export type AksharaPageArgs<TCursor extends string> = {
   isForward: boolean;
   limit: number;
-  before?: Cursor;
-  after?: Cursor;
+  before?: TCursor;
+  after?: TCursor;
 };
 
 export abstract class AksharaAbstract extends RpcClient<AksharaMethod> {

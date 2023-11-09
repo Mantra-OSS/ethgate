@@ -7,6 +7,7 @@ import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from
 // import ChainBlockList from './ChainBlockList';
 import type { Explorer } from '../../solver/graph/explorer';
 import { FallbackBoundary } from '../components/ui';
+import { SuspenseFallback } from '../components/ui';
 
 import HomeChart from './HomeChart';
 
@@ -17,7 +18,7 @@ import HomeChart from './HomeChart';
 
 export default function HomeView() {
   const node = useNode2<Explorer>('Explorer:');
-  if (!node) return null;
+  if (!node) return <SuspenseFallback />;
 
   return (
     <>

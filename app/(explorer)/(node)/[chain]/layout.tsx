@@ -8,19 +8,23 @@ import type { Explorer } from '../../../../solver/graph/explorer';
 
 import ChainThemeProvider from './layout.client';
 
-export type Params = { chain: string; path?: string[] };
-export type Props = { params: Params; searchParams: object };
+// // // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config#dynamicparams
+// export const dynamic = false;
+// export const dynamicParams = false;
 
-export async function generateStaticParams(): Promise<Params[]> {
-  const solver = getSolver();
-  const explorer = await solver.database.readNode<Explorer>('Explorer:');
-  return Object.values(explorer.data.chains).flatMap((chain) =>
-    [{ chain: chain.chainId }, { chain: chain.meta.slug }].flatMap((params) => [
-      params,
-      { ...params, path: ['blocks', '0'] },
-    ]),
-  );
-}
+export type Params = { chain: string; path?: string[] };
+export type Props = { params: Params; searchParams?: object };
+
+// export async function generateStaticParams(): Promise<Params[]> {
+//   const solver = getSolver();
+//   const explorer = await solver.database.readNode<Explorer>('Explorer:');
+//   return Object.values(explorer.data.chains).flatMap((chain) =>
+//     [{ chain: chain.chainId }, { chain: chain.meta.slug }].flatMap((params) => [
+//       params,
+//       { ...params, path: ['blocks', '0'] },
+//     ]),
+//   );
+// }
 
 export default async function Layout({
   params,

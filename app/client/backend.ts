@@ -1,16 +1,16 @@
 'use client';
 import 'client-only';
 import { Akshara, AksharaDatabase } from '@/lib-node';
-import type { Chain, ConnectionBlah, EdgeType } from '@/lib-solver';
+import type { Chain, ChainHasBlock, ConnectionPage, EdgeType } from '@/lib-solver';
 import { type PageArgs, Solver, type SolverEdge, type SolverNode } from '@/lib-solver';
 import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { useCallback, useEffect, useMemo } from 'react';
-import type { SWRResponse } from 'swr';
+import type { Fetcher, SWRResponse } from 'swr';
 import useSWR, { useSWRConfig } from 'swr';
 import type { SWRInfiniteKeyLoader } from 'swr/infinite';
 import useSWRInfinite, { SWRInfiniteResponse } from 'swr/infinite';
-import type { SWRSubscriptionOptions } from 'swr/subscription';
+import type { SWRSubscription, SWRSubscriptionOptions } from 'swr/subscription';
 import useSWRSubscription from 'swr/subscription';
 
 class ClientAkshara extends Akshara {
@@ -45,7 +45,7 @@ export const useNode = function useNode<TNode extends SolverNode>(id: TNode['id'
 };
 
 export const useNode2 = function useNode<TNode extends SolverNode>(
-  id: TNode['id'],
+  id: TNode['id'] | null,
 ): TNode | undefined {
   const { data: node } = useSWR<TNode>(id, nodeFetcher as any, {
     // suspense: true
@@ -68,13 +68,7 @@ export const useConnection = function useConnection<TEdge extends SolverEdge>(
   args: PageArgs<TEdge>,
 ): SWRResponse<ConnectionData<TEdge>> {
   // useDaSubscription(tailId);
-  const response = useSWR<ConnectionData<TEdge>>(
-    ['connection', edgeType.name, tailId, args],
-    connectionFetcher,
-    {
-      // suspense: true,
-    },
-  );
+  const response = useSWR(['connection', edgeType.name, tailId, args], connectionFetcher as any);
   return response;
 };
 
@@ -87,8 +81,8 @@ export const usePagination = function usePagination<TEdge extends SolverEdge>(
   tailId: SolverNode['id'],
   args: PageArgs<TEdge>,
 ): Pagination<TEdge> {
-  // useDaSubscription(tailId);
-  const getKey: SWRInfiniteKeyLoader<ConnectionBlah<TEdge>> = useCallback(
+  const subscription = useDaSubscription(tailId);
+  const getKey: SWRInfiniteKeyLoader<ConnectionPage<TEdge>> = useCallback(
     (pageIndex, previousPageData) => {
       if (previousPageData && !previousPageData.pageInfo.hasNextPage) return null;
       const key = [
@@ -104,14 +98,17 @@ export const usePagination = function usePagination<TEdge extends SolverEdge>(
     },
     [edgeType.name, tailId],
   );
-  const { data, error, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite<
-    ConnectionBlah<TEdge>
-  >(getKey, connectionFetcher, {
-    suspense: true,
-  });
+  const { data, error, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite(
+    getKey,
+    connectionFetcher as any,
+  );
   const pages = data ? data : [];
   const lastPage = pages[pages.length - 1];
   const edges = pages.flatMap((page) => page.edges);
+
+  useEffect(() => {
+    // mutate();
+  }, [mutate, subscription.data]);
 
   // const loadNext = useCallback(() => {
   //   if (isLoading || isValidating) {
@@ -122,7 +119,7 @@ export const usePagination = function usePagination<TEdge extends SolverEdge>(
   // }, [setSize, pages.length, isLoading, isValidating]);
 
   const loadNext = undefined;
-  const hasNext = lastPage.pageInfo.hasNextPage;
+  const hasNext = lastPage?.pageInfo.hasNextPage;
 
   return {
     edges,
@@ -132,36 +129,20 @@ export const usePagination = function usePagination<TEdge extends SolverEdge>(
 
 export const useDaSubscription = function useDaSubscription(nodeId: SolverNode['id']) {
   const node = useNode(nodeId);
-  const { mutate } = useSWRConfig();
   const subscription = useSWRSubscription(node.meta.chainId ?? null, nodeSubscriptionFetcher);
-
-  useEffect(() => {
-    mutate((key) => {
-      if (Array.isArray(key) && key[0] === 'connection') {
-        const [, type, tailId, args] = key;
-        if (!args.after) {
-          console.log('mutate', key);
-          return true;
-        }
-      }
-      return false;
-    });
-  }, [mutate, subscription.data]);
   return subscription;
 };
 
-const nodeFetcher = async <TNode extends SolverNode>(key: TNode['id']): Promise<TNode> => {
+const nodeFetcher: Fetcher<SolverNode, SolverNode['id']> = async (key) => {
   // console.debug(`[backend] nodeFetcher(${key})`);
-  const database = solver.database;
-  const node = await database.readNode(key);
+  const node = await solver.database.readNode(key);
   // console.debug(`[backend] nodeFetcher(${key}) -> ${JSON.stringify(node)}`);
   return node;
 };
 
-const nodesFetcher = async <Node extends SolverNode>(keys: Node['id'][]): Promise<Node[]> => {
+const nodesFetcher = async <TNode extends SolverNode>(keys: TNode['id'][]): Promise<TNode[]> => {
   // console.debug(`[backend] nodeFetcher(${key})`);
-  const database = solver.database;
-  const node = await Promise.all(keys.map((key) => database.readNode(key)));
+  const node = await Promise.all(keys.map((key) => solver.database.readNode(key)));
   // console.debug(`[backend] nodeFetcher(${key}) -> ${JSON.stringify(node)}`);
   return node;
 };
@@ -172,17 +153,14 @@ export type ConnectionKey<TEdge extends SolverEdge = SolverEdge> = [
   tailId: TEdge['tailId'],
   args: PageArgs<TEdge>,
 ];
-export type ConnectionData<TEdge extends SolverEdge = SolverEdge> = ConnectionBlah<TEdge> & {
+export type ConnectionData<TEdge extends SolverEdge = SolverEdge> = ConnectionPage<TEdge> & {
   type: TEdge['type'];
   tailId: TEdge['tailId'];
 };
-const connectionFetcher = async <TEdge extends SolverEdge>(
-  key: ConnectionKey<TEdge>,
-): Promise<ConnectionData<TEdge>> => {
+const connectionFetcher: Fetcher<ConnectionData, ConnectionKey> = async (key) => {
   const [, type, tailId, args] = key;
   // console.debug(`[backend] connectionFetcher(${type}, ${tailId}, ${JSON.stringify(args)})`);
-  const database = solver.database;
-  const connection = await database.getConnection(type, tailId, args).collect();
+  const connection = await solver.database.getConnection(type, tailId, args).collect();
   // console.debug(
   //   `[backend] connectionFetcher(${type}, ${tailId}, ${JSON.stringify(args)}) -> ${JSON.stringify(
   //     connection,
@@ -191,15 +169,14 @@ const connectionFetcher = async <TEdge extends SolverEdge>(
   return { type, tailId, ...connection };
 };
 
-const nodeSubscriptionFetcher = <TNode extends SolverNode>(
-  key: TNode['id'],
-  { next }: SWRSubscriptionOptions,
+const nodeSubscriptionFetcher: SWRSubscription<SolverNode['id'], ChainHasBlock, Error> = (
+  key,
+  { next },
 ) => {
   // console.debug(`[backend] nodeSubscriptionFetcher(${key})`);
   let aborted = false;
   (async () => {
-    const database = solver.database;
-    const updates = database.networkUpdates(key as Chain['id']);
+    const updates = solver.database.networkUpdates(key as Chain['id']);
     for await (const update of updates) {
       if (aborted) {
         break;

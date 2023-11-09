@@ -10,12 +10,11 @@ import {
   parseObjectId,
 } from '@/lib-node';
 import { blockSchema, chainSchema, logSchema, receiptSchema, transactionSchema } from '@/spec-node';
+import type { EdgeGenerator, GlobalId } from '@/spec-solver';
 import { parseGlobalId } from '@/spec-solver';
 
-import type { EdgeGenerator } from '../database/abstract';
-
 import { NodeType, SolverEdge } from './graph/abstract';
-import type { NodeCreateFn, ObjectId, ProperPageArgs, SolverNodeMeta } from './graph/abstract';
+import type { NodeCreateFn, ProperPageArgs, SolverNodeMeta } from './graph/abstract';
 import type { SolverNode } from './graph/abstract';
 
 export type AksharaTypeContext = {
@@ -44,16 +43,16 @@ export class AksharaNodeType<T extends AksharaNode> extends NodeType<T> {
 export class AksharaEdgeType {}
 
 export abstract class AksharaNode<
-  Name extends string = any,
-  Data extends object = any,
-  Id extends ObjectId<Name> = ObjectId<Name>,
-> implements SolverNode<Name, Data, Id>
+  TName extends string = any,
+  TData extends object = any,
+  TId extends GlobalId<TName> = GlobalId<TName>,
+> implements SolverNode<TName, TData, TId>
 {
-  abstract type: Name;
+  abstract type: TName;
   abstract meta: SolverNodeMeta;
-  id: Id;
-  data: Data;
-  constructor(id: Id, data: Data) {
+  id: TId;
+  data: TData;
+  constructor(id: TId, data: TData) {
     this.id = id;
     this.data = data;
   }
@@ -64,11 +63,11 @@ export abstract class AksharaNode<
 }
 
 export abstract class AksharaEdge<
-  Name extends string = any,
-  TailId extends string = any,
-  HeadId extends string = any,
-  Data extends object = any,
-> extends SolverEdge<Name, TailId, HeadId, Data> {}
+  TName extends string = any,
+  TTailId extends string = any,
+  THeadId extends string = any,
+  TData extends object = any,
+> extends SolverEdge<TName, TTailId, THeadId, TData> {}
 
 export const chainType = new AksharaNodeType<Chain>(
   (data) => new Chain(`Chain:${formatChainId(data)}`, data),

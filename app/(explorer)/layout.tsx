@@ -25,8 +25,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
   // console.log({ now });
   return (
     <BaseThemeProvider>
-      {/* <NowProvider value={now}>{children}</NowProvider> */}
-      {children}
+      <NowProvider initialValue={now}>{children}</NowProvider>
+      {/* {children} */}
     </BaseThemeProvider>
   );
 }

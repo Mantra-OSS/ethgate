@@ -6,17 +6,27 @@
     "plugin:storybook/recommended"
   ],
   "plugins": ["import", "@eslint-community/eslint-plugin-eslint-comments"],
+  "ignorePatterns": ["__generated__/"],
   "overrides": [
     {
       "files": ["**/*.ts", "**/*.tsx"],
       "extends": ["plugin:@typescript-eslint/recommended"],
       "plugins": ["@typescript-eslint"],
       "rules": {
+        "import/no-cycle": ["error", { "ignoreExternal": true }],
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/ban-types": "off"
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "typeParameter",
+            "format": ["PascalCase"],
+            "prefix": ["T"]
+          }
+        ]
       }
     }
   ],

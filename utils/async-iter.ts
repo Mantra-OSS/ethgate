@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export { flow, pipe } from 'fp-ts/lib/function';
 
 export async function* fromRange(start: number, end: number) {

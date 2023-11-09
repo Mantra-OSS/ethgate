@@ -1,10 +1,13 @@
 'use client';
 
+import type { RelayConnectionListItem_edge$key } from '@/__generated__/RelayConnectionListItem_edge.graphql';
+import type { RelayConnectionList_node$key } from '@/__generated__/RelayConnectionList_node.graphql';
 import { useConnection, useNode, usePagination, useSolver } from '@/app/client/backend';
 import type { ConnectionPage, Log, SolverEdge, SolverNode, Transaction } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import { memo, useCallback, useEffect, useTransition } from 'react';
+import { graphql, useFragment, usePaginationFragment } from 'react-relay';
 import { TransitionGroup } from 'react-transition-group';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
@@ -12,26 +15,50 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import InfiniteList from './InfiniteList';
 import { FallbackBoundary, NodeAvatar, SuspenseFallback } from './ui';
 
-export default function ConnectionList<TEdge extends SolverEdge>({
-  baseHref,
-  tailId,
+const connectionListQueryFragment = graphql`
+  fragment RelayConnectionList_node on Node
+  @argumentDefinitions(
+    type: { type: "String!" }
+    first: { type: "Int", defaultValue: 10 }
+    after: { type: "String" }
+  )
+  @refetchable(queryName: "RelayConnectionListPaginationQuery") {
+    connection(type: $type, first: $first, after: $after)
+      @connection(key: "RelayConnectionList_node_connection") {
+      edges {
+        headId
+        ...RelayConnectionListItem_edge
+      }
+    }
+  }
+`;
+
+export default function RelayConnectionList<TEdge extends SolverEdge>({
+  tail: tailFragment,
   edgeType,
+  baseHref,
   renderItem,
   paginate,
 }: {
-  baseHref: string;
-  tailId: SolverNode['id'];
+  tail: RelayConnectionList_node$key;
   edgeType: EdgeType<TEdge>;
+  baseHref: string;
   renderItem: (edge: TEdge) => React.ReactNode;
   paginate?: boolean;
 }) {
-  const { edges, loadNext } = usePagination(edgeType, tailId, { first: 10 });
+  const {
+    data: tail,
+    loadNext,
+    hasNext,
+    hasPrevious,
+    loadPrevious,
+  } = usePaginationFragment(connectionListQueryFragment, tailFragment);
 
   // const onLoadNext = useCallback(() => {
   //   setSize((size) => size + 1);
   // }, [setSize]);
 
-  const itemCount = edges.length + 1;
+  // const itemCount = edges.length + 1;
 
   return (
     <>
@@ -77,9 +104,9 @@ export default function ConnectionList<TEdge extends SolverEdge>({
                         </ListItemButton>
                       }
                     >
-                      <NodeConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
+                      <NodeRelayConnectionListItem edgeType={edgeType} tail={node} edge={edge}>
                         {renderItem(edge as any)}
-                      </NodeConnectionListItem>
+                      </NodeRelayConnectionListItem>
                     </FallbackBoundary>
                     </Collapse>
                   </ListItem>
@@ -90,12 +117,12 @@ export default function ConnectionList<TEdge extends SolverEdge>({
         )}
       </InfiniteLoader> */}
       <InfiniteList
-        // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={paginate && loadNext}
+      // loadPrevious={hasPrevious && onLoadPrevious}
+      // loadNext={paginate && loadNext}
       >
         <List>
           <TransitionGroup>
-            {edges.map((edge) => (
+            {tail.connection.edges.map((edge) => (
               <Collapse key={edge.headId}>
                 <ListItem dense disablePadding>
                   <FallbackBoundary
@@ -107,14 +134,9 @@ export default function ConnectionList<TEdge extends SolverEdge>({
                       </ListItemButton>
                     }
                   >
-                    <ConnectionListItem
-                      baseHref={baseHref}
-                      edgeType={edgeType}
-                      tailId={tailId}
-                      edge={edge}
-                    >
+                    <RelayConnectionListItem edge={edge} edgeType={edgeType} baseHref={baseHref}>
                       {renderItem(edge as any)}
-                    </ConnectionListItem>
+                    </RelayConnectionListItem>
                   </FallbackBoundary>
                 </ListItem>
               </Collapse>
@@ -126,36 +148,47 @@ export default function ConnectionList<TEdge extends SolverEdge>({
   );
 }
 
-const connectionListItemHeight: number = 22;
+const connectionListItemQueryFragment = graphql`
+  fragment RelayConnectionListItem_edge on Edge {
+    headId
+    tail {
+      meta {
+        slug
+      }
+    }
+    head {
+      meta {
+        slug
+      }
+    }
+  }
+`;
 
-const ConnectionListItem = memo(function ConnectionListItem<TEdge extends SolverEdge>({
-  baseHref,
+const RelayConnectionListItem = memo(function RelayConnectionListItem({
+  edge: edgeFragment,
   edgeType,
-  tailId,
-  edge,
+  baseHref,
   children,
 }: {
+  edge: RelayConnectionListItem_edge$key;
+  edgeType: EdgeType<any>;
   baseHref: string;
-  edgeType: EdgeType<TEdge>;
-  tailId: SolverNode['id'];
-  edge: TEdge;
   children: React.ReactNode;
 }) {
-  const tail = useNode(tailId);
-  const node = useNode(edge.headId);
+  const edge = useFragment(connectionListItemQueryFragment, edgeFragment);
   // console.log('tail', tail);
   // console.log('node', node);
 
-  const prefix = `${baseHref}${tail.meta.slug}`;
-  const suffix = `${edgeType.connectionName}/${node.meta.slug}`;
+  const prefix = `${baseHref}${edge.tail.meta.slug}`;
+  const suffix = `${edgeType.connectionName}/${edge.head.meta.slug}`;
   let href;
   switch (edgeType.name) {
     case 'ChainHasTransaction': {
-      href = `${prefix}/blocks/${(node as Transaction).data.blockNumber}/${suffix}`;
+      href = `${prefix}/blocks/${(edge.head as Transaction).data.blockNumber}/${suffix}`;
       break;
     }
     case 'BlockHasLog': {
-      href = `${prefix}/transactions/${(node as Log).data.transactionIndex}/${suffix}`;
+      href = `${prefix}/transactions/${(edge.head as Log).data.transactionIndex}/${suffix}`;
       break;
     }
     default: {

@@ -3,7 +3,6 @@ import type { RpcClientMethod as Method } from '@/lib-utils';
 import type {
   Address,
   AksharaBlockData,
-  AksharaChainId,
   AksharaChainKey,
   AksharaLogData,
   AksharaObjectData,
@@ -15,7 +14,6 @@ import type {
 export type AksharaDaMethod =
   | Method<'GetObject', [AksharaObjectKey], AksharaObjectData | undefined>
   | Method<'GetLatestBlock', [AksharaChainKey], AksharaBlockData>
-  | Method<'GetChains', [AksharaChainKey], Array<AksharaChainId>>
   | Method<
       'GetLogs',
       [

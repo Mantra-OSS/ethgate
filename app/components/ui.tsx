@@ -8,7 +8,7 @@ import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import EthgateLogo from '../(explorer)/EthgateLogo';
-import { useNode, useSolver } from '../client/backend';
+import { useNode2, useSolver } from '../client/backend';
 
 export function FallbackContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -87,6 +87,29 @@ export function NodeTypeIcon({
 export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
   const solver = useSolver();
   const nodeType = solver.graph.getNodeTypeById(nodeId);
+  const node = useNode2(nodeId);
+  let imageSrc;
+  let body;
+  if (node) {
+    imageSrc = node.meta.imageUrl;
+
+    if (!imageSrc) {
+      // TODO: Add API routes for node images
+      switch (node.type) {
+        case 'Chain': {
+          imageSrc = `/statics/${(node as Chain).data.chainId}.svg`;
+          break;
+        }
+        case 'Block':
+        case 'Transaction':
+        case 'Receipt':
+        case 'Log': {
+          body = <NodeTypeIcon nodeType={node.type} color="primary" />;
+          break;
+        }
+      }
+    }
+  }
   return (
     <Suspense
       fallback={
@@ -95,42 +118,16 @@ export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
         </Avatar>
       }
     >
-      <NodeAvatarContent nodeId={nodeId} />
+      {node && (
+        <Avatar alt={node.meta.name} src={imageSrc}>
+          {body ??
+            node.meta.name
+              .split(' ')
+              .map((word) => word[0])
+              .join('')}
+        </Avatar>
+      )}
     </Suspense>
-  );
-}
-
-function NodeAvatarContent({ nodeId }: { nodeId: SolverNode['id'] }) {
-  const solver = useSolver();
-  const nodeType = solver.graph.getNodeTypeById(nodeId);
-
-  const node = useNode(nodeId);
-  let imageSrc = node.meta.imageUrl;
-  let body;
-  if (!imageSrc) {
-    // TODO: Add API routes for node images
-    switch (nodeType.name) {
-      case 'Chain': {
-        imageSrc = `/statics/${(node as Chain).data.chainId}.svg`;
-        break;
-      }
-      case 'Block':
-      case 'Transaction':
-      case 'Receipt':
-      case 'Log': {
-        body = <NodeTypeIcon nodeType={node.type} color="primary" />;
-        break;
-      }
-    }
-  }
-  return (
-    <Avatar alt={node.meta.name} src={imageSrc}>
-      {body ??
-        node.meta.name
-          .split(' ')
-          .map((word) => word[0])
-          .join('')}
-    </Avatar>
   );
 }
 

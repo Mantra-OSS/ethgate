@@ -11,9 +11,8 @@ import type {
 } from '@/spec-node';
 import { AksharaDaClientAbstract } from '@/spec-node';
 
-import { EthereumPeer, blockFromEth, logFromEth, receiptFromEth, transactionFromEth } from '..';
-
-import { type Fetch } from './peer';
+import { blockFromEth, logFromEth, receiptFromEth, transactionFromEth } from './ethereum';
+import { EthereumPeer, type Fetch } from './peer';
 import { BatchLoader } from './utils';
 
 const ENABLE_CACHING = false;

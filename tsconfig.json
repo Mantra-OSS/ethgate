@@ -19,6 +19,7 @@
       }
     ],
     "paths": {
+      "@/__generated__/*": ["./__generated__/*"],
       "@/app/*": ["./app/*"],
       "@/spec-node": ["./akshara/spec"],
       "@/lib-node": ["./akshara"],

@@ -12,11 +12,17 @@ import type {
   Hash,
   Hex,
 } from '../db';
+import type { AksharaChainHasBlockData } from '../db/assoc';
 
 export type AksharaMethod =
   | Method<'GetObject', [AksharaObjectId | AksharaObjectKey], AksharaObjectData | undefined>
   | Method<'GetLatestBlock', [AksharaChainKey], AksharaBlockData | undefined>
   | Method<'GetChains', [AksharaChainKey], Array<AksharaChainId>>
+  | Method<
+      'GetChainHasBlockRange',
+      [AksharaChainKey, pos: number, limit: number],
+      AksharaChainHasBlockData[]
+    >
   | Method<
       'GetBlockRange',
       [Partial<AksharaChainKey>, pos: number, limit: number],

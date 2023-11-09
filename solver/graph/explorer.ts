@@ -1,7 +1,7 @@
+import type { EdgeGenerator } from '@/spec-solver';
 import { chains } from '@mantra-oss/chains';
 
 import type { EthgateSolverDatabase } from '../database';
-import type { EdgeGenerator } from '../database/abstract';
 
 import type { Block } from './akshara';
 import { type Chain, blockType, chainType } from './akshara';

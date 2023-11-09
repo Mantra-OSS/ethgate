@@ -81,7 +81,10 @@ export function AppBreadcrumbs() {
                 {matches.map((match, i) => (
                   <MenuItem key={i} onClick={handleClose}>
                     <Link href={`${match.href as any}` as any}>
-                      <Typography variant="h5" color="primary">
+                      <Typography
+                        variant="h5"
+                        color={match.title === 'ethgate.io' ? 'secondary' : 'primary'}
+                      >
                         {match.title}
                       </Typography>
                     </Link>
@@ -97,7 +100,10 @@ export function AppBreadcrumbs() {
         <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
           {matches.map((match, i) => (
             <Link key={i} href={`${match.href as any}` as any}>
-              <Typography variant="h5" color="primary">
+              <Typography
+                variant="h5"
+                color={match.title === 'ethgate.io' ? 'secondary' : 'primary'}
+              >
                 {match.title}
               </Typography>
             </Link>

@@ -1,4 +1,5 @@
-import type { EdgeGenerator } from '../database/abstract';
+import type { EdgeGenerator } from '@/spec-solver';
+
 import type { EthgateSolverDatabase } from '../database/database';
 
 import type { Block, Chain, Log, Receipt, Transaction } from './akshara';

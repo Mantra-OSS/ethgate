@@ -8,7 +8,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { useSolver } from '../client/backend';
 
-import NodeConnectionList from './ConnectionList';
+import ConnectionList from './ConnectionList';
 import {
   BlockListItem,
   ChainListItem,
@@ -76,7 +76,7 @@ export function NodeConnectionPageOverview({
   node: SolverNode;
   edgeType: EdgeType<any>;
 }) {
-  const renderItem: React.ComponentProps<typeof NodeConnectionList>['renderItem'] = ({ headId }) =>
+  const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
     createElement((listItemComponents as any)[edgeType.name], { nodeId: headId });
   return (
     <Section
@@ -114,7 +114,7 @@ export function NodeConnectionPageOverview({
     >
       <Stack minHeight={300}>
         <FallbackBoundary>
-          <NodeConnectionList
+          <ConnectionList
             baseHref="../"
             paginate
             tailId={node.id}

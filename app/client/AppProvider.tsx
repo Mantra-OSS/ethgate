@@ -1,10 +1,12 @@
 'use client';
 import { mapValues } from 'lodash';
 import { IntlProvider } from 'react-intl';
+// import { RelayEnvironmentProvider } from 'react-relay';
 import { RecoilRoot } from 'recoil';
 
 import en from '../lang/en.json';
-import { ViewerProvider } from '../viewer';
+
+// import relayEnvironment fro./relay.ts.disabledlay';
 
 const messages = mapValues(en, (value) => value.defaultMessage);
 
@@ -33,11 +35,11 @@ function AppIntlProvider({ children }: { children: React.ReactNode }) {
 export default function ClientProvider({ children }: { children: React.ReactNode }) {
   return (
     <>
+      {/* <RelayEnvironmentProvider environment={relayEnvironment}> */}
       <RecoilRoot>
-        <ViewerProvider>
-          <AppIntlProvider>{children}</AppIntlProvider>
-        </ViewerProvider>
+        <AppIntlProvider>{children}</AppIntlProvider>
       </RecoilRoot>
+      {/* </RelayEnvironmentProvider> */}
     </>
   );
 }

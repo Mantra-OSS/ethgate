@@ -1,35 +1,33 @@
 import type { Akshara, Time } from '@/lib-node';
+import type { GlobalId } from '@/spec-solver';
+import { parseGlobalId } from '@/spec-solver';
 
-import type { GlobalId } from '../../spec/database';
-import { parseGlobalId } from '../../spec/database';
 import type { Block, Chain } from '../akshara';
 
 export type GraphTypeContext = {
   aks: Akshara;
 };
 
-export type ObjectId<Type extends string, LocalId extends string = string> = `${Type}:${LocalId}`;
-
 export type SolverNodeMeta = {
   name: string;
   imageUrl?: string;
   slug: string;
   // path: string;
-  nodePath: ObjectId<any>[];
+  nodePath: GlobalId<any>[];
   themeColor?: string;
   chainId?: Chain['id'];
   blockId?: Block['id'];
 };
 
 export interface SolverNode<
-  Name extends string = any,
-  Data extends object = any,
-  Id extends ObjectId<Name> = ObjectId<Name>,
+  TName extends string = any,
+  TData extends object = any,
+  TId extends GlobalId<TName> = GlobalId<TName>,
 > {
-  type: Name;
+  type: TName;
   meta: SolverNodeMeta;
-  id: Id;
-  data: Data;
+  id: TId;
+  data: TData;
 }
 
 export type NodeCreateFn<T extends SolverNode> = (data: T['data']) => T;
@@ -43,7 +41,7 @@ export type SolverNodeTypeMeta = {
   slug: string;
 };
 
-export class NodeType<T extends SolverNode> {
+export class NodeType<T extends SolverNode = SolverNode> {
   name: T['type'];
   getData: NodeGetDataFn<T>;
   create: NodeCreateFn<T>;
@@ -71,17 +69,17 @@ export type SolverEdgeMeta = {
 };
 
 export abstract class SolverEdge<
-  Name extends string = any,
-  TailId extends string = any,
-  HeadId extends string = any,
-  Data extends object = any,
+  TName extends string = any,
+  TTailId extends string = any,
+  THeadId extends string = any,
+  TData extends object = any,
 > {
-  abstract type: Name;
-  tailId: TailId;
-  headId: HeadId;
-  data: Data;
+  abstract type: TName;
+  tailId: TTailId;
+  headId: THeadId;
+  data: TData;
   time: Time;
-  constructor(tailId: TailId, headId: HeadId, data: Data, time: Time) {
+  constructor(tailId: TTailId, headId: THeadId, data: TData, time: Time) {
     this.tailId = tailId;
     this.headId = headId;
     this.data = data;
@@ -93,15 +91,15 @@ export abstract class SolverEdge<
 }
 
 export interface GraphEdge<
-  Name extends string = any,
-  TailId extends string = any,
-  HeadId extends string = any,
-  Data extends object = any,
+  TName extends string = any,
+  TTailId extends string = any,
+  THeadId extends string = any,
+  TData extends object = any,
 > {
-  type: Name;
-  tailId: TailId;
-  headId: HeadId;
-  data: Data;
+  type: TName;
+  tailId: TTailId;
+  headId: THeadId;
+  data: TData;
   time: Time;
 }
 
@@ -112,7 +110,11 @@ export type ProperPageArgs<T extends GraphEdge> = {
   limit: number;
 };
 
-export type GraphEdgeGenerator<Edge extends GraphEdge> = AsyncGenerator<Edge, undefined, undefined>;
+export type GraphEdgeGenerator<TEdge extends GraphEdge> = AsyncGenerator<
+  TEdge,
+  undefined,
+  undefined
+>;
 
 export type SolverEdgeTypeMeta = {
   name: string;
@@ -133,7 +135,7 @@ export type EdgeGetFn<T extends GraphEdge> = (
   ctx: GraphTypeContext,
 ) => GraphEdgeGenerator<T>;
 
-export abstract class EdgeType2<T extends GraphEdge> {
+export abstract class EdgeType2<T extends GraphEdge = GraphEdge> {
   abstract name: T['type'];
   abstract meta: SolverEdgeTypeMeta;
   abstract tail: NodeType<any>;
