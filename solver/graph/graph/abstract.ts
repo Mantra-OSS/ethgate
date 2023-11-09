@@ -12,6 +12,7 @@ export type GraphNodeMeta = {
   slug: string;
   path: ObjectId<any>[];
   themeColor?: string;
+  chainId?: string;
 };
 
 export interface SolverNode<

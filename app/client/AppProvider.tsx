@@ -1,10 +1,12 @@
 'use client';
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import type { Theme, ThemeOptions } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { mapValues } from 'lodash';
+import { useMemo } from 'react';
 import { IntlProvider } from 'react-intl';
 import { RecoilRoot } from 'recoil';
 
-import { theme } from '../components/theme';
+import { createExplorerTheme } from '../components/theme';
 import en from '../lang/en.json';
 import tr from '../lang/tr.json';
 import { ViewerProvider, useViewer } from '../viewer';
@@ -30,12 +32,21 @@ function AppIntlProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function ClientProvider({ children }: { children: React.ReactNode }) {
+const theme = createExplorerTheme();
+
+export default function ClientProvider({
+  themeOptions,
+  children,
+}: {
+  themeOptions: ThemeOptions;
+  children: React.ReactNode;
+}) {
+  const customTheme = useMemo(() => createTheme(theme, themeOptions), [themeOptions]);
   return (
     <>
       <RecoilRoot>
         <ViewerProvider>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={customTheme}>
             <CssBaseline enableColorScheme />
             <AppIntlProvider>{children}</AppIntlProvider>
           </ThemeProvider>

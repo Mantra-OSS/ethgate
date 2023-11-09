@@ -1,7 +1,5 @@
 import type { MetadataRoute } from 'next';
 
-import { theme } from './components/theme';
-
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'ethgate.io',

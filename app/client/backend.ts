@@ -1,13 +1,8 @@
 'use client';
-import {
-  type PageArgs,
-  type PageInfo,
-  Solver,
-  type SolverEdge,
-  type SolverNode,
-} from '@/lib-solver';
-import { memoize } from 'lodash';
+import 'client-only';
+import { type PageArgs, Solver, type SolverEdge, type SolverNode } from '@/lib-solver';
 import { use } from 'react';
+import useSWR from 'swr';
 
 import { createAkshara } from './akshara.client';
 
@@ -31,60 +26,30 @@ export function useSolver() {
   return use(solverPromise);
 }
 
-// export class PunkerBackendClient {
-//   #backend: EthgateSolverServer | Promise<EthgateSolverServer> = serverPromise;
-
-//   async query(request: string, variables: Variables): Promise<QueryResponse> {
-//     const backend = await this.#backend;
-//     return backend.query(request, variables);
-//   }
-//   async subscribe(request: string, variables: Variables): Promise<Observable<QueryResponse>> {
-//     const backend = await this.#backend;
-//     return backend.subscribe(request, variables);
-//   }
-// }
-
-export const readNode = memoize(async function readNode<T extends SolverNode>(id: T['id']) {
+export const nodeFetcher = async <Node extends SolverNode>(key: Node['id']): Promise<Node> => {
+  console.debug(`[backend] nodeFetcher(${key})`);
   const database = (await solverPromise).solver.database;
-  const node = await database.readNode(id);
+  const node = await database.readNode(key);
+  console.debug(`[backend] nodeFetcher(${key}) -> ${JSON.stringify(node)}`);
   return node;
-});
+};
 
-export interface Connection<Edge extends SolverEdge> {
-  type: Edge['type'];
-  tailId: Edge['tailId'];
-  edges: Edge[];
-  pageInfo: PageInfo<Edge>;
-}
-
-export const connectionFetcher = async <Edge extends SolverEdge>([type, tailId, args]: [
-  type: Edge['type'],
-  tailId: Edge['tailId'],
-  args: PageArgs<Edge>,
-]) => {
-  console.debug(`[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)})`);
+export const connectionFetcher = async <Edge extends SolverEdge>(
+  key: [type: Edge['type'], tailId: Edge['tailId'], args: PageArgs<Edge>],
+) => {
+  const [type, tailId, args] = key;
+  console.debug(`[backend] connectionFetcher(${type}, ${tailId}, ${JSON.stringify(args)})`);
   const database = (await solverPromise).solver.database;
   const connection = await database.getConnection(type, tailId, args).collect();
   console.debug(
-    `[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)}) -> ${JSON.stringify(
+    `[backend] connectionFetcher(${type}, ${tailId}, ${JSON.stringify(args)}) -> ${JSON.stringify(
       connection,
     )}`,
   );
   return { type, tailId, ...connection };
 };
 
-export const readConnection = memoize(async function readConnection<Edge extends SolverEdge>(
-  type: Edge['type'],
-  tailId: Edge['tailId'],
-  args: PageArgs<Edge>,
-): Promise<Connection<Edge>> {
-  console.debug(`[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)})`);
-  const database = (await solverPromise).solver.database;
-  const connection = await database.getConnection(type, tailId, args).collect();
-  console.debug(
-    `[backend] readConnection(${type}, ${tailId}, ${JSON.stringify(args)}) -> ${JSON.stringify(
-      connection,
-    )}`,
-  );
-  return { type, tailId, ...connection };
-});
+export const useNode = function useNode<T extends SolverNode>(id: T['id']): T {
+  const { data: node } = useSWR(id, nodeFetcher as any, { suspense: true });
+  return node;
+};

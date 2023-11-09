@@ -1,3 +1,4 @@
+import { useNode } from '@/app/client/backend';
 import type { Block, Chain, Log, Receipt, Transaction } from '@/lib-solver';
 import { Avatar, Divider, Link, Stack, Typography } from '@mui/material';
 import { green, red } from '@mui/material/colors';
@@ -5,7 +6,6 @@ import { AnimatedAxis, AnimatedGrid, AnimatedLineSeries, Tooltip, XYChart } from
 import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
-import { useNode } from '../helpers/hooks';
 import { useNow } from '../viewer/viewer';
 
 export function ChainOverview({ node }: { node: Chain }) {

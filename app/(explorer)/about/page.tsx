@@ -1,7 +1,7 @@
 'use client';
 import { useSolver } from '@/app/client/backend';
 import { AppBreadcrumbs } from '@/app/client/breadcrumbs';
-import { useNode } from '@/app/helpers/hooks';
+import { createExplorerTheme } from '@/app/components/theme';
 import type { Block, Chain, Log, Transaction } from '@/lib-solver';
 import type { Chain as MantraOSSChain } from '@mantra-oss/chains';
 import { chains } from '@mantra-oss/chains';
@@ -36,7 +36,7 @@ export default function AboutPage() {
   const edgeType = solver.solver.graph.getEdgeType(node.type);
   console.log(edgeType); */
   return (
-    <ExplorerLayout nav={<AppBreadcrumbs />}>
+    <ExplorerLayout themeOptions={{}} nav={<AppBreadcrumbs />}>
       <AboutSection title="What Is EthGate.io?">
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={1}>
           <Box>
@@ -48,6 +48,8 @@ export default function AboutPage() {
             your fingertips.
           </Typography>
         </Stack>
+        <Image src="/icon" width={128} height={128} alt="Ethgate Icon" />
+        {/* <Image src="/_next/image?url=%2Ficon&w=128&q=75" width={128} height={128} alt="dadsa" /> */}
       </AboutSection>
       <AboutSection title="We Support Multiple Chains">
         <Typography variant="body1" padding={1} textAlign="center">

@@ -1,7 +1,7 @@
 'use client';
 
-import { useNode } from '@/app/helpers/hooks';
-import type { ConnectionBlah, SolverEdge, SolverNode } from '@/lib-solver';
+import { useNode } from '@/app/client/backend';
+import type { ConnectionBlah, Log, SolverEdge, SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import { useCallback, useTransition } from 'react';
@@ -104,8 +104,17 @@ export function NodeConnectionListItem<TEdge extends SolverEdge>({
 }) {
   const node = useNode(edge.headId);
 
+  let href = `${tail.meta.slug}/${edgeType.connectionName}/${node.meta.slug}`;
+  switch (edgeType.name) {
+    case 'BlockHasLog': {
+      href = `${tail.meta.slug}/transactions/${(node as Log).data.transactionIndex}/${
+        edgeType.connectionName
+      }/${node.meta.slug}`;
+    }
+  }
+
   return (
-    <ListItemButton href={`${tail.meta.slug}/${edgeType.connectionName}/${node.meta.slug}`}>
+    <ListItemButton href={href}>
       <ListItemAvatar>
         <NodeAvatar node={node} />
       </ListItemAvatar>

@@ -1,4 +1,5 @@
 import { GitHub, Twitter } from '@mui/icons-material';
+import type { Theme, ThemeOptions } from '@mui/material';
 import {
   Alert,
   AppBar,
@@ -17,14 +18,16 @@ import ClientProvider from '../client/AppProvider';
 import EthgateLogo from './EthgateLogo';
 
 export default async function ExplorerLayout({
+  themeOptions,
   children,
   nav,
 }: {
+  themeOptions: ThemeOptions;
   children: React.ReactNode;
   nav: React.ReactNode;
 }) {
   return (
-    <ClientProvider>
+    <ClientProvider themeOptions={themeOptions}>
       <Stack role="banner" style={{ minHeight: '100vh' }}>
         <AppBar position="sticky">
           <Toolbar>
