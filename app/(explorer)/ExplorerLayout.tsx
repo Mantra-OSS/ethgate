@@ -1,4 +1,4 @@
-import { GitHub, Twitter } from '@mui/icons-material';
+import { GitHub, Telegram, Twitter } from '@mui/icons-material';
 import type { Theme, ThemeOptions } from '@mui/material';
 import {
   Alert,
@@ -40,12 +40,7 @@ export default async function ExplorerLayout({
             <Box flex={1} />
             <Stack direction="row" spacing={2} alignItems="center">
               <Button href="/about">About</Button>
-              <IconButton href="https://github.com/mantra-oss/" target="_blank" color={'primary'}>
-                <GitHub />
-              </IconButton>
-              <IconButton href="https://twitter.com/ethgate_io" target="_blank" color={'primary'}>
-                <Twitter />
-              </IconButton>
+              <Socials />
               {/* <ChangeLanguage /> */}
             </Stack>
           </Toolbar>
@@ -61,15 +56,26 @@ export default async function ExplorerLayout({
       <Box m={1} mt="auto">
         <Paper>
           <Stack width="100%" direction="row" justifyContent="flex-end" padding={1}>
-            <IconButton href="https://github.com/mantra-oss/" target="_blank" color={'primary'}>
-              <GitHub />
-            </IconButton>
-            <IconButton href="https://twitter.com/ethgate_io" target="_blank" color={'primary'}>
-              <Twitter />
-            </IconButton>
+            <Socials />
           </Stack>
         </Paper>
       </Box>
     </ClientProvider>
+  );
+}
+
+function Socials() {
+  return (
+    <>
+      <IconButton href="https://github.com/mantra-oss/" target="_blank" color={'primary'}>
+        <GitHub />
+      </IconButton>
+      <IconButton href="https://t.me/ethgate_io" target="_blank" color={'primary'}>
+        <Telegram />
+      </IconButton>
+      <IconButton href="https://twitter.com/ethgate_io" target="_blank" color={'primary'}>
+        <Twitter />
+      </IconButton>
+    </>
   );
 }
