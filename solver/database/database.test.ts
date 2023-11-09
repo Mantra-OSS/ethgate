@@ -1,39 +1,42 @@
-import { Akshara, AksharaDatabase } from "@/akshara/index.js";
-import { ETHGATE_NODE_TEST_CHAINS } from "@/akshara/testing/index.js";
-import { beforeEach, describe, expect, it } from "@jest/globals";
-import fetch from "cross-fetch";
-import { IDBFactory, IDBKeyRange } from "fake-indexeddb";
+import { Akshara, AksharaDatabase } from '@/lib-node';
+import { beforeEach, describe, expect, it } from '@jest/globals';
+import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 
-import { EthgateSolverDatabase } from "./index.js";
+import { ETHGATE_NODE_TEST_CHAINS } from '../../akshara/testing';
+import { SolverGraph } from '../solver';
 
-describe("EthgateSolverDatabase", () => {
+import { EthgateSolverDatabase } from '.';
+
+const graph = new SolverGraph();
+
+describe('EthgateSolverDatabase', () => {
   let node: Akshara;
   beforeEach(() => {
     const chains = ETHGATE_NODE_TEST_CHAINS;
     const fetchFn = fetch;
     const database = new AksharaDatabase({
-      name: "test",
+      name: 'test',
       indexedDB: new IDBFactory(),
       IDBKeyRange: IDBKeyRange,
     });
-    node = new Akshara({ chains, fetchFn, database });
+    node = new Akshara({ chains, fetchFn, database, daBatchScheduleFn: undefined as any });
   });
 
   it('can read "Chain:1"', async () => {
-    const db = new EthgateSolverDatabase({ node });
-    await expect(db.readNode("Chain:1")).resolves.toMatchObject({
-      id: "Chain:1",
+    const db = new EthgateSolverDatabase({ node, graph });
+    await expect(db.readNode('Chain:1')).resolves.toMatchObject({
+      id: 'Chain:1',
       data: {
-        chainId: "1",
+        chainId: '1',
       },
     });
   });
 
-  it("can read ChainHasBlock with no blocks in cache", async () => {
-    const db = new EthgateSolverDatabase({ node });
-    const eth = await db.readNode("Chain:1");
+  it('can read ChainHasBlock with no blocks in cache', async () => {
+    const db = new EthgateSolverDatabase({ node, graph });
+    const eth = await db.readNode('Chain:1');
     const { edges, pageInfo } = await db
-      .getConnection("ChainHasBlock", eth.id, {
+      .getConnection('ChainHasBlock', eth.id, {
         first: 10,
       })
       .collect();
@@ -44,20 +47,20 @@ describe("EthgateSolverDatabase", () => {
     expect(pageInfo.endCursor).not.toBeDefined();
   });
 
-  it("can read ChainHasBlock", async () => {
-    const db = new EthgateSolverDatabase({ node });
-    const eth = await db.readNode("Chain:1");
+  it('can read ChainHasBlock', async () => {
+    const db = new EthgateSolverDatabase({ node, graph });
+    const eth = await db.readNode('Chain:1');
     const latestBlock = await db
-      .networkUpdates("Chain:1")
+      .networkUpdates('Chain:1')
       .next()
       .then((result) => {
         if (result.done) {
-          throw new Error("Iterator was closed before a value was yielded");
+          throw new Error('Iterator was closed before a value was yielded');
         }
         return result.value;
       });
     const { edges, pageInfo } = await db
-      .getConnection("ChainHasBlock", eth.id, {
+      .getConnection('ChainHasBlock', eth.id, {
         first: 10,
       })
       .collect();
@@ -68,26 +71,26 @@ describe("EthgateSolverDatabase", () => {
     expect(pageInfo.endCursor).toBe(edges[9].cursor);
   });
 
-  it("can read ChainHasBlock after cursor", async () => {
-    const db = new EthgateSolverDatabase({ node });
-    const eth = await db.readNode("Chain:1");
+  it('can read ChainHasBlock after cursor', async () => {
+    const db = new EthgateSolverDatabase({ node, graph });
+    const eth = await db.readNode('Chain:1');
     const latestBlock = await db
-      .networkUpdates("Chain:1")
+      .networkUpdates('Chain:1')
       .next()
       .then((result) => {
         if (result.done) {
-          throw new Error("Iterator was closed before a value was yielded");
+          throw new Error('Iterator was closed before a value was yielded');
         }
         return result.value;
       });
     const { edges: allEdges } = await db
-      .getConnection("ChainHasBlock", eth.id, {
+      .getConnection('ChainHasBlock', eth.id, {
         first: 11,
       })
       .collect();
     const expectedEdges = allEdges.slice(1);
     const { edges, pageInfo } = await db
-      .getConnection("ChainHasBlock", eth.id, {
+      .getConnection('ChainHasBlock', eth.id, {
         first: 10,
         after: latestBlock.cursor,
       })
@@ -96,31 +99,29 @@ describe("EthgateSolverDatabase", () => {
     expect(pageInfo.hasNextPage).toBe(true);
     expect(pageInfo.hasPreviousPage).toBe(false);
     expect(pageInfo.startCursor).toBe(expectedEdges[0].cursor);
-    expect(pageInfo.endCursor).toBe(
-      expectedEdges[expectedEdges.length - 1].cursor
-    );
+    expect(pageInfo.endCursor).toBe(expectedEdges[expectedEdges.length - 1].cursor);
   });
 
-  it("can read ChainHasBlock with after and before", async () => {
-    const db = new EthgateSolverDatabase({ node });
-    const eth = await db.readNode("Chain:1");
+  it('can read ChainHasBlock with after and before', async () => {
+    const db = new EthgateSolverDatabase({ node, graph });
+    const eth = await db.readNode('Chain:1');
     const latestBlock = await db
-      .networkUpdates("Chain:1")
+      .networkUpdates('Chain:1')
       .next()
       .then((result) => {
         if (result.done) {
-          throw new Error("Iterator was closed before a value was yielded");
+          throw new Error('Iterator was closed before a value was yielded');
         }
         return result.value;
       });
     const { edges: allEdges } = await db
-      .getConnection("ChainHasBlock", eth.id, {
+      .getConnection('ChainHasBlock', eth.id, {
         first: 11,
       })
       .collect();
     const expectedEdges = allEdges.slice(1, -1);
     const { edges, pageInfo } = await db
-      .getConnection("ChainHasBlock", eth.id, {
+      .getConnection('ChainHasBlock', eth.id, {
         first: 10,
         after: latestBlock.cursor,
         before: allEdges[allEdges.length - 1].cursor,
@@ -130,8 +131,6 @@ describe("EthgateSolverDatabase", () => {
     expect(pageInfo.hasNextPage).toBe(false);
     expect(pageInfo.hasPreviousPage).toBe(false);
     expect(pageInfo.startCursor).toBe(expectedEdges[0].cursor);
-    expect(pageInfo.endCursor).toBe(
-      expectedEdges[expectedEdges.length - 1].cursor
-    );
+    expect(pageInfo.endCursor).toBe(expectedEdges[expectedEdges.length - 1].cursor);
   });
 });

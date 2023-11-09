@@ -1,6 +1,5 @@
-import { RpcClient } from '@ethgate/lib-utils';
-// import type { EthgateAksharaDaAbstract } from '../da/index.js';
-import { maxTime, minTime } from '@ethgate/spec-node';
+import { RpcClient } from '@/lib-utils';
+import { maxTime, minTime } from '@/spec-node';
 
 import type {
   AksharaBlockData,
@@ -22,9 +21,11 @@ import type {
   AksharaTransactionId,
   AksharaTransactionKey,
   Time,
-} from '../db/index.js';
+} from '../db';
 
-import type { AksharaMethod } from './methods.js';
+import type { AksharaMethod } from './methods';
+
+// import type { EthgateAksharaDaAbstract } from '../da';
 
 export type AksharaCall<Name extends AksharaMethod['Name'] = AksharaMethod['Name']> = Extract<
   AksharaMethod,
@@ -94,7 +95,6 @@ export abstract class AksharaAbstract extends RpcClient<AksharaMethod> {
     key: Partial<AksharaChainKey>,
     high: Time,
     low: Time,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     buffer: number,
   ): AsyncGenerator<number, undefined, undefined> {
     if (low !== minTime) {

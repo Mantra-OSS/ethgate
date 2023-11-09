@@ -1,4 +1,4 @@
-import { Pool, Result } from '@ethgate/lib-utils';
+import { Pool, Result } from '@/lib-utils';
 import type {
   AksharaBlockData,
   AksharaChainData,
@@ -8,52 +8,46 @@ import type {
   AksharaDaResult,
   EthereumCall,
   PeerTypes,
-} from '@ethgate/spec-node';
-import { AksharaDaClientAbstract } from '@ethgate/spec-node';
+} from '@/spec-node';
+import { AksharaDaClientAbstract } from '@/spec-node';
 
-import {
-  EthereumPeer,
-  blockFromEth,
-  logFromEth,
-  receiptFromEth,
-  transactionFromEth,
-} from '../index.js';
+import { EthereumPeer, blockFromEth, logFromEth, receiptFromEth, transactionFromEth } from '..';
 
-import { type Fetch } from './peer/index.js';
-import { BatchLoader } from './utils.js';
+import { type Fetch } from './peer';
+import { BatchLoader } from './utils';
 
 const ENABLE_CACHING = false;
 
-// export type AksharaDaClientConfig = {
-//   chain: AksharaChainData;
-//   fetch: Fetch;
-//   batchScheduleFn?: (callback: () => void) => void;
-//   cacheMap: DataLoader.CacheMap<string, Promise<AksharaDaClientResult>>;
-//   persistCache: boolean;
-// };
+export type AksharaDaClientConfig = {
+  root: AksharaChainData;
+  fetchFn: Fetch;
+  batchScheduleFn: (callback: () => void) => void;
+  // cacheMap: DataLoader.CacheMap<string, Promise<AksharaDaClientResult>>;
+  // persistCache: boolean;
+};
 
 export class AksharaDaClient extends AksharaDaClientAbstract {
-  readonly #pool: AksharaPeerPool;
-  readonly #loader: BatchLoader<AksharaDaCall, AksharaDaResult, string>;
+  readonly pool: AksharaPeerPool;
+  readonly loader: BatchLoader<AksharaDaCall, AksharaDaResult, string>;
   latestBlocks: Map<AksharaChainId, AksharaBlockData> = new Map();
 
-  constructor(root: AksharaChainData, fetchFn: Fetch) {
-    super(root);
-    const peers = root.rpcs.map(({ url }) => {
+  constructor(config: AksharaDaClientConfig) {
+    super(config.root);
+    const peers = config.root.rpcs.map(({ url }) => {
       const peer = new EthereumPeer({
         url,
-        fetch: fetchFn,
+        fetch: config.fetchFn,
       });
       return peer;
     });
 
     const configg = {
       // batchScheduleFn: (callback: any) => setTimeout(callback, 1000 / 30 / 30),
-      batchScheduleFn: (callback: any) => setTimeout(callback, 2000),
+      batchScheduleFn: config.batchScheduleFn,
       cacheMap: new Map(),
       persistCache: ENABLE_CACHING,
     };
-    this.#pool = new AksharaPeerPool(
+    this.pool = new AksharaPeerPool(
       peers
         .map((peer) => ({
           peer,
@@ -61,8 +55,8 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
         }))
         .sort((a, b) => a.priority - b.priority),
     );
-    this.#loader = new BatchLoader({
-      batchLoadFn: this.#batchLoad,
+    this.loader = new BatchLoader({
+      batchLoadFn: this._batchLoad,
       cacheKeyFn: (call) => JSON.stringify(call),
       batchScheduleFn: configg.batchScheduleFn,
       cacheMap: configg.cacheMap,
@@ -70,7 +64,7 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
     });
   }
 
-  #batchLoad = async (
+  _batchLoad = async (
     calls: ReadonlyArray<AksharaDaCall>,
   ): Promise<Array<AksharaDaResult | Error>> => {
     const DEBUG = false;
@@ -159,7 +153,6 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
           throw new Error('Not implemented 2321');
         }
         case 'GetLatestBlock': {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const [key] = call[1];
           return ['eth_getBlockByNumber', ['latest', false]];
         }
@@ -244,7 +237,7 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
         });
       });
 
-    const innerResponses = await Promise.any([this.#pool.withPeer(fn), this.#pool.withPeer(fn)]);
+    const innerResponses = await Promise.any([this.pool.withPeer(fn), this.pool.withPeer(fn)]);
 
     const responses = innerResponses.map((innerResponse) => {
       if (innerResponse.isErr) {
@@ -264,7 +257,7 @@ export class AksharaDaClient extends AksharaDaClientAbstract {
   };
 
   async executeBatch(calls: AksharaDaMethod['Call'][]): Promise<AksharaDaMethod['Result'][]> {
-    const responses = await this.#loader.loadMany(calls);
+    const responses = await this.loader.loadMany(calls);
     return responses as any;
   }
 }
@@ -275,14 +268,14 @@ type PoolItem = {
 };
 
 export class AksharaPeerPool {
-  #pool: Pool<PoolItem>;
+  _pool: Pool<PoolItem>;
 
   constructor(items: PoolItem[]) {
-    this.#pool = new Pool(items);
+    this._pool = new Pool(items);
   }
 
   async withPeer<T>(fn: (peer: EthereumPeer) => Promise<T>): Promise<T> {
-    const item = await this.#pool.acquire();
+    const item = await this._pool.acquire();
     try {
       // console.log('acquired', item.peer);
       return await fn(item.peer);
@@ -290,7 +283,7 @@ export class AksharaPeerPool {
       (async () => {
         // console.log('releasing...', item.peer);
         // await new Promise((resolve) => setTimeout(resolve, 10000));
-        this.#pool.release(item);
+        this._pool.release(item);
         // console.log('released', item.peer);
       })();
     }

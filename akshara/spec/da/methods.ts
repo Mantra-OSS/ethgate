@@ -1,4 +1,4 @@
-import type { RpcClientMethod as Method } from '@ethgate/lib-utils';
+import type { RpcClientMethod as Method } from '@/lib-utils';
 
 import type {
   Address,
@@ -10,7 +10,7 @@ import type {
   AksharaObjectKey,
   Hash,
   Hex,
-} from '../db/index.js';
+} from '../db';
 
 export type AksharaDaMethod =
   | Method<'GetObject', [AksharaObjectKey], AksharaObjectData | undefined>

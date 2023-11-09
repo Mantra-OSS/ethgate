@@ -1,4 +1,4 @@
-import type { RpcClientMethod as Method } from '@ethgate/lib-utils';
+import type { RpcClientMethod as Method } from '@/lib-utils';
 
 import type {
   Address,
@@ -11,7 +11,7 @@ import type {
   Receipt,
   Transaction,
   TransactionRequest,
-} from './types.js';
+} from './types';
 
 export type EthereumMethod =
   | Method<'eth_blockNumber', [], number>

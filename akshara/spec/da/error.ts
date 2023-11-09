@@ -1,4 +1,4 @@
-import type { AksharaDaCall } from "./client.js";
+import type { AksharaDaCall } from './client';
 
 export abstract class AksharaDaError extends Error {
   abstract readonly name: `AksharaDa${string}Error`;
@@ -8,19 +8,14 @@ export abstract class AksharaDaError extends Error {
 }
 
 export class AksharaDaPeerError extends AksharaDaError {
-  readonly name = "AksharaDaPeerError";
+  readonly name = 'AksharaDaPeerError';
   readonly error: unknown;
-  constructor(
-    request: unknown,
-    error: unknown,
-    message?: string,
-    options?: ErrorOptions
-  ) {
+  constructor(request: unknown, error: unknown, message?: string, options?: ErrorOptions) {
     const errorMessage = `${String(error)}\nRequest:\n  ${JSON.stringify(
       request,
       null,
-      "  "
-    ).replaceAll("\n", "\n  ")}}`.replaceAll("\n", "\n  ");
+      '  ',
+    ).replaceAll('\n', '\n  ')}}`.replaceAll('\n', '\n  ');
     let message2 = message;
     if (message !== undefined) {
       message2 = `${message}\n  ${errorMessage}`;
@@ -35,7 +30,7 @@ export class AksharaDaPeerError extends AksharaDaError {
 }
 
 export class AksharaDaCallError extends AksharaDaError {
-  readonly name = "AksharaDaCallError";
+  readonly name = 'AksharaDaCallError';
   readonly call: AksharaDaCall;
   constructor(call: AksharaDaCall, message: string, options?: ErrorOptions) {
     super(`${message}\n  ${JSON.stringify(call)}`, options);
@@ -44,13 +39,10 @@ export class AksharaDaCallError extends AksharaDaError {
 }
 
 export class AksharaDaExecuteError extends AksharaDaError {
-  readonly name = "AksharaDaExecuteError";
+  readonly name = 'AksharaDaExecuteError';
   readonly calls: AksharaDaCall[];
   constructor(calls: AksharaDaCall[], message: string, options?: ErrorOptions) {
-    super(
-      `${message}\n  ${calls.map((call) => JSON.stringify(call)).join("\n  ")}`,
-      options
-    );
+    super(`${message}\n  ${calls.map((call) => JSON.stringify(call)).join('\n  ')}`, options);
     this.calls = calls;
   }
 }

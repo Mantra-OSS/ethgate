@@ -1,4 +1,4 @@
-import { Result } from '@ethgate/lib-utils';
+import { Result } from '@/lib-utils';
 import type {
   AksharaBlockData,
   AksharaBlockId,
@@ -15,26 +15,28 @@ import type {
   AksharaResult,
   AksharaTransactionId,
   AksharaTransactionKey,
-} from '@ethgate/spec-node';
-import { AksharaAbstract, type AksharaChainId } from '@ethgate/spec-node';
+} from '@/spec-node';
+import { AksharaAbstract, type AksharaChainId } from '@/spec-node';
 import type { Chain } from '@mantra-oss/chains';
-import type fetch from 'cross-fetch';
 
-import { AksharaDaClient } from '../consensus/client.js';
-import type { AksharaDatabase } from '../index.js';
+import type { AksharaDatabase } from '..';
+import { AksharaDaClient } from '../consensus/client';
 
-export type FetchFn = typeof fetch;
+export type FetchFn = (...args: any[]) => Promise<any>;
+// export type FetchFn = typeof fetch;
 
 export type AksharaConfig = {
   chains: Record<AksharaChainId, Chain>;
   fetchFn: FetchFn;
   database: AksharaDatabase;
+  daBatchScheduleFn: (callback: () => void) => void;
 };
 
 export class Akshara extends AksharaAbstract {
   chains: Record<AksharaChainId, Chain>;
   fetchFn: FetchFn;
   database: AksharaDatabase;
+  daBatchScheduleFn: (callback: () => void) => void;
   consensusClients: Map<AksharaChainId, AksharaDaClient> = new Map();
 
   constructor(config: AksharaConfig) {
@@ -52,6 +54,7 @@ export class Akshara extends AksharaAbstract {
     this.chains = config.chains;
     this.fetchFn = config.fetchFn;
     this.database = config.database;
+    this.daBatchScheduleFn = config.daBatchScheduleFn;
   }
 
   // getLatestBlock(chainId: AksharaChainId): AksharaBlockData | undefined {
@@ -59,16 +62,15 @@ export class Akshara extends AksharaAbstract {
   //   return client.latestBlocks.get(chainId);
   // }
 
-  #getChain(chainId: AksharaChainId): AksharaChainData {
+  _getChain(chainId: AksharaChainId): AksharaChainData {
     const chain = this.chains[chainId];
     if (!chain) throw new Error(`No chain for chain ${chainId}`);
     return {
       chainId: chain.chainId,
-      name: chain.name,
+      meta: chain.meta,
       parentId: chain.parent?.chainId,
       parent: chain.parent && {
         chainId: chain.parent.chainId,
-        type: chain.parent.type,
         bridges: chain.parent.bridges ?? [],
       },
       rpcs: chain.rpcs,
@@ -79,8 +81,12 @@ export class Akshara extends AksharaAbstract {
   getDaClient(chainId: AksharaChainId): AksharaDaClient {
     let client = this.consensusClients.get(chainId);
     if (!client) {
-      const chain = this.#getChain(chainId);
-      client = new AksharaDaClient(chain, this.fetchFn);
+      const root = this._getChain(chainId);
+      client = new AksharaDaClient({
+        root,
+        fetchFn: this.fetchFn,
+        batchScheduleFn: this.daBatchScheduleFn,
+      });
       this.consensusClients.set(chainId, client);
     }
     return client;
@@ -97,7 +103,7 @@ export class Akshara extends AksharaAbstract {
             const key = typeof id === 'string' ? parseObjectId(id) : id;
 
             if (key.type === 'Chain') {
-              const chain = this.#getChain(key.chainId);
+              const chain = this._getChain(key.chainId);
               return Result.ok(chain) satisfies CallResult;
             }
 
@@ -117,7 +123,10 @@ export class Akshara extends AksharaAbstract {
                 },
               ]);
               if (transaction) {
-                await this.database._put({ type: 'Transaction', ...transaction });
+                await this.database._put({
+                  type: 'Transaction',
+                  ...transaction,
+                });
                 object = await client.execute(call[0], [
                   {
                     type: 'Receipt',
@@ -225,7 +234,13 @@ export class Akshara extends AksharaAbstract {
                       .fill(0)
                       .map((_, i) => [
                         'GetObject',
-                        [{ type: 'Block', chainId, number: earliestBlock.number - i - 1 }],
+                        [
+                          {
+                            type: 'Block',
+                            chainId,
+                            number: earliestBlock.number - i - 1,
+                          },
+                        ],
                       ]),
                   );
 

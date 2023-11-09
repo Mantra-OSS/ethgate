@@ -1,0 +1,14 @@
+{
+  "NodePage.InspectQuery": {
+    "defaultMessage": "Inspect query"
+  },
+  "Connection.title": {
+    "defaultMessage": "{name, select, chains {Chains} blocks {Blocks} transactions {Transactions} receipts {Receipts} logs {Logs} other {Connection \"{name}\"} }"
+  },
+  "Connection.transactions": {
+    "defaultMessage": "Transactions"
+  },
+  "Connection.logs": {
+    "defaultMessage": "Logs"
+  }
+}

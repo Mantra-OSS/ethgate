@@ -1,8 +1,16 @@
 import type { Chain as EthgateChainDataExtra } from '@mantra-oss/chains';
 import type { FromSchema } from 'json-schema-to-ts';
 
-import type { AksharaChainId } from './types.js';
-import { addressSchema, chainIdSchema, hashSchema, hexSchema, u64Schema } from './types.js';
+import type { AksharaChainId } from './types';
+import { addressSchema, chainIdSchema, hashSchema, hexSchema, u64Schema } from './types';
+
+export type AksharaObjects = {
+  Chain: { Data: AksharaChainData };
+  Block: { Data: AksharaBlockData };
+  Transaction: { Data: AksharaTransactionData };
+  Receipt: { Data: AksharaReceiptData };
+  Log: { Data: AksharaLogData };
+};
 
 export type AksharaObjectKey =
   | ({ type: 'Chain' } & AksharaChainKey)
@@ -53,7 +61,13 @@ export const chainSchema = {
   type: 'object',
   properties: {
     chainId: chainIdSchema,
-    name: { type: 'string' },
+    meta: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+      },
+      required: ['name'],
+    },
     rpcs: {
       type: 'array',
       items: {
@@ -70,16 +84,26 @@ export const chainSchema = {
       type: 'object',
       properties: {
         chainId: chainIdSchema,
-        type: { type: 'string' },
-        // bridges: { type: ['null', 'string', 'number', 'boolean', 'array', 'object'] },
+        bridges: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              url: { type: 'string' },
+            },
+            required: ['url'],
+          },
+        },
       },
-      required: ['chainId', 'type', 'bridges'],
+      required: ['chainId', 'bridges'],
     },
     extra: { type: 'object' },
   },
-  required: ['chainId', 'name', 'rpcs', 'extra'],
+  required: ['chainId', 'meta', 'rpcs', 'extra'],
 } as const;
-export type AksharaChainData = FromSchema<typeof chainSchema> & { extra: EthgateChainDataExtra };
+export type AksharaChainData = FromSchema<typeof chainSchema> & {
+  extra: EthgateChainDataExtra;
+};
 
 export type AksharaBlockKey =
   | Pick<AksharaBlockData, 'chainId' | 'hash'>

@@ -1,8 +1,8 @@
-import { RpcClient } from '@ethgate/lib-utils';
+import { RpcClient } from '@/lib-utils';
 
-import type { AksharaChainData } from '../db/index.js';
+import type { AksharaChainData } from '../db';
 
-import type { AksharaDaMethod } from './methods.js';
+import type { AksharaDaMethod } from './methods';
 
 export type AksharaDaCall<Name extends AksharaDaMethod['Name'] = AksharaDaMethod['Name']> = Extract<
   AksharaDaMethod,

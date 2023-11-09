@@ -1,12 +1,8 @@
-import type {
-  AksharaObjectData,
-  AksharaObjectKey,
-  AksharaObjectPartialKey,
-} from '@ethgate/spec-node';
-import { AksharaDatabaseAbstract } from '@ethgate/spec-node';
+import type { AksharaObjectData, AksharaObjectKey, AksharaObjectPartialKey } from '@/spec-node';
+import { AksharaDatabaseAbstract } from '@/spec-node';
 import { Dexie, type DexieOptions } from 'dexie';
 
-export type { Hash } from '@ethgate/spec-node';
+export type { Hash } from '@/spec-node';
 
 export type AksharaDatabaseConfig = {
   name: string;

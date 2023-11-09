@@ -1,4 +1,4 @@
-import type { AksharaCall } from './node.js';
+import type { AksharaCall } from './node';
 
 export abstract class AksharaError extends Error {
   abstract readonly name: `Akshara${string}Error`;
@@ -16,11 +16,15 @@ export class AksharaPeerError extends AksharaError {
       null,
       '  ',
     ).replaceAll('\n', '\n  ')}}`.replaceAll('\n', '\n  ');
+    let message_;
     if (message !== undefined) {
-      super(`${message}\n  ${errorMessage}`, options);
+      // super(`${message}\n  ${errorMessage}`, options);
+      message = `${message}\n  ${errorMessage}`;
     } else {
-      super(errorMessage, options);
+      // super(errorMessage, options);
+      message = errorMessage;
     }
+    super(message, options);
     this.error = error;
   }
 }

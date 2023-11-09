@@ -1,27 +1,27 @@
-import { describe, expect, it, jest } from '@jest/globals';
-import fetch from 'cross-fetch';
+import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { type Mock } from 'jest-mock';
 
-import { ETHGATE_NODE_TEST_CHAINS } from '../testing/index.js';
+import { ETHGATE_NODE_TEST_CHAINS } from '../testing';
 
-import { AksharaDaClient } from './index.js';
+import { AksharaDaClient } from '.';
 
 describe('AksharaDaClient', () => {
   let fetchFn: Mock<typeof fetch>;
   let client: AksharaDaClient;
   beforeEach(() => {
     fetchFn = jest.fn(fetch);
-    client = new AksharaDaClient(
-      {
+    client = new AksharaDaClient({
+      root: {
         chainId: ETHGATE_NODE_TEST_CHAINS['1'].chainId,
-        name: ETHGATE_NODE_TEST_CHAINS['1'].name,
+        meta: ETHGATE_NODE_TEST_CHAINS['1'].meta,
         parent: undefined,
         parentId: undefined,
         rpcs: ETHGATE_NODE_TEST_CHAINS['1'].rpcs,
         extra: ETHGATE_NODE_TEST_CHAINS['1'],
       },
       fetchFn,
-    );
+      batchScheduleFn: undefined as any,
+    });
   });
 
   it('can fetch genesis', async () => {

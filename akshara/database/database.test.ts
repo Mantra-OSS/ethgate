@@ -1,8 +1,8 @@
-import type { Address, AksharaChainId, Hash, Hex } from '@ethgate/spec-node';
-import { describe, expect, it } from '@jest/globals';
+import type { Address, AksharaChainId, Hash, Hex } from '@/spec-node';
+import { beforeEach, describe, expect, it } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 
-import { AksharaDatabase } from './database.js';
+import { AksharaDatabase } from './database';
 
 describe('AksharaDatabase', () => {
   let database: AksharaDatabase;

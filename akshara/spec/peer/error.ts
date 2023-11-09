@@ -1,4 +1,4 @@
-import type { EthereumCall } from './peer.js';
+import type { EthereumCall } from './peer';
 
 export abstract class EthereumPeerError extends Error {
   abstract readonly name: `EthereumPeer${string}Error`;

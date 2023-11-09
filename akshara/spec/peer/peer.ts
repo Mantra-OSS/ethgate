@@ -1,7 +1,7 @@
-import { RpcClient } from '@ethgate/lib-utils';
+import { RpcClient } from '@/lib-utils';
 
-// import type { EthgatePeerCallError } from './error.js';
-import type { EthereumMethod } from './methods.js';
+// import type { EthgatePeerCallError } from './error';
+import type { EthereumMethod } from './methods';
 
 export type EthereumCall<Name extends EthereumMethod['Name'] = EthereumMethod['Name']> = Extract<
   EthereumMethod,

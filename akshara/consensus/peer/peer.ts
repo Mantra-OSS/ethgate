@@ -1,12 +1,12 @@
-import { Result } from '@ethgate/lib-utils';
-import type { EthereumCall, EthereumResult } from '@ethgate/spec-node';
-import { EthereumPeerAbstract, EthereumPeerExecuteError } from '@ethgate/spec-node';
+import { Result } from '@/lib-utils';
+import type { EthereumCall, EthereumResult } from '@/spec-node';
+import { EthereumPeerAbstract, EthereumPeerExecuteError } from '@/spec-node';
 
 import {
   EthereumPeerFetchError,
   EthereumPeerJsonRpc2Error,
   EthereumPeerResponseError,
-} from './error.js';
+} from './error';
 
 export type Fetch = any;
 
@@ -17,12 +17,12 @@ export type EthereumPeerConfig = {
 
 export class EthereumPeer extends EthereumPeerAbstract {
   readonly url: string;
-  readonly #fetch: Fetch;
+  readonly fetch: Fetch;
 
   constructor(config: EthereumPeerConfig) {
     super();
     this.url = config.url;
-    this.#fetch = config.fetch;
+    this.fetch = config.fetch;
   }
 
   async post(message: unknown): Promise<unknown> {
@@ -34,7 +34,7 @@ export class EthereumPeer extends EthereumPeerAbstract {
       // mode: 'no-cors',
     };
 
-    const response = await this.#fetch(request.url, request).catch((error: unknown) => {
+    const response = await this.fetch(request.url, request).catch((error: unknown) => {
       throw new EthereumPeerFetchError(error, request);
     });
 
