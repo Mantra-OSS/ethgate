@@ -44,6 +44,15 @@ export const useNode = function useNode<TNode extends SolverNode>(id: TNode['id'
   return node;
 };
 
+export const useNode2 = function useNode<TNode extends SolverNode>(
+  id: TNode['id'],
+): TNode | undefined {
+  const { data: node } = useSWR<TNode>(id, nodeFetcher as any, {
+    // suspense: true
+  });
+  return node;
+};
+
 export const useNodes = function useNodes<TNode extends SolverNode>(
   ids: TNode['id'][],
 ): TNode[] | undefined {
