@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const solver = await getSolver();
+  const solver = getSolver();
   const resolved = await solver.resolvePath(['chains', params.chain, ...(params.path ?? [])]);
   if (!resolved) notFound();
   switch (resolved[0]) {

@@ -3,7 +3,7 @@
 import type { EdgeType, SolverNode } from '@/lib-solver';
 import { ArrowOutward } from '@mui/icons-material';
 import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
-import { createElement } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { useSolver } from '../client/backend';
@@ -27,8 +27,13 @@ export default function ConnectionPage({
   node: SolverNode;
   edgeTypeName: string;
 }) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    setReady(true);
+  }, []);
   const solver = useSolver();
   const edgeType = solver.graph.getEdgeType(edgeTypeName);
+  if (!ready) return null;
   return (
     <Grid container spacing={1} padding={1}>
       <Grid item xs={12}>

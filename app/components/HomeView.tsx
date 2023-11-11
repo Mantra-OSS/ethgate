@@ -1,6 +1,6 @@
 'use client';
 
-import { useNode } from '@/app/client/backend';
+import { useNode2 } from '@/app/client/backend';
 import type { Chain } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 
@@ -16,7 +16,8 @@ import HomeChart from './HomeChart';
 // import ChainTransactionList from './ChainTransactionList';
 
 export default function HomeView() {
-  const node = useNode<Explorer>('Explorer:');
+  const node = useNode2<Explorer>('Explorer:');
+  if (!node) return null;
 
   return (
     <>
