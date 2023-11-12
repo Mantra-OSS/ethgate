@@ -158,7 +158,7 @@ export class Solver {
       if (headSlug === undefined) {
         return ['connection', resolved, edgeType];
       }
-      switch (edgeType.name) {
+      switch (edgeType.typeName) {
         case 'ExplorerHasChain': {
           const tail = resolved as Explorer;
           const chain = Object.values(tail.data.chains).find(
@@ -219,7 +219,7 @@ export class Solver {
           break;
         }
         default: {
-          throw new Error(`Unknown edge type ${edgeType.name}`);
+          throw new Error(`Unknown edge type ${edgeType.typeName}`);
         }
       }
     }

@@ -70,7 +70,7 @@ export class EthgateSolverDatabase extends DatabaseAbstract<SolverNode, SolverEd
     const isForward = !args.last;
     const limit = isForward ? args.first! : args.last!;
 
-    const edgeType = this.graph.edgeTypes.find((edgeType) => edgeType.name === type);
+    const edgeType = this.graph.edgeTypes.find((edgeType) => edgeType.typeName === type);
     if (!edgeType) throw new Error(`edge type not found: ${type}`);
     const edges = edgeType.get(
       tailId,

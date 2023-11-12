@@ -149,7 +149,7 @@ const ConnectionListItem = memo(function ConnectionListItem<TEdge extends Solver
   const prefix = `${baseHref}${tail.meta.slug}`;
   const suffix = `${edgeType.connectionName}/${node.meta.slug}`;
   let href;
-  switch (edgeType.name) {
+  switch (edgeType.typeName) {
     case 'ChainHasTransaction': {
       href = `${prefix}/blocks/${(node as Transaction).data.blockNumber}/${suffix}`;
       break;

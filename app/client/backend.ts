@@ -68,7 +68,10 @@ export const useConnection = function useConnection<TEdge extends SolverEdge>(
   args: PageArgs<TEdge>,
 ): SWRResponse<ConnectionData<TEdge>> {
   // useDaSubscription(tailId);
-  const response = useSWR(['connection', edgeType.name, tailId, args], connectionFetcher as any);
+  const response = useSWR(
+    ['connection', edgeType.typeName, tailId, args],
+    connectionFetcher as any,
+  );
   return response;
 };
 
@@ -87,7 +90,7 @@ export const usePagination = function usePagination<TEdge extends SolverEdge>(
       if (previousPageData && !previousPageData.pageInfo.hasNextPage) return null;
       const key = [
         'connection',
-        edgeType.name,
+        edgeType.typeName,
         tailId,
         {
           first: 10,
@@ -96,7 +99,7 @@ export const usePagination = function usePagination<TEdge extends SolverEdge>(
       ];
       return key;
     },
-    [edgeType.name, tailId],
+    [edgeType.typeName, tailId],
   );
   const { data, error, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite(
     getKey,

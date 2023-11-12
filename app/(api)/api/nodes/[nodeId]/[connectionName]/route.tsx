@@ -15,7 +15,7 @@ export async function GET(request: Request, { params, searchParams }: Props) {
   if (!edgeType) notFound();
   const connection = await solver.database
     .getConnection(
-      edgeType.name,
+      edgeType.typeName,
       node.id,
       searchParams ?? {
         first: 10,

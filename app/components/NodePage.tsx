@@ -41,10 +41,10 @@ export default function NodePage({ node }: { node: SolverNode }) {
   const solver = useSolver();
   const nodeType = solver.graph.getNodeTypeById(node2.id);
   const edgeTypes = solver.graph.getEdgeTypesForNode(nodeType.name).filter((edgeType) => {
-    if (edgeType.name === 'BlockHasReceipt') {
+    if (edgeType.typeName === 'BlockHasReceipt') {
       return false;
     } else if (
-      edgeType.name === 'ChainHasChain'
+      edgeType.typeName === 'ChainHasChain'
       // && Object.keys(node).includes('parentId')
     ) {
       return false;
@@ -94,7 +94,7 @@ export function NodePageConnectionSection({
 }) {
   const tail = useNode(tailId);
   const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
-    createElement((listItemComponents as any)[edgeType.name], { nodeId: headId });
+    createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
   return (
     <Section
       title={

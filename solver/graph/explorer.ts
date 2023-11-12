@@ -34,7 +34,7 @@ export type Explorer = SolverNode<
 >;
 
 export class ExplorerHasChainType extends EdgeType2<ExplorerHasChain> {
-  name = 'ExplorerHasChain' as const;
+  typeName = 'ExplorerHasChain' as const;
   tail = explorerType;
   head = chainType;
   meta = { name: 'Chains', slug: 'chains' };
@@ -59,7 +59,7 @@ export class ExplorerHasChain extends SolverEdge<
   Chain['id'],
   object
 > {
-  static typeName = explorerHasChainType.name;
+  static typeName = explorerHasChainType.typeName;
   type = 'ExplorerHasChain' as const;
   static tail = explorerHasChainType.tail;
   static head = explorerHasChainType.head;

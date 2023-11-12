@@ -16,7 +16,7 @@ export default async function Page({ params }: Props) {
     }
     case 'connection': {
       const [, node, edgeType] = resolved;
-      return <ConnectionPage node={{ ...node }} edgeTypeName={edgeType.name} />;
+      return <ConnectionPage node={{ ...node }} edgeTypeName={edgeType.typeName} />;
     }
   }
 }

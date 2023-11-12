@@ -122,7 +122,7 @@ export type SolverEdgeTypeMeta = {
 };
 
 export interface EdgeType<T extends GraphEdge> {
-  name: T['type'];
+  typeName: T['type'];
   tail: NodeType<any>;
   head: NodeType<any>;
   connectionName: string;
@@ -136,7 +136,7 @@ export type EdgeGetFn<T extends GraphEdge> = (
 ) => GraphEdgeGenerator<T>;
 
 export abstract class EdgeType2<T extends GraphEdge = GraphEdge> {
-  abstract name: T['type'];
+  abstract typeName: T['type'];
   abstract meta: SolverEdgeTypeMeta;
   abstract tail: NodeType<any>;
   abstract head: NodeType<any>;
@@ -168,7 +168,7 @@ export abstract class SolverGraphAbstract {
   }
 
   getEdgeType<T extends EdgeType<any>>(type: string): T {
-    return this.edgeTypes.find((edgeType) => edgeType.name === type)! as T;
+    return this.edgeTypes.find((edgeType) => edgeType.typeName === type)! as T;
   }
 
   getEdgeTypesForNode<T extends EdgeType<any>>(type: string): T[] {

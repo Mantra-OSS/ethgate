@@ -77,7 +77,7 @@ export function NodeConnectionPageOverview({
   edgeType: EdgeType<any>;
 }) {
   const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
-    createElement((listItemComponents as any)[edgeType.name], { nodeId: headId });
+    createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
   return (
     <Section
       title={
