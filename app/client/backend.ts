@@ -67,68 +67,74 @@ export const useConnection = function useConnection<TEdge extends SolverEdge>(
   tailId: SolverNode['id'],
   args: PageArgs<TEdge>,
 ): SWRResponse<ConnectionData<TEdge>> {
-  // useDaSubscription(tailId);
+  const subscription = useDaSubscription(tailId);
   const response = useSWR(
     ['connection', edgeType.typeName, tailId, args],
     connectionFetcher as any,
+    // { refreshInterval: 1000 },
   );
+  const mutate = response.mutate;
+  useEffect(() => {
+    mutate();
+  }, [mutate, subscription.data]);
   return response;
 };
 
-export type Pagination<TEdge extends SolverEdge> = {
-  edges: TEdge[];
-  loadNext?: () => void;
-};
-export const usePagination = function usePagination<TEdge extends SolverEdge>(
-  edgeType: EdgeType<TEdge>,
-  tailId: SolverNode['id'],
-  args: PageArgs<TEdge>,
-): Pagination<TEdge> {
-  const subscription = useDaSubscription(tailId);
-  const getKey: SWRInfiniteKeyLoader<ConnectionPage<TEdge>> = useCallback(
-    (pageIndex, previousPageData) => {
-      if (previousPageData && !previousPageData.pageInfo.hasNextPage) return null;
-      const key = [
-        'connection',
-        edgeType.typeName,
-        tailId,
-        {
-          first: 10,
-          after: previousPageData?.pageInfo.endCursor,
-        },
-      ];
-      return key;
-    },
-    [edgeType.typeName, tailId],
-  );
-  const { data, error, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite(
-    getKey,
-    connectionFetcher as any,
-  );
-  const pages = data ? data : [];
-  const lastPage = pages[pages.length - 1];
-  const edges = pages.flatMap((page) => page.edges);
+// export type Pagination<TEdge extends SolverEdge> = {
+//   edges: TEdge[];
+//   loadNext?: () => void;
+// };
+// export const usePagination = function usePagination<TEdge extends SolverEdge>(
+//   edgeType: EdgeType<TEdge>,
+//   tailId: SolverNode['id'],
+//   args: PageArgs<TEdge>,
+// ): Pagination<TEdge> {
+//   // const subscription = useDaSubscription(tailId);
+//   const getKey: SWRInfiniteKeyLoader<ConnectionPage<TEdge>> = useCallback(
+//     (pageIndex, previousPageData) => {
+//       if (previousPageData && !previousPageData.pageInfo.hasNextPage) return null;
+//       const key = [
+//         'connection',
+//         edgeType.typeName,
+//         tailId,
+//         {
+//           first: 10,
+//           after: previousPageData?.pageInfo.endCursor,
+//         },
+//       ];
+//       return key;
+//     },
+//     [edgeType.typeName, tailId],
+//   );
+//   const { data, error, isLoading, isValidating, mutate, setSize, size } = useSWRInfinite(
+//     getKey,
+//     connectionFetcher as any,
+//     { refreshInterval: 1000 },
+//   );
+//   const pages = data ? data : [];
+//   const lastPage = pages[pages.length - 1];
+//   const edges = pages.flatMap((page) => page.edges);
 
-  useEffect(() => {
-    // mutate();
-  }, [mutate, subscription.data]);
+//   // useEffect(() => {
+//   //   // mutate();
+//   // }, [mutate, subscription.data]);
 
-  // const loadNext = useCallback(() => {
-  //   if (isLoading || isValidating) {
-  //     return;
-  //   }
-  //   console.log('loadNext', pages.length);
-  //   setSize(pages.length + 1);
-  // }, [setSize, pages.length, isLoading, isValidating]);
+//   // const loadNext = useCallback(() => {
+//   //   if (isLoading || isValidating) {
+//   //     return;
+//   //   }
+//   //   console.log('loadNext', pages.length);
+//   //   setSize(pages.length + 1);
+//   // }, [setSize, pages.length, isLoading, isValidating]);
 
-  const loadNext = undefined;
-  const hasNext = lastPage?.pageInfo.hasNextPage;
+//   const loadNext = undefined;
+//   const hasNext = lastPage?.pageInfo.hasNextPage;
 
-  return {
-    edges,
-    loadNext: hasNext && !isValidating && !isLoading ? loadNext : undefined,
-  };
-};
+//   return {
+//     edges,
+//     loadNext: hasNext && !isValidating && !isLoading ? loadNext : undefined,
+//   };
+// };
 
 export const useDaSubscription = function useDaSubscription(nodeId: SolverNode['id']) {
   const node = useNode(nodeId);

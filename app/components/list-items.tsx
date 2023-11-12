@@ -52,14 +52,14 @@ export function BlockListItem({ nodeId: blockId }: { nodeId: Block['id'] }) {
         </Stack>
         <Stack direction="column" flex={2}>
           <Typography>
-            Block Hash: <FormattedHex value={node.data.hash} />
+            <FormattedHex value={node.data.hash} />
           </Typography>
-          <Typography>
+          {/* <Typography>
             Miner: <FormattedHex value={node.data.miner} />
-          </Typography>
+          </Typography> */}
         </Stack>
         <Stack direction="column" flex={1} textAlign="right">
-          <Typography>{node.data.transactions.length} txns</Typography>
+          {/* <Typography>{node.data.transactions.length} txns</Typography> */}
           <Typography variant="caption">
             <FormattedRelativeTime
               value={timestamp.diff(now).as('seconds')}
@@ -87,19 +87,19 @@ export function TransactionListItem({ nodeId: transactionId }: { nodeId: Transac
           <Typography>
             <FormattedHex value={node.data.hash} />
           </Typography>
-          <Typography>{node.data.blockNumber}</Typography>
+          {/* <Typography>{node.data.blockNumber}</Typography> */}
         </Stack>
         <Stack direction="column" flex={2}>
           <Typography>
-            From: <FormattedHex value={node.data.from} />
+            <FormattedHex value={node.data.from} />
           </Typography>
-          <Typography>
+          {/* <Typography>
             To:
             {node.data.to && <FormattedHex value={node.data.to} />}
-          </Typography>
+          </Typography> */}
         </Stack>
         <Stack direction="column" flex={1} textAlign="right">
-          <Typography>{(parseInt(node.data.value, 16) / 10 ** 18).toFixed(2)} ETH</Typography>
+          {/* <Typography>{(parseInt(node.data.value, 16) / 10 ** 18).toFixed(2)} ETH</Typography> */}
           <Typography variant="caption">
             <FormattedRelativeTime
               value={timestamp.diff(now).as('seconds')}

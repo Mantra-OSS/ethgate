@@ -1,10 +1,19 @@
 'use client';
 
-import { useConnection, useNode, usePagination, useSolver } from '@/app/client/backend';
+import { useConnection, useNode, useSolver } from '@/app/client/backend';
 import type { ConnectionPage, Log, SolverEdge, SolverNode, Transaction } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
-import { Collapse, List, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
-import { memo, useCallback, useEffect, useTransition } from 'react';
+import {
+  Collapse,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Skeleton,
+  Stack,
+} from '@mui/material';
+import { Fragment, memo, useCallback, useEffect, useTransition } from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
@@ -25,13 +34,22 @@ export default function ConnectionList<TEdge extends SolverEdge>({
   renderItem: (edge: TEdge) => React.ReactNode;
   paginate?: boolean;
 }) {
-  const { edges, loadNext } = usePagination(edgeType, tailId, { first: 10 });
+  const {
+    data: pageData,
+    error,
+    isLoading,
+    isValidating,
+    mutate,
+  } = useConnection(edgeType, tailId, { first: 10 });
+  const pages = pageData ? [pageData] : [];
+  const lastPage = pages[pages.length - 1];
+  const edges = pages.flatMap((page) => page.edges);
 
   // const onLoadNext = useCallback(() => {
   //   setSize((size) => size + 1);
   // }, [setSize]);
 
-  const itemCount = edges.length + 1;
+  // const itemCount = edges.length + 1;
 
   return (
     <>
@@ -90,36 +108,45 @@ export default function ConnectionList<TEdge extends SolverEdge>({
         )}
       </InfiniteLoader> */}
       <InfiniteList
-        // loadPrevious={hasPrevious && onLoadPrevious}
-        loadNext={paginate && loadNext}
+      // loadPrevious={hasPrevious && onLoadPrevious}
+      // loadNext={paginate && loadNext}
       >
         <List>
-          <TransitionGroup>
-            {edges.map((edge) => (
-              <Collapse key={edge.headId}>
-                <ListItem dense disablePadding>
-                  <FallbackBoundary
-                    suspenseFallback={
-                      <ListItemButton>
-                        <ListItemAvatar>
-                          <NodeAvatar nodeId={edge.headId} />
-                        </ListItemAvatar>
-                      </ListItemButton>
-                    }
+          {/* <TransitionGroup> */}
+          {edges.map((edge) => (
+            <Fragment key={edge.headId}>
+              {/* <Collapse key={edge.headId} in={true}> */}
+              <ListItem dense disablePadding>
+                <FallbackBoundary
+                  suspenseFallback={
+                    <ListItemButton>
+                      <ListItemAvatar>
+                        <NodeAvatar nodeId={edge.headId} />
+                      </ListItemAvatar>
+                      <ListItemText>
+                        <Stack direction="row" spacing={1} justifyContent="space-between">
+                          <Stack direction="column" flex={1}>
+                            <Skeleton width={100} />
+                          </Stack>
+                        </Stack>
+                      </ListItemText>
+                    </ListItemButton>
+                  }
+                >
+                  <ConnectionListItem
+                    baseHref={baseHref}
+                    edgeType={edgeType}
+                    tailId={tailId}
+                    edge={edge}
                   >
-                    <ConnectionListItem
-                      baseHref={baseHref}
-                      edgeType={edgeType}
-                      tailId={tailId}
-                      edge={edge}
-                    >
-                      {renderItem(edge as any)}
-                    </ConnectionListItem>
-                  </FallbackBoundary>
-                </ListItem>
-              </Collapse>
-            ))}
-          </TransitionGroup>
+                    {renderItem(edge as any)}
+                  </ConnectionListItem>
+                </FallbackBoundary>
+              </ListItem>
+              {/* </Collapse> */}
+            </Fragment>
+          ))}
+          {/* </TransitionGroup> */}
         </List>
       </InfiniteList>
     </>

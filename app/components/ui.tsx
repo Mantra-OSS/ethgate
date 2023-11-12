@@ -118,13 +118,17 @@ export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
         </Avatar>
       }
     >
-      {node && (
+      {node ? (
         <Avatar alt={node.meta.name} src={imageSrc}>
           {body ??
             node.meta.name
               .split(' ')
               .map((word) => word[0])
               .join('')}
+        </Avatar>
+      ) : (
+        <Avatar>
+          <NodeTypeIcon nodeType={nodeType.name} color="primary" />
         </Avatar>
       )}
     </Suspense>
