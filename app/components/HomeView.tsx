@@ -3,8 +3,9 @@
 import { useNode2 } from '@/app/client/backend';
 import type { Chain } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
-
 // import ChainBlockList from './ChainBlockList';
+import Image from 'next/image';
+
 import type { Explorer } from '../../solver/graph/explorer';
 import { FallbackBoundary } from '../components/ui';
 import { SuspenseFallback } from '../components/ui';
@@ -38,7 +39,7 @@ export default function HomeView() {
           <Grid item xs={12}>
             <Paper>
               <Typography variant="h3" padding={1} textAlign="center">
-                Chains
+                Explore Chains
               </Typography>
               <Divider />
               <FallbackBoundary>
@@ -57,6 +58,17 @@ export default function HomeView() {
                   })}
                 </Stack>
               </FallbackBoundary>
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper>
+              <Typography variant="h3" padding={1} textAlign="center">
+                Follow Us
+              </Typography>
+              <Divider />
+              <Stack direction="row" padding={3} justifyContent="center">
+                <Image src="/qr" width={200} height={200} alt="QR code for ethgate.io" />
+              </Stack>
             </Paper>
           </Grid>
         </Grid>
