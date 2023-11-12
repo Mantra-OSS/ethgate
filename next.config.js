@@ -18,11 +18,6 @@ const nextConfig = {
   },
   transpilePackages: ['@mantra-oss/chains'],
   compiler: {
-    // https://nextjs.org/docs/architecture/nextjs-compiler#relay
-    // relay: {
-    //   // This should match relay.config.js
-    //   ...relayConfig,
-    // },
     // https://nextjs.org/docs/architecture/nextjs-compiler#remove-react-properties
     reactRemoveProperties: true,
   },

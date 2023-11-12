@@ -1,7 +1,5 @@
 import type { AksharaAbstract, AksharaConfig, AksharaObjectKey } from '@/lib-node';
 import { chains } from '@mantra-oss/chains';
-import type { ExecutionResult, GraphQLArgs } from 'graphql';
-import { execute, parse, subscribe } from 'graphql';
 
 import { EthgateSolverDatabase as SolverDatabase } from '../database';
 import type { Block, Chain, Transaction } from '../graph';
@@ -24,12 +22,6 @@ import type { Explorer } from '../graph/explorer';
 import { ExplorerHasChain, explorerType } from '../graph/explorer';
 import type { EdgeType, NodeType, SolverEdge, SolverNode } from '../graph/graph/abstract';
 import { SolverGraphAbstract } from '../graph/graph/abstract';
-
-import type { SolverSchema } from './schema';
-import { createSolverSchema } from './schema';
-
-export type Variables = GraphQLArgs['variableValues'];
-export type QueryResponse = ExecutionResult;
 
 export class SolverGraph extends SolverGraphAbstract {
   nodeTypes: NodeType<any>[] = [
