@@ -272,12 +272,12 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
           return solver.database.getNode(id);
         },
       },
-      root: {
-        type: new GraphQLNonNull(root),
-        resolve(parent, args, solver) {
-          return solver.getRoot();
-        },
-      },
+      // root: {
+      //   type: new GraphQLNonNull(root),
+      //   resolve(parent, args, solver) {
+      //     return solver.getRoot();
+      //   },
+      // },
     },
   });
 
