@@ -1,5 +1,7 @@
 import type { AksharaAbstract, AksharaConfig, AksharaObjectKey } from '@/lib-node';
 import { chains } from '@mantra-oss/chains';
+import type { ExecutionResult, GraphQLArgs } from 'graphql';
+import { execute, parse, subscribe } from 'graphql';
 
 import { EthgateSolverDatabase as SolverDatabase } from '../database';
 import type { Block, Chain, Transaction } from '../graph';
@@ -22,6 +24,12 @@ import type { Explorer } from '../graph/explorer';
 import { ExplorerHasChain, explorerType } from '../graph/explorer';
 import type { EdgeType, NodeType, SolverEdge, SolverNode } from '../graph/graph/abstract';
 import { SolverGraphAbstract } from '../graph/graph/abstract';
+
+import type { SolverSchema } from './schema';
+import { createSolverSchema } from './schema';
+
+export type Variables = GraphQLArgs['variableValues'];
+export type QueryResponse = ExecutionResult;
 
 export class SolverGraph extends SolverGraphAbstract {
   nodeTypes: NodeType<any>[] = [
@@ -55,13 +63,13 @@ export type SolverConfig = {
 export class Solver {
   chains: AksharaConfig['chains'];
   graph: SolverGraph;
-  // schema: SolverSchema;
+  schema: SolverSchema;
   database: SolverDatabase;
 
   constructor(config: SolverConfig) {
     this.chains = chains as any;
     this.graph = new SolverGraph();
-    // this.schema = createSolverSchema(this.graph);
+    this.schema = createSolverSchema(this.graph);
     this.database =
       config.database ??
       new SolverDatabase({
@@ -70,40 +78,40 @@ export class Solver {
       });
   }
 
-  // async query(source: string, variableValues: Variables): Promise<QueryResponse> {
-  //   const document = parse(source);
-  //   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  //   const contextValue = this;
-  //   const rootValue = undefined;
-  //   const result = await execute({
-  //     schema: this.schema,
-  //     document,
-  //     variableValues,
-  //     contextValue,
-  //     rootValue,
-  //     // typeResolver: (
-  //     //   value: any,
-  //     //   context: SchemaContext,
-  //     //   info: GraphQLResolveInfo,
-  //     //   abstractType: GraphQLAbstractType,
-  //     // ) => {
-  //     //   console.log('hey');
-  //     //   return value[info.fieldName](value, context, info, abstractType);
-  //     // },
-  //     // fieldResolver: (source: any, args: any, context: SchemaContext, info: GraphQLResolveInfo) => {
-  //     //   console.log('hey');
-  //     //   return source[info.fieldName](source, args, context, info);
-  //     // },
-  //   });
+  async query(source: string, variableValues: Variables): Promise<QueryResponse> {
+    const document = parse(source);
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const contextValue = this;
+    const rootValue = undefined;
+    const result = await execute({
+      schema: this.schema,
+      document,
+      variableValues,
+      contextValue,
+      rootValue,
+      // typeResolver: (
+      //   value: any,
+      //   context: SchemaContext,
+      //   info: GraphQLResolveInfo,
+      //   abstractType: GraphQLAbstractType,
+      // ) => {
+      //   console.log('hey');
+      //   return value[info.fieldName](value, context, info, abstractType);
+      // },
+      // fieldResolver: (source: any, args: any, context: SchemaContext, info: GraphQLResolveInfo) => {
+      //   console.log('hey');
+      //   return source[info.fieldName](source, args, context, info);
+      // },
+    });
 
-  //   if (result.errors) {
-  //     if (result.errors.length === 1) throw result.errors[0];
-  //     result.errors.forEach((err) => console.error(err.originalError));
-  //   }
+    if (result.errors) {
+      if (result.errors.length === 1) throw result.errors[0];
+      result.errors.forEach((err) => console.error(err.originalError));
+    }
 
-  //   // You get weird errors if you don't stringify and parse the result.
-  //   return JSON.parse(JSON.stringify(result));
-  // }
+    // You get weird errors if you don't stringify and parse the result.
+    return JSON.parse(JSON.stringify(result));
+  }
   // async subscribe(source: string, variableValues: Variables): Promise<Observable<QueryResponse>> {
   //   const document = parse(source);
 

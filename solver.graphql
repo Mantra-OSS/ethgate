@@ -1,0 +1,227 @@
+type Query {
+  node(id: ID!): Node
+  root: Explorer!
+}
+
+interface Node {
+  id: ID!
+  meta: NodeMeta!
+  data: JSONObject!
+  connection(type: String!, first: Int, after: String): Connection!
+}
+
+type NodeMeta {
+  name: String!
+  slug: String!
+  chainId: ID
+}
+
+scalar JSONObject
+
+interface Connection {
+  edges: [Edge!]!
+  pageInfo: PageInfo!
+}
+
+interface Edge {
+  type: String!
+  tailId: ID!
+  tail: Node!
+  headId: ID!
+  head: Node!
+  node: Node!
+  cursor: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Explorer implements Node {
+  id: ID!
+  meta: NodeMeta!
+  data: JSONObject!
+  connection(type: String!, first: Int, after: String): Connection!
+  chains(first: Int, after: String): ExplorerHasChainConnection!
+}
+
+type ExplorerHasChainConnection implements Connection {
+  edges: [ExplorerHasChainEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ExplorerHasChainEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Explorer!
+  headId: ID!
+  head: Chain!
+  node: Chain!
+  cursor: String!
+}
+
+type Chain implements Node {
+  id: ID!
+  meta: NodeMeta!
+  data: JSONObject!
+  connection(type: String!, first: Int, after: String): Connection!
+  chains(first: Int, after: String): ChainHasChainConnection!
+  blocks(first: Int, after: String): ChainHasBlockConnection!
+  transactions(first: Int, after: String): ChainHasTransactionConnection!
+}
+
+type ChainHasChainConnection implements Connection {
+  edges: [ChainHasChainEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ChainHasChainEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Chain!
+  headId: ID!
+  head: Chain!
+  node: Chain!
+  cursor: String!
+}
+
+type ChainHasBlockConnection implements Connection {
+  edges: [ChainHasBlockEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ChainHasBlockEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Chain!
+  headId: ID!
+  head: Block!
+  node: Block!
+  cursor: String!
+}
+
+type Block implements Node {
+  id: ID!
+  meta: NodeMeta!
+  data: JSONObject!
+  connection(type: String!, first: Int, after: String): Connection!
+  transactions(first: Int, after: String): BlockHasTransactionConnection!
+  logs(first: Int, after: String): BlockHasLogConnection!
+  receipts(first: Int, after: String): BlockHasReceiptConnection!
+}
+
+type BlockHasTransactionConnection implements Connection {
+  edges: [BlockHasTransactionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BlockHasTransactionEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Block!
+  headId: ID!
+  head: Transaction!
+  node: Transaction!
+  cursor: String!
+}
+
+type Transaction implements Node {
+  id: ID!
+  meta: NodeMeta!
+  data: JSONObject!
+  connection(type: String!, first: Int, after: String): Connection!
+  logs(first: Int, after: String): TransactionHasLogConnection!
+}
+
+type TransactionHasLogConnection implements Connection {
+  edges: [TransactionHasLogEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TransactionHasLogEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Transaction!
+  headId: ID!
+  head: Log!
+  node: Log!
+  cursor: String!
+}
+
+type Log implements Node {
+  id: ID!
+  meta: NodeMeta!
+  data: JSONObject!
+  connection(type: String!, first: Int, after: String): Connection!
+}
+
+type BlockHasLogConnection implements Connection {
+  edges: [BlockHasLogEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BlockHasLogEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Block!
+  headId: ID!
+  head: Log!
+  node: Log!
+  cursor: String!
+}
+
+type BlockHasReceiptConnection implements Connection {
+  edges: [BlockHasReceiptEdge!]!
+  pageInfo: PageInfo!
+}
+
+type BlockHasReceiptEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Block!
+  headId: ID!
+  head: Receipt!
+  node: Receipt!
+  cursor: String!
+}
+
+type Receipt implements Node {
+  id: ID!
+  meta: NodeMeta!
+  data: JSONObject!
+  connection(type: String!, first: Int, after: String): Connection!
+  logs(first: Int, after: String): ReceiptHasLogConnection!
+}
+
+type ReceiptHasLogConnection implements Connection {
+  edges: [ReceiptHasLogEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ReceiptHasLogEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Receipt!
+  headId: ID!
+  head: Log!
+  node: Log!
+  cursor: String!
+}
+
+type ChainHasTransactionConnection implements Connection {
+  edges: [ChainHasTransactionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ChainHasTransactionEdge implements Edge {
+  type: String!
+  tailId: ID!
+  tail: Chain!
+  headId: ID!
+  head: Transaction!
+  node: Transaction!
+  cursor: String!
+}
