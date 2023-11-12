@@ -5,6 +5,7 @@ import type { Chain } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 // import ChainBlockList from './ChainBlockList';
 import Image from 'next/image';
+import { QRCodeSVG } from 'qrcode.react';
 
 import type { Explorer } from '../../solver/graph/explorer';
 import { FallbackBoundary } from '../components/ui';
@@ -67,7 +68,7 @@ export default function HomeView() {
               </Typography>
               <Divider />
               <Stack direction="row" padding={3} justifyContent="center">
-                <Image src="/qr" width={200} height={200} alt="QR code for ethgate.io" />
+                <QRCodeSVG value="https://twitter.com/ethgate_io" includeMargin size={200} />
               </Stack>
             </Paper>
           </Grid>

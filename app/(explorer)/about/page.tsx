@@ -19,6 +19,7 @@ import {
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
+import { QRCodeSVG } from 'qrcode.react';
 import { useState } from 'react';
 
 import EthgateLogo from '../EthgateLogo';
@@ -118,8 +119,7 @@ export default function AboutPage() {
             </Button>
           </Stack>
         </Box>
-
-        <Image src="/qr" width={128} height={128} alt="QR code for ethgate.io" />
+        <QRCodeSVG value="https://twitter.com/ethgate_io" includeMargin size={128} />
       </AboutSection>
     </ExplorerLayout>
   );
