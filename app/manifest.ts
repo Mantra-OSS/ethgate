@@ -10,27 +10,27 @@ export default function manifest(): MetadataRoute.Manifest {
     // theme_color: theme.palette.primary.main,
     // background_color: theme.palette.background.default,
     icons: [
-      {
-        src: '/favicon.ico',
-        sizes: 'any',
-        type: 'image/x-icon',
-      },
-      {
-        src: '/pwa-192x192.png',
-        sizes: '192x192',
-        type: 'image/png',
-      },
-      {
-        src: '/pwa-512x512.png',
-        sizes: '512x512',
-        type: 'image/png',
-      },
-      {
-        src: '/maskable-icon-512x512.png',
-        sizes: '512x512',
-        type: 'image/png',
-        purpose: 'maskable',
-      },
+      // {
+      //   src: '/favicon.ico',
+      //   sizes: 'any',
+      //   type: 'image/x-icon',
+      // },
+      // {
+      //   src: '/pwa-192x192.png',
+      //   sizes: '192x192',
+      //   type: 'image/png',
+      // },
+      // {
+      //   src: '/pwa-512x512.png',
+      //   sizes: '512x512',
+      //   type: 'image/png',
+      // },
+      // {
+      //   src: '/maskable-icon-512x512.png',
+      //   sizes: '512x512',
+      //   type: 'image/png',
+      //   purpose: 'maskable',
+      // },
     ],
   };
 }
