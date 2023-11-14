@@ -5,7 +5,7 @@ import type { Chain, ChainHasBlock, ConnectionPage, EdgeType } from '@/lib-solve
 import { type PageArgs, Solver, type SolverEdge, type SolverNode } from '@/lib-solver';
 import { chains } from '@mantra-oss/chains';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
-import { useCallback, useEffect, useMemo } from 'react';
+import { startTransition, useCallback, useEffect, useMemo } from 'react';
 import type { Fetcher, SWRResponse } from 'swr';
 import useSWR, { useSWRConfig } from 'swr';
 import type { SWRInfiniteKeyLoader } from 'swr/infinite';
@@ -73,10 +73,12 @@ export const useConnection = function useConnection<TEdge extends SolverEdge>(
     connectionFetcher as any,
     // { refreshInterval: 1000 },
   );
-  const mutate = response.mutate;
+  const { data, mutate } = response;
   useEffect(() => {
-    mutate();
-  }, [mutate, subscription.data]);
+    startTransition(() => {
+      mutate(data);
+    });
+  }, [mutate, data, subscription.data]);
   return response;
 };
 
