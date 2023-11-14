@@ -224,9 +224,15 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
           },
           head: {
             type: new GraphQLNonNull(head),
+            resolve(parent, args, solver) {
+              return solver.database.readNode(parent.headId);
+            },
           },
           node: {
             type: new GraphQLNonNull(head),
+            resolve(parent, args, solver) {
+              return solver.database.readNode(parent.headId);
+            },
           },
           cursor: {
             type: new GraphQLNonNull(GraphQLString),

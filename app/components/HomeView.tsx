@@ -1,11 +1,14 @@
 'use client';
 
+import type { HomeViewChainQuery } from '@/__generated__/HomeViewChainQuery.graphql';
 import { useConnection, useNode, useNode2, useSolver } from '@/app/client/backend';
 import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 // import ChainBlockList from './ChainBlockList';
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
+import { useLazyLoadQuery } from 'react-relay';
+import { graphql } from 'relay-runtime';
 
 import type { Explorer } from '../../solver/graph/explorer';
 import { FallbackBoundary, NodeAvatar } from '../components/ui';
@@ -46,7 +49,7 @@ export default function HomeView() {
               <FallbackBoundary>
                 <Stack direction="row" padding={3} justifyContent="space-between">
                   {Object.values(node.data.chains).map((chain) => {
-                    return <HomeChain chainId={`Chain:${chain.chainId}`} key={chain.chainId} />;
+                    return <HomeViewChain chainId={`Chain:${chain.chainId}`} key={chain.chainId} />;
                   })}
                 </Stack>
               </FallbackBoundary>
@@ -69,8 +72,29 @@ export default function HomeView() {
   );
 }
 
-function HomeChain({ chainId }: { chainId: any }) {
-  const chain = useNode<Chain>(chainId);
+const homeViewChainQuery = graphql`
+  query HomeViewChainQuery($chainId: ID!) {
+    node(id: $chainId) {
+      id
+      meta {
+        name
+        slug
+      }
+      connection(type: "ChainHasBlock", first: 1) {
+        edges {
+          node {
+            id
+            data
+          }
+        }
+      }
+    }
+  }
+`;
+
+function HomeViewChain({ chainId }: { chainId: any }) {
+  const { node: chain } = useLazyLoadQuery<HomeViewChainQuery>(homeViewChainQuery, { chainId });
+  // const chain = useNode<Chain>(chainId);
   // const solver = useSolver();
   // const edgeType = solver.graph.getEdgeType('ChainHasBlock');
   // const {
@@ -83,13 +107,17 @@ function HomeChain({ chainId }: { chainId: any }) {
   // const latestChainHasBlock: ChainHasBlock | undefined = pageData?.edges[0];
   // const latestBlock: Block | undefined = useNode<Block>(latestChainHasBlock?.headId as any);
 
+  if (!chain?.id || !chain?.meta) {
+    throw new Error(`Chain not found: ${chainId}`);
+  }
+
   return (
     <Link href={`/${chain.meta.slug}`} style={{ textDecoration: 'none' }}>
       <Stack direction="row" alignItems="center" spacing={2}>
         <NodeAvatar nodeId={chain.id} />
         {/* <Stack direction="column" spacing={0}>
           <Typography variant="h6">{chain.meta.name}</Typography>
-          <Typography variant="h6">{latestBlock?.data.number}</Typography>
+          <Typography variant="h6">{chain.connection.edges[0]?.node.data.number}</Typography>
         </Stack> */}
       </Stack>
     </Link>
