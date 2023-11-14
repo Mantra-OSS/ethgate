@@ -1,14 +1,14 @@
 'use client';
 
-import { useNode2 } from '@/app/client/backend';
-import type { Chain } from '@/lib-solver';
+import { useConnection, useNode, useNode2, useSolver } from '@/app/client/backend';
+import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 // import ChainBlockList from './ChainBlockList';
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
 
 import type { Explorer } from '../../solver/graph/explorer';
-import { FallbackBoundary } from '../components/ui';
+import { FallbackBoundary, NodeAvatar } from '../components/ui';
 import { SuspenseFallback } from '../components/ui';
 
 import HomeChart from './HomeChart';
@@ -46,16 +46,7 @@ export default function HomeView() {
               <FallbackBoundary>
                 <Stack direction="row" padding={3} justifyContent="space-between">
                   {Object.values(node.data.chains).map((chain) => {
-                    return (
-                      <Link href={`/${chain.meta.slug}`} key={chain.chainId}>
-                        <Avatar alt={chain.meta.name} src={`/statics/${chain.chainId}.svg`}>
-                          {chain.meta.name
-                            .split(' ')
-                            .map((word: string) => word[0])
-                            .join('')}
-                        </Avatar>
-                      </Link>
-                    );
+                    return <HomeChain chainId={`Chain:${chain.chainId}`} key={chain.chainId} />;
                   })}
                 </Stack>
               </FallbackBoundary>
@@ -75,5 +66,32 @@ export default function HomeView() {
         </Grid>
       </Container>
     </>
+  );
+}
+
+function HomeChain({ chainId }: { chainId: any }) {
+  const chain = useNode<Chain>(chainId);
+  // const solver = useSolver();
+  // const edgeType = solver.graph.getEdgeType('ChainHasBlock');
+  // const {
+  //   data: pageData,
+  //   error,
+  //   isLoading,
+  //   isValidating,
+  //   mutate,
+  // } = useConnection(edgeType, chainId, { first: 11 });
+  // const latestChainHasBlock: ChainHasBlock | undefined = pageData?.edges[0];
+  // const latestBlock: Block | undefined = useNode<Block>(latestChainHasBlock?.headId as any);
+
+  return (
+    <Link href={`/${chain.meta.slug}`} style={{ textDecoration: 'none' }}>
+      <Stack direction="row" alignItems="center" spacing={2}>
+        <NodeAvatar nodeId={chain.id} />
+        {/* <Stack direction="column" spacing={0}>
+          <Typography variant="h6">{chain.meta.name}</Typography>
+          <Typography variant="h6">{latestBlock?.data.number}</Typography>
+        </Stack> */}
+      </Stack>
+    </Link>
   );
 }
