@@ -104,7 +104,7 @@ export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
         case 'Transaction':
         case 'Receipt':
         case 'Log': {
-          body = <NodeTypeIcon nodeType={node.type} color="primary" />;
+          body = <NodeTypeIcon nodeType={node.type} color="primary" sx={{ fontSize: 22 }} />;
           break;
         }
       }
@@ -113,13 +113,13 @@ export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
   return (
     <Suspense
       fallback={
-        <Avatar>
-          <NodeTypeIcon nodeType={nodeType.name} color="primary" />
+        <Avatar sx={{ width: 32, height: 32 }}>
+          <NodeTypeIcon nodeType={nodeType.name} color="primary" sx={{ fontSize: 22 }} />
         </Avatar>
       }
     >
       {node ? (
-        <Avatar alt={node.meta.name} src={imageSrc}>
+        <Avatar sx={{ width: 32, height: 32 }} alt={node.meta.name} src={imageSrc}>
           {body ??
             node.meta.name
               .split(' ')
@@ -127,8 +127,8 @@ export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
               .join('')}
         </Avatar>
       ) : (
-        <Avatar>
-          <NodeTypeIcon nodeType={nodeType.name} color="primary" />
+        <Avatar sx={{ width: 32, height: 32 }}>
+          <NodeTypeIcon nodeType={nodeType.name} color="primary" sx={{ fontSize: 22 }} />
         </Avatar>
       )}
     </Suspense>
