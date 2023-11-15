@@ -153,7 +153,10 @@ export class Akshara extends AksharaAbstract {
             const client = this.getDaClient(key.chainId);
             const block = await client.execute('GetLatestBlock', [key]);
 
-            await this.database.putBlock(block);
+            if (!block) {
+              console.error('No block found for', key);
+              await this.database.putBlock(block);
+            }
 
             return Result.ok(block) satisfies CallResult;
           }

@@ -6,8 +6,9 @@ import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 // import ChainBlockList from './ChainBlockList';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
-import { useLazyLoadQuery } from 'react-relay';
+import { useLazyLoadQuery, useSubscription } from 'react-relay';
 import { graphql } from 'relay-runtime';
 
 import type { Explorer } from '../../solver/graph/explorer';
@@ -47,7 +48,13 @@ export default function HomeView() {
               </Typography>
               <Divider />
               <FallbackBoundary>
-                <Stack direction="row" padding={3} justifyContent="space-between">
+                <Stack
+                  direction="row"
+                  p={2}
+                  gap={2}
+                  justifyContent="space-around"
+                  flexWrap={'wrap'}
+                >
                   {Object.values(node.data.chains).map((chain) => {
                     return <HomeViewChain chainId={`Chain:${chain.chainId}`} key={chain.chainId} />;
                   })}
@@ -80,12 +87,40 @@ const homeViewChainQuery = graphql`
         name
         slug
       }
-      connection(type: "ChainHasBlock", first: 1) {
+      connection(type: "ChainHasBlock", first: 1)
+        @connection(key: "HomeViewChainQuery_connection") {
+        __id
         edges {
           node {
-            id
-            data
+            ...HomeViewChainFragment @relay(mask: false)
           }
+        }
+        pageInfo {
+          startCursor
+        }
+      }
+    }
+  }
+`;
+
+const homeViewChainFragment = graphql`
+  fragment HomeViewChainFragment on Block {
+    id
+    data
+  }
+`;
+
+const homeViewChainSubscriptionQuery = graphql`
+  subscription HomeViewChainSubscriptionQuery(
+    $chainId: ID!
+    $type: String!
+    $before: String
+    $connection: ID!
+  ) {
+    node_connection(id: $chainId, type: $type, before: $before) {
+      edges @prependEdge(connections: [$connection]) {
+        node {
+          ...HomeViewChainFragment @relay(mask: false)
         }
       }
     }
@@ -94,6 +129,16 @@ const homeViewChainQuery = graphql`
 
 function HomeViewChain({ chainId }: { chainId: any }) {
   const { node: chain } = useLazyLoadQuery<HomeViewChainQuery>(homeViewChainQuery, { chainId });
+  if (!chain) notFound();
+  useSubscription({
+    subscription: homeViewChainSubscriptionQuery,
+    variables: {
+      chainId,
+      type: 'ChainHasBlock',
+      // before: chain.connection.pageInfo.startCursor,
+      connection: chain.connection.__id,
+    },
+  });
   // const chain = useNode<Chain>(chainId);
   // const solver = useSolver();
   // const edgeType = solver.graph.getEdgeType('ChainHasBlock');
@@ -107,18 +152,14 @@ function HomeViewChain({ chainId }: { chainId: any }) {
   // const latestChainHasBlock: ChainHasBlock | undefined = pageData?.edges[0];
   // const latestBlock: Block | undefined = useNode<Block>(latestChainHasBlock?.headId as any);
 
-  if (!chain?.id || !chain?.meta) {
-    throw new Error(`Chain not found: ${chainId}`);
-  }
-
   return (
     <Link href={`/${chain.meta.slug}`} style={{ textDecoration: 'none' }}>
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="row" alignItems="center" spacing={2} flexWrap={'nowrap'}>
         <NodeAvatar nodeId={chain.id} />
-        {/* <Stack direction="column" spacing={0}>
+        <Stack direction="column" spacing={0}>
           <Typography variant="h6">{chain.meta.name}</Typography>
           <Typography variant="h6">{chain.connection.edges[0]?.node.data.number}</Typography>
-        </Stack> */}
+        </Stack>
       </Stack>
     </Link>
   );

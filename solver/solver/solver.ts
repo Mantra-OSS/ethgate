@@ -2,6 +2,8 @@ import type { AksharaAbstract, AksharaConfig, AksharaObjectKey } from '@/lib-nod
 import { chains } from '@mantra-oss/chains';
 import type { ExecutionResult, GraphQLArgs } from 'graphql';
 import { execute, parse, subscribe } from 'graphql';
+import type { Observable } from 'rxjs';
+import { from, map } from 'rxjs';
 
 import { EthgateSolverDatabase as SolverDatabase } from '../database';
 import type { Block, Chain, Transaction } from '../graph';
@@ -112,34 +114,35 @@ export class Solver {
     // You get weird errors if you don't stringify and parse the result.
     return JSON.parse(JSON.stringify(result));
   }
-  // async subscribe(source: string, variableValues: Variables): Promise<Observable<QueryResponse>> {
-  //   const document = parse(source);
+  async subscribe(source: string, variableValues: Variables): Promise<Observable<QueryResponse>> {
+    const document = parse(source);
 
-  //   const contextValue = new SchemaContext(this.#database);
-  //   const rootValue = undefined;
-  //   const results = await subscribe({
-  //     schema: this.schema,
-  //     document,
-  //     variableValues,
-  //     contextValue,
-  //     rootValue,
-  //   }).then((results) => {
-  //     if (Symbol.asyncIterator in results) {
-  //       return from(results);
-  //     }
-  //     return from([results]);
-  //   });
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const contextValue = this;
+    const rootValue = undefined;
+    const results = await subscribe({
+      schema: this.schema,
+      document,
+      variableValues,
+      contextValue,
+      rootValue,
+    }).then((results) => {
+      if (Symbol.asyncIterator in results) {
+        return from(results);
+      }
+      return from([results]);
+    });
 
-  //   return results.pipe(
-  //     map((item) => {
-  //       if (item.errors) {
-  //         item.errors.forEach((err) => console.error(err.originalError));
-  //       }
-  //       // You get weird errors if you don't stringify and parse the result.
-  //       return JSON.parse(JSON.stringify(item));
-  //     }),
-  //   );
-  // }
+    return results.pipe(
+      map((item) => {
+        if (item.errors) {
+          item.errors.forEach((err) => console.error(err.originalError));
+        }
+        // You get weird errors if you don't stringify and parse the result.
+        return JSON.parse(JSON.stringify(item));
+      }),
+    );
+  }
 
   async getRoot(): Promise<Explorer> {
     const root = await explorerType.get('Explorer:', this.database);

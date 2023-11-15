@@ -11,8 +11,8 @@ import {
   Observable as RelayObservable,
   Store,
 } from 'relay-runtime';
-// import type { Observable } from 'rxjs';
-// import { from, mergeMap, tap } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { from, mergeMap, tap } from 'rxjs';
 
 import { useSolver } from './backend';
 
@@ -45,23 +45,22 @@ class PunkerRelayNetwork implements ReturnType<typeof Network.create> {
   };
 
   subscribe: SubscribeFunction = (request, variables) => {
-    throw new Error('Not implemented');
-    // const results = from(useSolver().subscribe(request.text!, variables)).pipe(
-    //   mergeMap((result) => result),
-    // ) as Observable<GraphQLResponse>;
+    const results = from(useSolver().subscribe(request.text!, variables)).pipe(
+      mergeMap((result) => result),
+    ) as Observable<GraphQLResponse>;
 
-    // return RelayObservable.create<GraphQLResponse>((subscriber) =>
-    //   results
-    //     .pipe(
-    //       // TODO: Do not tap if DEBUG_RESULTS is false
-    //       tap((result) => {
-    //         if (DEBUG_RESULTS) {
-    //           console.log(result);
-    //         }
-    //       }),
-    //     )
-    //     .subscribe(subscriber),
-    // );
+    return RelayObservable.create<GraphQLResponse>((subscriber) =>
+      results
+        .pipe(
+          // TODO: Do not tap if DEBUG_RESULTS is false
+          tap((result) => {
+            if (DEBUG_RESULTS) {
+              console.log(result);
+            }
+          }),
+        )
+        .subscribe(subscriber),
+    );
   };
 
   execute: ExecuteFunction = Network.create(this.query, this.subscribe).execute;
