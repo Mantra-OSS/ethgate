@@ -1,6 +1,7 @@
 'use client';
 
-import type { HomeViewChainQuery } from '@/__generated__/HomeViewChainQuery.graphql';
+import type { HomeViewChain_node$key } from '@/__generated__/HomeViewChain_node.graphql';
+import type { HomeViewQuery } from '@/__generated__/HomeViewQuery.graphql';
 import { useConnection, useNode, useNode2, useSolver } from '@/app/client/backend';
 import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
@@ -8,7 +9,8 @@ import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
-import { useLazyLoadQuery, useSubscription } from 'react-relay';
+import { Fragment } from 'react';
+import { useFragment, useLazyLoadQuery, useSubscription } from 'react-relay';
 import { graphql } from 'relay-runtime';
 
 import type { Explorer } from '../../solver/graph/explorer';
@@ -22,9 +24,23 @@ import HomeChart from './HomeChart';
 // import ChainOverview from './ChainOverview';
 // import ChainTransactionList from './ChainTransactionList';
 
+const homeViewQuery = graphql`
+  query HomeViewQuery {
+    root {
+      chains {
+        edges {
+          headId
+          node {
+            ...HomeViewChain_node
+          }
+        }
+      }
+    }
+  }
+`;
+
 export default function HomeView() {
-  const node = useNode2<Explorer>('Explorer:');
-  if (!node) return <SuspenseFallback />;
+  const data = useLazyLoadQuery<HomeViewQuery>(homeViewQuery, {});
 
   return (
     <>
@@ -55,9 +71,11 @@ export default function HomeView() {
                   justifyContent="space-around"
                   flexWrap={'wrap'}
                 >
-                  {Object.values(node.data.chains).map((chain) => {
-                    return <HomeViewChain chainId={`Chain:${chain.chainId}`} key={chain.chainId} />;
-                  })}
+                  {data.root.chains.edges.map((edge) => (
+                    <Fragment key={edge.headId}>
+                      <HomeViewChain chain={edge.node} />
+                    </Fragment>
+                  ))}
                 </Stack>
               </FallbackBoundary>
             </Paper>
@@ -79,32 +97,29 @@ export default function HomeView() {
   );
 }
 
-const homeViewChainQuery = graphql`
-  query HomeViewChainQuery($chainId: ID!) {
-    node(id: $chainId) {
-      id
-      meta {
-        name
-        slug
+const HomeViewChain_node = graphql`
+  fragment HomeViewChain_node on Chain {
+    id
+    meta {
+      name
+      slug
+    }
+    connection(type: "ChainHasBlock", first: 1) @connection(key: "HomeViewChainQuery_connection") {
+      __id
+      edges {
+        node {
+          ...HomeViewChain_block @relay(mask: false)
+        }
       }
-      connection(type: "ChainHasBlock", first: 1)
-        @connection(key: "HomeViewChainQuery_connection") {
-        __id
-        edges {
-          node {
-            ...HomeViewChainFragment @relay(mask: false)
-          }
-        }
-        pageInfo {
-          startCursor
-        }
+      pageInfo {
+        startCursor
       }
     }
   }
 `;
 
-const homeViewChainFragment = graphql`
-  fragment HomeViewChainFragment on Block {
+const HomeViewChain_block = graphql`
+  fragment HomeViewChain_block on Block {
     id
     data
   }
@@ -120,20 +135,19 @@ const homeViewChainSubscriptionQuery = graphql`
     node_connection(id: $chainId, type: $type, before: $before) {
       edges @prependEdge(connections: [$connection]) {
         node {
-          ...HomeViewChainFragment @relay(mask: false)
+          ...HomeViewChain_block @relay(mask: false)
         }
       }
     }
   }
 `;
 
-function HomeViewChain({ chainId }: { chainId: any }) {
-  const { node: chain } = useLazyLoadQuery<HomeViewChainQuery>(homeViewChainQuery, { chainId });
-  if (!chain) notFound();
+function HomeViewChain({ chain: chainFragment }: { chain: HomeViewChain_node$key }) {
+  const chain = useFragment(HomeViewChain_node, chainFragment);
   useSubscription({
     subscription: homeViewChainSubscriptionQuery,
     variables: {
-      chainId,
+      chainId: chain.id,
       type: 'ChainHasBlock',
       // before: chain.connection.pageInfo.startCursor,
       connection: chain.connection.__id,

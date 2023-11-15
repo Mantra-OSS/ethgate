@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a78c035c343322ef5c765e586e6d12a1>>
+ * @generated SignedSource<<668d98cd767d6918fb6d7bac65852654>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,21 +11,21 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { GlobalId } from "@/lib-solver";
 import { FragmentRefs } from "relay-runtime";
-export type HomeViewChainFragment$data = {
+export type HomeViewChain_block$data = {
   readonly data: any;
   readonly id: GlobalId;
-  readonly " $fragmentType": "HomeViewChainFragment";
+  readonly " $fragmentType": "HomeViewChain_block";
 };
-export type HomeViewChainFragment$key = {
-  readonly " $data"?: HomeViewChainFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"HomeViewChainFragment">;
+export type HomeViewChain_block$key = {
+  readonly " $data"?: HomeViewChain_block$data;
+  readonly " $fragmentSpreads": FragmentRefs<"HomeViewChain_block">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "HomeViewChainFragment",
+  "name": "HomeViewChain_block",
   "selections": [
     {
       "alias": null,
@@ -46,6 +46,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f469c05513ecf9c75277b9147b0aefc3";
+(node as any).hash = "859848b600d9d33a18e9d1ae677e9cc7";
 
 export default node;
