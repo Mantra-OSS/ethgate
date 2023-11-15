@@ -7,7 +7,7 @@ export type GlobalId<T extends NodeTypeName = NodeTypeName> = `${T}:${LocalId}`;
 export function parseGlobalId<TNodeType extends NodeTypeName>(
   id: GlobalId<TNodeType>,
 ): [type: TNodeType, localId: LocalId] {
-  const match = id.match(globalIdRegExp);
+  const match = globalIdRegExp.exec(id);
   if (!match) {
     throw new Error(`Invalid object id: ${id}`);
   }
