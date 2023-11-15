@@ -225,3 +225,11 @@ type ChainHasTransactionEdge implements Edge {
   node: Transaction!
   cursor: String!
 }
+
+type Subscription {
+  node_connection(id: ID!, type: String!, first: Int, before: String): NodeConnectionSubscription
+}
+
+type NodeConnectionSubscription {
+  edges: [Edge!]!
+}

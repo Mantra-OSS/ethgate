@@ -20,7 +20,7 @@ import {
   printSchema,
 } from 'graphql';
 
-import type { NodeType, SolverEdge, SolverNode } from '../graph';
+import type { Chain, NodeType, SolverEdge, SolverNode } from '../graph';
 
 import { GraphQLJSONObject } from './schema/scalars';
 import type { Solver, SolverGraph } from './solver';
@@ -191,6 +191,15 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
                       type: GraphQLString,
                     },
                   },
+                  async resolve(parent, args, solver): Promise<ConnectionData> {
+                    return {
+                      ...(await solver.database
+                        .getConnection(edgeType.typeName, parent.id, args)
+                        .collect()),
+                      type: args.type,
+                      tailId: parent.id,
+                    };
+                  },
                 },
               ];
             }),
@@ -218,6 +227,9 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
           },
           tail: {
             type: new GraphQLNonNull(tail),
+            resolve(parent, args, solver) {
+              return solver.database.readNode(parent.tailId);
+            },
           },
           headId: {
             type: new GraphQLNonNull(GraphQLID),
@@ -266,29 +278,130 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
 
   const query = new GraphQLObjectType<undefined, Solver>({
     name: 'Query',
-    fields: {
-      node: {
-        type: nodeInterface,
+    fields: () => {
+      // const nodeFields = Object.fromEntries(
+      //   nodes.map((node) => {
+      //     return [
+      //       node.name,
+      //       {
+      //         type: new GraphQLNonNull(node),
+      //         args: {
+      //           id: {
+      //             type: new GraphQLNonNull(GraphQLID),
+      //           },
+      //         },
+      //         resolve(_, { id }, solver) {
+      //           return solver.database.getNode(id);
+      //         },
+      //       },
+      //     ];
+      //   }),
+      // );
+
+      return {
+        node: {
+          type: nodeInterface,
+          args: {
+            id: {
+              type: new GraphQLNonNull(GraphQLID),
+            },
+          },
+          resolve(_, { id }, solver) {
+            return solver.database.getNode(id);
+          },
+        },
+        root: {
+          type: new GraphQLNonNull(root),
+          resolve(parent, args, solver) {
+            return solver.getRoot();
+          },
+        },
+      };
+    },
+  });
+
+  const subscription = new GraphQLObjectType<void, Solver>({
+    name: 'Subscription',
+    fields: () => ({
+      node_connection: {
+        type: new GraphQLObjectType({
+          name: 'NodeConnectionSubscription',
+          fields: {
+            edges: {
+              type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(edgeInterface))),
+            },
+          },
+        }),
         args: {
           id: {
             type: new GraphQLNonNull(GraphQLID),
           },
+          type: {
+            type: new GraphQLNonNull(GraphQLString),
+          },
+          first: {
+            type: GraphQLInt,
+          },
+          before: {
+            // type: new GraphQLNonNull(GraphQLString),
+            type: GraphQLString,
+          },
         },
-        resolve(_, { id }, solver) {
-          return solver.database.getNode(id);
+        async *subscribe(
+          parent,
+          args: {
+            id: SolverNode['id'];
+            type: SolverEdge['type'];
+            first?: number;
+            before?: SolverEdge['headId'];
+          },
+          solver,
+        ): AsyncGenerator<{ node_connection: { edges: SolverEdge[] } } | void> {
+          const tail = await solver.database.readNode(args.id);
+          const chainId = tail.meta.chainId;
+          if (!chainId) throw new Error(`chainId not found: ${args.id}`);
+          const chain = await solver.database.readNode<Chain>(chainId);
+          const updates = solver.database.networkUpdates(chain.id);
+          let before = args.before;
+
+          let updatePromise = updates.next();
+          while (true) {
+            if (!before) {
+              const item = await solver.database
+                .getConnection(args.type, chain.id, {
+                  first: 1,
+                })
+                .next();
+              if (item.done) {
+                await updatePromise;
+                updatePromise = updates.next();
+                yield;
+                continue;
+              }
+              const edge = item.value;
+              before = edge.headId;
+            }
+
+            const connection = solver.database.getConnection(args.type, chain.id, {
+              first: args.first,
+              before,
+            });
+            // TODO: Do not collect, but yield in batches
+            const { edges } = await connection.collect();
+            yield { node_connection: { edges: edges.reverse() } };
+
+            await updatePromise;
+            updatePromise = updates.next();
+            yield;
+          }
         },
       },
-      root: {
-        type: new GraphQLNonNull(root),
-        resolve(parent, args, solver) {
-          return solver.getRoot();
-        },
-      },
-    },
+    }),
   });
 
   const schema = new GraphQLSchema({
     query,
+    subscription,
   });
   return schema;
 };
