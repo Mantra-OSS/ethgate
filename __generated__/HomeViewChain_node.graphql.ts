@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<67d29b704b688660c089971181503a84>>
+ * @generated SignedSource<<905bc3bdef7349c6d3e648c095653fd1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,7 @@ export type HomeViewChain_node$data = {
     readonly name: string;
     readonly slug: string;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"NodeAvatar_node">;
   readonly " $fragmentType": "HomeViewChain_node";
 };
 export type HomeViewChain_node$key = {
@@ -61,6 +62,11 @@ return {
   },
   "name": "HomeViewChain_node",
   "selections": [
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "NodeAvatar_node"
+    },
     (v0/*: any*/),
     {
       "alias": null,
@@ -205,6 +211,6 @@ return {
 };
 })();
 
-(node as any).hash = "a03daff5b22348604caf499e272ac6af";
+(node as any).hash = "94cfb82e20b43f7d59fb49676afc55b3";
 
 export default node;

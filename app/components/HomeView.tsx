@@ -14,10 +14,11 @@ import { useFragment, useLazyLoadQuery, useSubscription } from 'react-relay';
 import { graphql } from 'relay-runtime';
 
 import type { Explorer } from '../../solver/graph/explorer';
-import { FallbackBoundary, NodeAvatar } from '../components/ui';
+import { FallbackBoundary, NodeAvatar2 } from '../components/ui';
 import { SuspenseFallback } from '../components/ui';
 
 import HomeChart from './HomeChart';
+import { NodeAvatar } from './NodeAvatar';
 
 // import ChainDescendantBlockList from './ChainDescendantBlockList';
 // import ChainChainList from './ChainChainList';
@@ -99,6 +100,7 @@ export default function HomeView() {
 
 const HomeViewChain_node = graphql`
   fragment HomeViewChain_node on Chain {
+    ...NodeAvatar_node
     id
     meta {
       name
@@ -157,7 +159,7 @@ function HomeViewChain({ chain: chainFragment }: { chain: HomeViewChain_node$key
   return (
     <Link href={`/${chain.meta.slug}`} style={{ textDecoration: 'none' }}>
       <Stack direction="row" alignItems="center" spacing={2} flexWrap={'nowrap'}>
-        <NodeAvatar nodeId={chain.id} />
+        <NodeAvatar node={chain} />
         <Stack direction="column" spacing={0}>
           <Typography variant="h6">{chain.meta.name}</Typography>
           <Typography variant="h6">{chain.connection.edges[0]?.node.data.number}</Typography>

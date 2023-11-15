@@ -19,7 +19,7 @@ import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
 
 import InfiniteList from './InfiniteList';
-import { FallbackBoundary, NodeAvatar, SuspenseFallback } from './ui';
+import { FallbackBoundary, NodeAvatar2, SuspenseFallback } from './ui';
 
 export default function ConnectionList<TEdge extends SolverEdge>({
   baseHref,
@@ -121,7 +121,7 @@ export default function ConnectionList<TEdge extends SolverEdge>({
                     suspenseFallback={
                       <ListItemButton>
                         <ListItemAvatar>
-                          <NodeAvatar nodeId={edge.headId} />
+                          <NodeAvatar2 nodeId={edge.headId} />
                         </ListItemAvatar>
                         <ListItemText>
                           <Stack direction="row" spacing={1} justifyContent="space-between">
@@ -194,7 +194,7 @@ const ConnectionListItem = memo(function ConnectionListItem<TEdge extends Solver
   return (
     <ListItemButton href={href}>
       <ListItemAvatar>
-        <NodeAvatar nodeId={edge.headId} />
+        <NodeAvatar2 nodeId={edge.headId} />
       </ListItemAvatar>
       {children}
     </ListItemButton>

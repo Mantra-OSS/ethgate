@@ -16,7 +16,7 @@ import {
   TransactionListItem,
   listItemComponents,
 } from './list-items';
-import { FallbackBoundary, NodeAvatar, Section } from './ui';
+import { FallbackBoundary, NodeAvatar2, Section } from './ui';
 
 // import ChainBlockList from './ChainBlockList';
 
@@ -39,7 +39,7 @@ export default function ConnectionPage({
       <Grid item xs={12}>
         <Paper>
           <Stack direction="row" alignItems="center" gap={1} p={1}>
-            <NodeAvatar nodeId={node.id} />
+            <NodeAvatar2 nodeId={node.id} />
             <Stack>
               <Typography variant="h4" flex={1}>
                 {node.meta.name}{' '}

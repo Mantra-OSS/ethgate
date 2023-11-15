@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b84336aff4605f7e913b47f04003a3a1>>
+ * @generated SignedSource<<16a843d6c965c1d3cd2aed711c54a8ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type NodePageQuery$data = {
     readonly meta: {
       readonly name: string;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"NodePageConnectionSection_node" | "NodePageOverview_node">;
+    readonly " $fragmentSpreads": FragmentRefs<"NodeAvatar_node" | "NodePageConnectionSection_node" | "NodePageOverview_node">;
   } | null | undefined;
 };
 export type NodePageQuery = {
@@ -89,6 +89,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "NodePageConnectionSection_node"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "NodeAvatar_node"
           },
           (v2/*: any*/),
           {
@@ -163,16 +168,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "df07f62f3af626899b6b804158b87a19",
+    "cacheID": "be6d37e987dbfcaf983e6bb403f6a949",
     "id": null,
     "metadata": {},
     "name": "NodePageQuery",
     "operationKind": "query",
-    "text": "query NodePageQuery(\n  $nodeId: ID!\n) {\n  node(id: $nodeId) {\n    __typename\n    ...NodePageOverview_node\n    ...NodePageConnectionSection_node\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment NodePageConnectionSection_node on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodePageOverview_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n    slug\n  }\n  data\n}\n"
+    "text": "query NodePageQuery(\n  $nodeId: ID!\n) {\n  node(id: $nodeId) {\n    __typename\n    ...NodePageOverview_node\n    ...NodePageConnectionSection_node\n    ...NodeAvatar_node\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n\nfragment NodePageConnectionSection_node on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodePageOverview_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n    slug\n  }\n  data\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c5ffa8665b51dc1408b4a69f9d6e2194";
+(node as any).hash = "e5dd6338a349d39d1013b4b7b0d99dc3";
 
 export default node;

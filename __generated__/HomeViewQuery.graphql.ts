@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2d2d93379a82b807517f25e2a67c365f>>
+ * @generated SignedSource<<ab7acdf191f34c99fd2b9b6e0069cfe5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -305,6 +305,14 @@ return {
                         "key": "HomeViewChainQuery_connection",
                         "kind": "LinkedHandle",
                         "name": "connection"
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": [
+                          (v3/*: any*/)
+                        ],
+                        "type": "Node",
+                        "abstractKey": "__isNode"
                       }
                     ],
                     "storageKey": null
@@ -322,12 +330,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "33360c49cfe3088aa51ed7dd14c5dd30",
+    "cacheID": "85083331eccc4096a7698d09884009fc",
     "id": null,
     "metadata": {},
     "name": "HomeViewQuery",
     "operationKind": "query",
-    "text": "query HomeViewQuery {\n  root {\n    chains {\n      edges {\n        headId\n        node {\n          ...HomeViewChain_node\n          id\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment HomeViewChain_node on Chain {\n  id\n  meta {\n    name\n    slug\n  }\n  connection(type: \"ChainHasBlock\", first: 1) {\n    __typename\n    edges {\n      __typename\n      node {\n        __typename\n        ... on Block {\n          id\n          data\n        }\n        id\n      }\n      __isEdge: __typename\n      cursor\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query HomeViewQuery {\n  root {\n    chains {\n      edges {\n        headId\n        node {\n          ...HomeViewChain_node\n          id\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment HomeViewChain_node on Chain {\n  ...NodeAvatar_node\n  id\n  meta {\n    name\n    slug\n  }\n  connection(type: \"ChainHasBlock\", first: 1) {\n    __typename\n    edges {\n      __typename\n      node {\n        __typename\n        ... on Block {\n          id\n          data\n        }\n        id\n      }\n      __isEdge: __typename\n      cursor\n    }\n    pageInfo {\n      startCursor\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n"
   }
 };
 })();

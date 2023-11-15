@@ -23,7 +23,7 @@ import { graphql, useFragment, useLazyLoadQuery } from 'react-relay';
 
 // import ChainChart from './ChainChart';
 import { useNow } from './now';
-import { FallbackBoundary, NodeAvatar } from './ui';
+import { FallbackBoundary, NodeAvatar2 } from './ui';
 
 export const nodePageOverviewFragment = graphql`
   fragment NodePageOverview_node on Node {
@@ -123,7 +123,7 @@ export function ChainRow({ chainId }: { chainId: Chain['id'] }) {
       <Typography>Chain</Typography>
       {chain ? (
         <Link href={`/${chain.meta.slug}`}>
-          <NodeAvatar nodeId={chain.id} />
+          <NodeAvatar2 nodeId={chain.id} />
         </Link>
       ) : (
         <Skeleton width={300} />

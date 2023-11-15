@@ -14,15 +14,17 @@ import { graphql } from 'relay-runtime';
 import { useNode, useSolver } from '../client/backend';
 
 import ConnectionList from './ConnectionList';
+import { NodeAvatar } from './NodeAvatar';
 import { NodePageOverview } from './NodePageOverview';
 import { listItemComponents } from './list-items';
-import { FallbackBoundary, NodeAvatar, Section } from './ui';
+import { FallbackBoundary, Section } from './ui';
 
 const nodePageQuery = graphql`
   query NodePageQuery($nodeId: ID!) {
     node(id: $nodeId) {
       ...NodePageOverview_node
       ...NodePageConnectionSection_node
+      ...NodeAvatar_node
       id
       meta {
         name
@@ -59,7 +61,7 @@ export default function NodePage({ nodeId }: { nodeId: SolverNode['id'] }) {
         <Grid item xs={12}>
           <Paper>
             <Stack direction="row" alignItems="center" gap={1} p={1} pl={2}>
-              <NodeAvatar nodeId={node.id} />
+              <NodeAvatar node={node} />
               <Stack>
                 <Typography variant="h3" flex={1}>
                   {node.meta.name}

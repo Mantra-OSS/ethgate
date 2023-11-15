@@ -6,6 +6,7 @@ import type { DefaultComponentProps } from '@mui/material/OverridableComponent';
 import { Suspense } from 'react';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
+import { graphql } from 'relay-runtime';
 
 import EthgateLogo from '../(explorer)/EthgateLogo';
 import { useNode2, useSolver } from '../client/backend';
@@ -84,7 +85,8 @@ export function NodeTypeIcon({
   }
 }
 
-export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
+/** @deprecated */
+export function NodeAvatar2({ nodeId }: { nodeId: SolverNode['id'] }) {
   const solver = useSolver();
   const nodeType = solver.graph.getNodeTypeById(nodeId);
   const node = useNode2(nodeId);
