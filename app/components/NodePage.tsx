@@ -1,5 +1,6 @@
 'use client';
-// import type { NodePageQuery } from '@/__generated__/NodePageQuery.graphql';
+import type { NodePageConnectionSection_node$key } from '@/__generated__/NodePageConnectionSection_node.graphql';
+import type { NodePageQuery } from '@/__generated__/NodePageQuery.graphql';
 import type { SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { ArrowOutward } from '@mui/icons-material';
@@ -7,39 +8,39 @@ import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } fro
 import { notFound } from 'next/navigation';
 import { createElement, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-// import { useLazyLoadQuery } from 'react-relay';
-// import { graphql } from 'relay-runtime';
+import { useFragment, useLazyLoadQuery } from 'react-relay';
+import { graphql } from 'relay-runtime';
 
 import { useNode, useSolver } from '../client/backend';
 
 import ConnectionList from './ConnectionList';
+import { NodePageOverview } from './NodePageOverview';
 import { listItemComponents } from './list-items';
-import { overviewComponents } from './overviews';
 import { FallbackBoundary, NodeAvatar, Section } from './ui';
 
-// const nodePageQuery = graphql`
-//   query NodePageQuery($id: ID!) {
-//     node(id: $id) {
-//       id
-//       meta {
-//         name
-//       }
-//       data
-//     }
-//   }
-// `;
+const nodePageQuery = graphql`
+  query NodePageQuery($nodeId: ID!) {
+    node(id: $nodeId) {
+      ...NodePageOverview_node
+      ...NodePageConnectionSection_node
+      id
+      meta {
+        name
+      }
+      data
+    }
+  }
+`;
 
-export default function NodePage({ node }: { node: SolverNode }) {
-  // const { node: node2 } = useLazyLoadQuery<NodePageQuery>(nodePageQuery, { id: node.id });
-  // if (!node2) notFound();
-  // console.log('node2', node2);
-  const node2 = node;
+export default function NodePage({ nodeId }: { nodeId: SolverNode['id'] }) {
+  const { node } = useLazyLoadQuery<NodePageQuery>(nodePageQuery, { nodeId });
+  if (!node) notFound();
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setReady(true);
   }, []);
   const solver = useSolver();
-  const nodeType = solver.graph.getNodeTypeById(node2.id);
+  const nodeType = solver.graph.getNodeTypeById(node.id);
   const edgeTypes = solver.graph.getEdgeTypesForNode(nodeType.name).filter((edgeType) => {
     if (edgeType.typeName === 'BlockHasReceipt') {
       return false;
@@ -51,7 +52,6 @@ export default function NodePage({ node }: { node: SolverNode }) {
     }
     return true;
   });
-  const children = createElement((overviewComponents as any)[nodeType.name], { node });
   if (!ready) return null;
   return (
     <>
@@ -59,15 +59,17 @@ export default function NodePage({ node }: { node: SolverNode }) {
         <Grid item xs={12}>
           <Paper>
             <Stack direction="row" alignItems="center" gap={1} p={1} pl={2}>
-              <NodeAvatar nodeId={node2.id} />
+              <NodeAvatar nodeId={node.id} />
               <Stack>
                 <Typography variant="h3" flex={1}>
-                  {node2.meta.name}
+                  {node.meta.name}
                 </Typography>
               </Stack>
             </Stack>
             <Divider />
-            <FallbackBoundary>{children}</FallbackBoundary>
+            <FallbackBoundary>
+              <NodePageOverview node={node} />
+            </FallbackBoundary>
           </Paper>
         </Grid>
         {edgeTypes.map((edgeType) => (
@@ -77,7 +79,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
             xs={12}
             md={edgeTypes.length > 2 ? 4 : edgeTypes.length > 1 ? 6 : 12}
           >
-            <NodePageConnectionSection tailId={node.id} edgeType={edgeType} />
+            <NodePageConnectionSection node={node} edgeType={edgeType} />
           </Grid>
         ))}
       </Grid>
@@ -85,14 +87,23 @@ export default function NodePage({ node }: { node: SolverNode }) {
   );
 }
 
+const nodePageConnectionSectionFragment = graphql`
+  fragment NodePageConnectionSection_node on Node {
+    id
+    meta {
+      slug
+    }
+  }
+`;
+
 export function NodePageConnectionSection({
-  tailId,
+  node: nodeFragment,
   edgeType,
 }: {
-  tailId: SolverNode['id'];
+  node: NodePageConnectionSection_node$key;
   edgeType: EdgeType<any>;
 }) {
-  const tail = useNode(tailId);
+  const node = useFragment(nodePageConnectionSectionFragment, nodeFragment);
   const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
     createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
   return (
@@ -119,7 +130,7 @@ export function NodePageConnectionSection({
         <>
           <Tooltip title={<FormattedMessage id="Connection.viewAll" defaultMessage="View All" />}>
             <IconButton
-              href={`${tail.meta.slug}/${edgeType.connectionName}`}
+              href={`${node.meta.slug}/${edgeType.connectionName}`}
               size="small"
               color="primary"
             >
@@ -137,7 +148,12 @@ export function NodePageConnectionSection({
       // }}
       >
         <FallbackBoundary>
-          <ConnectionList baseHref="" tailId={tailId} edgeType={edgeType} renderItem={renderItem} />
+          <ConnectionList
+            baseHref=""
+            tailId={node.id}
+            edgeType={edgeType}
+            renderItem={renderItem}
+          />
         </FallbackBoundary>
       </Stack>
       <Divider />

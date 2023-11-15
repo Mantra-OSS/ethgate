@@ -1,3 +1,4 @@
+import type { NodePageOverview_node$key } from '@/__generated__/NodePageOverview_node.graphql';
 import { useNode2 } from '@/app/client/backend';
 import type { Receipt } from '@/lib-solver';
 import {
@@ -7,27 +8,59 @@ import {
   type Log,
   SolverNode,
   type Transaction,
+  blockType,
+  chainType,
+  logType,
+  receiptType,
+  transactionType,
 } from '@/lib-solver';
 import { Avatar, Divider, Link, Skeleton, Stack, Typography } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import { green, red } from '@mui/material/colors';
 import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
-// import { graphql, useLazyLoadQuery } from 'react-relay';
+import { graphql, useFragment, useLazyLoadQuery } from 'react-relay';
 
 // import ChainChart from './ChainChart';
 import { useNow } from './now';
 import { FallbackBoundary, NodeAvatar } from './ui';
 
-export const overviewComponents = {
-  Chain: ChainOverview,
-  Block: BlockOverview,
-  Transaction: TransactionOverview,
-  Receipt: ReceiptOverview,
-  Log: LogOverview,
-};
+export const nodePageOverviewFragment = graphql`
+  fragment NodePageOverview_node on Node {
+    __typename
+    id
+    meta {
+      name
+      slug
+    }
+    data
+  }
+`;
 
-export function ChainOverview({ node }: { node: Chain }) {
+export function NodePageOverview({ node: nodeFragment }: { node: NodePageOverview_node$key }) {
+  const node = useFragment(nodePageOverviewFragment, nodeFragment);
+
+  switch (node.__typename) {
+    case 'Chain': {
+      return <ChainOverview node={nodeFragment} />;
+    }
+    case 'Block': {
+      return <BlockOverview node={nodeFragment} />;
+    }
+    case 'Transaction': {
+      return <TransactionOverview node={nodeFragment} />;
+    }
+    case 'Receipt': {
+      return <ReceiptOverview node={nodeFragment} />;
+    }
+    case 'Log': {
+      return <LogOverview node={nodeFragment} />;
+    }
+  }
+}
+
+export function ChainOverview({ node: nodeFragment }: { node: NodePageOverview_node$key }) {
+  const node = chainType.create(useFragment(nodePageOverviewFragment, nodeFragment).data);
   return (
     <>
       <Stack
@@ -48,7 +81,7 @@ export function ChainOverview({ node }: { node: Chain }) {
         />
         {node.data.parent &&
           node.data.parent.bridges.length > 0 &&
-          node.data.parent.bridges.map((bridge, index) => (
+          node.data.parent.bridges.map((bridge: any, index: any) => (
             <Chip
               key={index}
               label={`Bridge: ${bridge.url}`}
@@ -143,7 +176,8 @@ export function ReceiptRow({ receiptId }: { receiptId: Receipt['id'] }) {
   );
 }
 
-export function BlockOverview({ node }: { node: Block }) {
+export function BlockOverview({ node: nodeFragment }: { node: NodePageOverview_node$key }) {
+  const node = blockType.create(useFragment(nodePageOverviewFragment, nodeFragment).data);
   const timestamp = DateTime.fromMillis(node.data.timestamp * 1000);
   const now = useNow();
 
@@ -227,9 +261,8 @@ export function BlockOverview({ node }: { node: Block }) {
   );
 }
 
-export function TransactionOverview({ node }: { node: Transaction }) {
-  const receipt = useNode2<Receipt>(node.receiptId);
-
+export function TransactionOverview({ node: nodeFragment }: { node: NodePageOverview_node$key }) {
+  const node = transactionType.create(useFragment(nodePageOverviewFragment, nodeFragment).data);
   return (
     <Stack divider={<Divider />}>
       <ChainRow chainId={node.chainId} />
@@ -294,12 +327,13 @@ export function TransactionOverview({ node }: { node: Transaction }) {
         <Typography>Value</Typography>
         <Typography>{<FormattedNumber value={parseInt(node.data.value, 16)} />}</Typography>
       </Stack>
-      {receipt && <ReceiptOverview receipt={receipt} />}
+      {/* {receipt && <ReceiptOverview receipt={receipt} />} */}
     </Stack>
   );
 }
 
-export function ReceiptOverview({ receipt: node }: { receipt: Receipt }) {
+export function ReceiptOverview({ node: nodeFragment }: { node: NodePageOverview_node$key }) {
+  const node = receiptType.create(useFragment(nodePageOverviewFragment, nodeFragment).data);
   return (
     <Stack divider={<Divider />}>
       <ChainRow chainId={node.chainId} />
@@ -329,7 +363,8 @@ export function ReceiptOverview({ receipt: node }: { receipt: Receipt }) {
   );
 }
 
-export function LogOverview({ node }: { node: Log }) {
+export function LogOverview({ node: nodeFragment }: { node: NodePageOverview_node$key }) {
+  const node = logType.create(useFragment(nodePageOverviewFragment, nodeFragment).data);
   return (
     <Stack divider={<Divider />}>
       <ChainRow chainId={node.chainId} />
