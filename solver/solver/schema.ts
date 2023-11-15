@@ -191,6 +191,15 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
                       type: GraphQLString,
                     },
                   },
+                  async resolve(parent, args, solver): Promise<ConnectionData> {
+                    return {
+                      ...(await solver.database
+                        .getConnection(edgeType.typeName, parent.id, args)
+                        .collect()),
+                      type: args.type,
+                      tailId: parent.id,
+                    };
+                  },
                 },
               ];
             }),

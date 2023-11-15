@@ -153,18 +153,6 @@ function HomeViewChain({ chain: chainFragment }: { chain: HomeViewChain_node$key
       connection: chain.connection.__id,
     },
   });
-  // const chain = useNode<Chain>(chainId);
-  // const solver = useSolver();
-  // const edgeType = solver.graph.getEdgeType('ChainHasBlock');
-  // const {
-  //   data: pageData,
-  //   error,
-  //   isLoading,
-  //   isValidating,
-  //   mutate,
-  // } = useConnection(edgeType, chainId, { first: 11 });
-  // const latestChainHasBlock: ChainHasBlock | undefined = pageData?.edges[0];
-  // const latestBlock: Block | undefined = useNode<Block>(latestChainHasBlock?.headId as any);
 
   return (
     <Link href={`/${chain.meta.slug}`} style={{ textDecoration: 'none' }}>
