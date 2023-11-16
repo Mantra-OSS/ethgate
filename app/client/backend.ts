@@ -39,11 +39,13 @@ export function useSolver() {
   return solver;
 }
 
+/** @deprecated */
 export const useNode = function useNode<TNode extends SolverNode>(id: TNode['id']): TNode {
   const { data: node } = useSWR(id, nodeFetcher as any, { suspense: true });
   return node;
 };
 
+/** @deprecated */
 export const useNode2 = function useNode<TNode extends SolverNode>(
   id: TNode['id'] | null,
 ): TNode | undefined {
@@ -53,6 +55,7 @@ export const useNode2 = function useNode<TNode extends SolverNode>(
   return node;
 };
 
+/** @deprecated */
 export const useNodes = function useNodes<TNode extends SolverNode>(
   ids: TNode['id'][],
 ): TNode[] | undefined {
@@ -62,6 +65,7 @@ export const useNodes = function useNodes<TNode extends SolverNode>(
   return node;
 };
 
+/** @deprecated */
 export const useConnection = function useConnection<TEdge extends SolverEdge>(
   edgeType: EdgeType<TEdge>,
   tailId: SolverNode['id'],

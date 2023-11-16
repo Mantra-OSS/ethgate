@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl';
 import { useFragment, useLazyLoadQuery } from 'react-relay';
 import { graphql } from 'relay-runtime';
 
-import { useNode, useSolver } from '../client/backend';
+import { useSolver } from '../client/backend';
 
 import ConnectionList from './ConnectionList';
 import { NodeAvatar } from './NodeAvatar';
@@ -91,6 +91,7 @@ export default function NodePage({ nodeId }: { nodeId: SolverNode['id'] }) {
 
 const nodePageConnectionSectionFragment = graphql`
   fragment NodePageConnectionSection_node on Node {
+    ...ConnectionList_node
     id
     meta {
       slug
@@ -150,12 +151,7 @@ export function NodePageConnectionSection({
       // }}
       >
         <FallbackBoundary>
-          <ConnectionList
-            baseHref=""
-            tailId={node.id}
-            edgeType={edgeType}
-            renderItem={renderItem}
-          />
+          <ConnectionList node={node} baseHref="" edgeType={edgeType} renderItem={renderItem} />
         </FallbackBoundary>
       </Stack>
       <Divider />

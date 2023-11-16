@@ -1,5 +1,6 @@
 'use client';
 
+import type { ConnectionList_node$key } from '@/__generated__/ConnectionList_node.graphql';
 import { useConnection, useNode, useSolver } from '@/app/client/backend';
 import type { ConnectionPage, Log, SolverEdge, SolverNode, Transaction } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
@@ -14,33 +15,45 @@ import {
   Stack,
 } from '@mui/material';
 import { Fragment, memo, useCallback, useEffect, useTransition } from 'react';
+import { useFragment } from 'react-relay';
 import { TransitionGroup } from 'react-transition-group';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
+import { graphql } from 'relay-runtime';
 
 import InfiniteList from './InfiniteList';
 import { FallbackBoundary, NodeAvatar2, SuspenseFallback } from './ui';
 
+export const connectionListFragment = graphql`
+  fragment ConnectionList_node on Node {
+    id
+    meta {
+      slug
+    }
+  }
+`;
+
 export default function ConnectionList<TEdge extends SolverEdge>({
+  node: nodeFragment,
   baseHref,
-  tailId,
   edgeType,
   renderItem,
   paginate,
 }: {
+  node: ConnectionList_node$key;
   baseHref: string;
-  tailId: SolverNode['id'];
   edgeType: EdgeType<TEdge>;
   renderItem: (edge: TEdge) => React.ReactNode;
   paginate?: boolean;
 }) {
+  const node = useFragment(connectionListFragment, nodeFragment);
   const {
     data: pageData,
     error,
     isLoading,
     isValidating,
     mutate,
-  } = useConnection(edgeType, tailId, { first: 10 });
+  } = useConnection(edgeType, node.id, { first: 10 });
   const pages = pageData ? [pageData] : [];
   const lastPage = pages[pages.length - 1];
   const edges = pages.flatMap((page) => page.edges);
@@ -136,7 +149,7 @@ export default function ConnectionList<TEdge extends SolverEdge>({
                     <ConnectionListItem
                       baseHref={baseHref}
                       edgeType={edgeType}
-                      tailId={tailId}
+                      tailId={node.id}
                       edge={edge}
                     >
                       {renderItem(edge as any)}

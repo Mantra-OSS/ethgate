@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ff73f6d7572b7af7ecc4c44a397e1a5>>
+ * @generated SignedSource<<4c3c2d472dac7b6eeb6b042c4351e017>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,30 +11,24 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { GlobalId } from "@/lib-solver";
 import { FragmentRefs } from "relay-runtime";
-export type NodePageConnectionSection_node$data = {
+export type ConnectionList_node$data = {
   readonly id: GlobalId;
   readonly meta: {
     readonly slug: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"ConnectionList_node">;
-  readonly " $fragmentType": "NodePageConnectionSection_node";
+  readonly " $fragmentType": "ConnectionList_node";
 };
-export type NodePageConnectionSection_node$key = {
-  readonly " $data"?: NodePageConnectionSection_node$data;
-  readonly " $fragmentSpreads": FragmentRefs<"NodePageConnectionSection_node">;
+export type ConnectionList_node$key = {
+  readonly " $data"?: ConnectionList_node$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ConnectionList_node">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "NodePageConnectionSection_node",
+  "name": "ConnectionList_node",
   "selections": [
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ConnectionList_node"
-    },
     {
       "alias": null,
       "args": null,
@@ -65,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isNode"
 };
 
-(node as any).hash = "352bcedf878cdf1755ddb9d117d267c7";
+(node as any).hash = "402635d4cfa6b84d24c7485ceb752c79";
 
 export default node;

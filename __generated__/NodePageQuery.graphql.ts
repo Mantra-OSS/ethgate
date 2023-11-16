@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16a843d6c965c1d3cd2aed711c54a8ae>>
+ * @generated SignedSource<<68a821fffcfe8078786a31ae3574ec23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -168,12 +168,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "be6d37e987dbfcaf983e6bb403f6a949",
+    "cacheID": "1ff28f09223281fe4106023a10929c34",
     "id": null,
     "metadata": {},
     "name": "NodePageQuery",
     "operationKind": "query",
-    "text": "query NodePageQuery(\n  $nodeId: ID!\n) {\n  node(id: $nodeId) {\n    __typename\n    ...NodePageOverview_node\n    ...NodePageConnectionSection_node\n    ...NodeAvatar_node\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n\nfragment NodePageConnectionSection_node on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodePageOverview_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n    slug\n  }\n  data\n}\n"
+    "text": "query NodePageQuery(\n  $nodeId: ID!\n) {\n  node(id: $nodeId) {\n    __typename\n    ...NodePageOverview_node\n    ...NodePageConnectionSection_node\n    ...NodeAvatar_node\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment ConnectionList_node on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n\nfragment NodePageConnectionSection_node on Node {\n  __isNode: __typename\n  ...ConnectionList_node\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodePageOverview_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n    slug\n  }\n  data\n}\n"
   }
 };
 })();

@@ -1,14 +1,20 @@
 'use client';
 
+import type { ConnectionPageOverview_node$key } from '@/__generated__/ConnectionPageOverview_node.graphql';
+import type { ConnectionPageQuery } from '@/__generated__/ConnectionPageQuery.graphql';
 import type { EdgeType, SolverNode } from '@/lib-solver';
 import { ArrowOutward } from '@mui/icons-material';
 import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import { notFound } from 'next/navigation';
 import { createElement, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { useFragment, useLazyLoadQuery } from 'react-relay';
+import { graphql } from 'relay-runtime';
 
 import { useSolver } from '../client/backend';
 
 import ConnectionList from './ConnectionList';
+import { NodeAvatar } from './NodeAvatar';
 import {
   BlockListItem,
   ChainListItem,
@@ -18,15 +24,47 @@ import {
 } from './list-items';
 import { FallbackBoundary, NodeAvatar2, Section } from './ui';
 
-// import ChainBlockList from './ChainBlockList';
+const connectionPageQuery = graphql`
+  query ConnectionPageQuery($nodeId: ID!, $edgeTypeName: String!) {
+    node(id: $nodeId) {
+      ...NodeAvatar_node
+      ...ConnectionPageOverview_node
+      id
+      meta {
+        name
+      }
+      connection(type: $edgeTypeName, first: 10)
+        @connection(key: "ConnectionPageQuery_connection") {
+        __id
+        edges {
+          node {
+            id
+          }
+        }
+      }
+      # ...NodePageOverview_node
+      # ...NodePageConnectionSection_node
+      # id
+      # meta {
+      #   name
+      # }
+      # data
+    }
+  }
+`;
 
 export default function ConnectionPage({
-  node,
+  nodeId,
   edgeTypeName,
 }: {
-  node: SolverNode;
+  nodeId: SolverNode['id'];
   edgeTypeName: string;
 }) {
+  const { node } = useLazyLoadQuery<ConnectionPageQuery>(connectionPageQuery, {
+    nodeId,
+    edgeTypeName,
+  });
+  if (!node) notFound();
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setReady(true);
@@ -39,7 +77,7 @@ export default function ConnectionPage({
       <Grid item xs={12}>
         <Paper>
           <Stack direction="row" alignItems="center" gap={1} p={1}>
-            <NodeAvatar2 nodeId={node.id} />
+            <NodeAvatar node={node} />
             <Stack>
               <Typography variant="h4" flex={1}>
                 {node.meta.name}{' '}
@@ -63,19 +101,29 @@ export default function ConnectionPage({
         </Paper>
       </Grid>
       <Grid item xs={12}>
-        <NodeConnectionPageOverview node={node} edgeType={edgeType} />
+        <ConnectionPageOverview node={node} edgeType={edgeType} />
       </Grid>
     </Grid>
   );
 }
+export const connectionPageOverviewFragment = graphql`
+  fragment ConnectionPageOverview_node on Node {
+    ...ConnectionList_node
+    id
+    meta {
+      slug
+    }
+  }
+`;
 
-export function NodeConnectionPageOverview({
-  node,
+export function ConnectionPageOverview({
+  node: nodeFragment,
   edgeType,
 }: {
-  node: SolverNode;
+  node: ConnectionPageOverview_node$key;
   edgeType: EdgeType<any>;
 }) {
+  const node = useFragment(connectionPageOverviewFragment, nodeFragment);
   const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
     createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
   return (
@@ -115,9 +163,9 @@ export function NodeConnectionPageOverview({
       <Stack minHeight={300}>
         <FallbackBoundary>
           <ConnectionList
+            node={node}
             baseHref="../"
             paginate
-            tailId={node.id}
             edgeType={edgeType}
             renderItem={renderItem}
           />
