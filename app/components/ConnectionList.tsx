@@ -23,6 +23,7 @@ import InfiniteLoader from 'react-window-infinite-loader';
 import { graphql } from 'relay-runtime';
 
 import InfiniteList from './InfiniteList';
+import { NodeAvatar } from './NodeAvatar';
 import { FallbackBoundary, NodeAvatar2, SuspenseFallback } from './ui';
 
 export const connectionListFragment = graphql`
@@ -188,6 +189,7 @@ const connectionListItemFragment = graphql`
       }
     }
     node {
+      ...NodeAvatar_node
       id
       meta {
         slug
@@ -215,11 +217,13 @@ const ConnectionListItem = memo(function ConnectionListItem<TEdge extends Solver
   let href;
   switch (edgeType.typeName) {
     case 'ChainHasTransaction': {
-      href = `${prefix}/blocks/${(edge.node as Transaction).data.blockNumber}/${suffix}`;
+      href = `${prefix}/blocks/${(edge.node as unknown as Transaction).data.blockNumber}/${suffix}`;
       break;
     }
     case 'BlockHasLog': {
-      href = `${prefix}/transactions/${(edge.node as Log).data.transactionIndex}/${suffix}`;
+      href = `${prefix}/transactions/${
+        (edge.node as unknown as Log).data.transactionIndex
+      }/${suffix}`;
       break;
     }
     default: {
@@ -231,7 +235,7 @@ const ConnectionListItem = memo(function ConnectionListItem<TEdge extends Solver
   return (
     <ListItemButton href={href}>
       <ListItemAvatar>
-        <NodeAvatar2 nodeId={edge.headId} />
+        <NodeAvatar node={edge.node} />
       </ListItemAvatar>
       {children}
     </ListItemButton>

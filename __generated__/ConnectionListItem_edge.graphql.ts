@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d162b1ddb3f7778c8cb1c188e7e6331>>
+ * @generated SignedSource<<c9ca2f275e9b329860a1a81574ca3743>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type ConnectionListItem_edge$data = {
     readonly meta: {
       readonly slug: string;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"NodeAvatar_node">;
   };
   readonly tail: {
     readonly meta: {
@@ -85,6 +86,11 @@ return {
       "plural": false,
       "selections": [
         {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "NodeAvatar_node"
+        },
+        {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
@@ -108,6 +114,6 @@ return {
 };
 })();
 
-(node as any).hash = "6d716e50d12f67182f0ec5b100001d83";
+(node as any).hash = "2da989df41917e497ff85b04144c923d";
 
 export default node;

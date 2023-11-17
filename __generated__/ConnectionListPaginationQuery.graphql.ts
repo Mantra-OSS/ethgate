@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<72d2fe60ae8dd1715661334ddb0be750>>
+ * @generated SignedSource<<4bd7391cc6268c4996e9edb1c616f27b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -75,13 +75,24 @@ v4 = {
   "storageKey": null
 },
 v5 = {
+  "kind": "TypeDiscriminator",
+  "abstractKey": "__isNode"
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = {
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "NodeMeta",
@@ -89,17 +100,11 @@ v6 = {
   "name": "meta",
   "plural": false,
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "slug",
-      "storageKey": null
-    }
+    (v7/*: any*/)
   ],
   "storageKey": null
 },
-v7 = [
+v9 = [
   (v2/*: any*/),
   (v3/*: any*/),
   {
@@ -158,15 +163,12 @@ return {
         "plural": false,
         "selections": [
           (v4/*: any*/),
-          {
-            "kind": "TypeDiscriminator",
-            "abstractKey": "__isNode"
-          },
           (v5/*: any*/),
           (v6/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v9/*: any*/),
             "concreteType": null,
             "kind": "LinkedField",
             "name": "connection",
@@ -202,8 +204,8 @@ return {
                     "plural": false,
                     "selections": [
                       (v4/*: any*/),
-                      (v6/*: any*/),
-                      (v5/*: any*/)
+                      (v8/*: any*/),
+                      (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -218,6 +220,25 @@ return {
                       (v4/*: any*/),
                       (v5/*: any*/),
                       (v6/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "NodeMeta",
+                        "kind": "LinkedField",
+                        "name": "meta",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "name",
+                            "storageKey": null
+                          },
+                          (v7/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       {
                         "alias": null,
                         "args": null,
@@ -268,7 +289,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v9/*: any*/),
             "filters": [
               "type"
             ],
@@ -283,12 +304,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "68398223295b76ce11a3f31e2786a25f",
+    "cacheID": "007911f17d606b6b7fe9ce14cdf77950",
     "id": null,
     "metadata": {},
     "name": "ConnectionListPaginationQuery",
     "operationKind": "query",
-    "text": "query ConnectionListPaginationQuery(\n  $after: String\n  $edgeTypeName: String!\n  $first: Int!\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...ConnectionList_node_3wPyRw\n    id\n  }\n}\n\nfragment ConnectionListItem_edge on Edge {\n  __isEdge: __typename\n  headId\n  tail {\n    __typename\n    meta {\n      slug\n    }\n    id\n  }\n  node {\n    __typename\n    id\n    meta {\n      slug\n    }\n    data\n  }\n}\n\nfragment ConnectionList_node_3wPyRw on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n  connection(type: $edgeTypeName, first: $first, after: $after) {\n    __typename\n    edges {\n      __typename\n      ...ConnectionListItem_edge\n      headId\n      __isEdge: __typename\n      cursor\n      node {\n        __typename\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query ConnectionListPaginationQuery(\n  $after: String\n  $edgeTypeName: String!\n  $first: Int!\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...ConnectionList_node_3wPyRw\n    id\n  }\n}\n\nfragment ConnectionListItem_edge on Edge {\n  __isEdge: __typename\n  headId\n  tail {\n    __typename\n    meta {\n      slug\n    }\n    id\n  }\n  node {\n    __typename\n    ...NodeAvatar_node\n    id\n    meta {\n      slug\n    }\n    data\n  }\n}\n\nfragment ConnectionList_node_3wPyRw on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n  connection(type: $edgeTypeName, first: $first, after: $after) {\n    __typename\n    edges {\n      __typename\n      ...ConnectionListItem_edge\n      headId\n      __isEdge: __typename\n      cursor\n      node {\n        __typename\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n"
   }
 };
 })();

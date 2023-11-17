@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25c6f26591630fdf6da2de3914dcbbb0>>
+ * @generated SignedSource<<b66452e933e2ec81866f3a50a4e6fe50>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -78,20 +78,16 @@ v6 = {
   "storageKey": null
 },
 v7 = {
+  "kind": "TypeDiscriminator",
+  "abstractKey": "__isNode"
+},
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v8 = [
-  (v2/*: any*/),
-  {
-    "kind": "Literal",
-    "name": "type",
-    "value": "ChainHasBlock"
-  }
-],
 v9 = {
   "alias": null,
   "args": null,
@@ -100,10 +96,19 @@ v9 = {
   "name": "meta",
   "plural": false,
   "selections": [
-    (v7/*: any*/)
+    (v4/*: any*/),
+    (v8/*: any*/)
   ],
   "storageKey": null
-};
+},
+v10 = [
+  (v2/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "type",
+    "value": "ChainHasBlock"
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -177,28 +182,13 @@ return {
         "plural": false,
         "selections": [
           (v6/*: any*/),
-          {
-            "kind": "TypeDiscriminator",
-            "abstractKey": "__isNode"
-          },
+          (v7/*: any*/),
           (v3/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "NodeMeta",
-            "kind": "LinkedField",
-            "name": "meta",
-            "plural": false,
-            "selections": [
-              (v4/*: any*/),
-              (v7/*: any*/)
-            ],
-            "storageKey": null
-          },
+          (v9/*: any*/),
           (v5/*: any*/),
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v10/*: any*/),
             "concreteType": null,
             "kind": "LinkedField",
             "name": "connection",
@@ -234,7 +224,18 @@ return {
                     "plural": false,
                     "selections": [
                       (v6/*: any*/),
-                      (v9/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "NodeMeta",
+                        "kind": "LinkedField",
+                        "name": "meta",
+                        "plural": false,
+                        "selections": [
+                          (v8/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       (v3/*: any*/)
                     ],
                     "storageKey": null
@@ -248,6 +249,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v6/*: any*/),
+                      (v7/*: any*/),
                       (v3/*: any*/),
                       (v9/*: any*/),
                       (v5/*: any*/)
@@ -294,7 +296,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v10/*: any*/),
             "filters": [
               "type"
             ],
@@ -309,12 +311,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f478f4d3969fd84bcc23dd6289a9f711",
+    "cacheID": "607ae0d03b0ce668bce2e8103d7b3fb8",
     "id": null,
     "metadata": {},
     "name": "NodePageQuery",
     "operationKind": "query",
-    "text": "query NodePageQuery(\n  $nodeId: ID!\n) {\n  node(id: $nodeId) {\n    __typename\n    ...NodePageOverview_node\n    ...NodePageConnectionSection_node_VSGbW\n    ...NodeAvatar_node\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment ConnectionListItem_edge on Edge {\n  __isEdge: __typename\n  headId\n  tail {\n    __typename\n    meta {\n      slug\n    }\n    id\n  }\n  node {\n    __typename\n    id\n    meta {\n      slug\n    }\n    data\n  }\n}\n\nfragment ConnectionList_node_VSGbW on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n  connection(type: \"ChainHasBlock\", first: 20) {\n    __typename\n    edges {\n      __typename\n      ...ConnectionListItem_edge\n      headId\n      __isEdge: __typename\n      cursor\n      node {\n        __typename\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n\nfragment NodePageConnectionSection_node_VSGbW on Node {\n  __isNode: __typename\n  ...ConnectionList_node_VSGbW\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodePageOverview_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n    slug\n  }\n  data\n}\n"
+    "text": "query NodePageQuery(\n  $nodeId: ID!\n) {\n  node(id: $nodeId) {\n    __typename\n    ...NodePageOverview_node\n    ...NodePageConnectionSection_node_VSGbW\n    ...NodeAvatar_node\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment ConnectionListItem_edge on Edge {\n  __isEdge: __typename\n  headId\n  tail {\n    __typename\n    meta {\n      slug\n    }\n    id\n  }\n  node {\n    __typename\n    ...NodeAvatar_node\n    id\n    meta {\n      slug\n    }\n    data\n  }\n}\n\nfragment ConnectionList_node_VSGbW on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n  connection(type: \"ChainHasBlock\", first: 20) {\n    __typename\n    edges {\n      __typename\n      ...ConnectionListItem_edge\n      headId\n      __isEdge: __typename\n      cursor\n      node {\n        __typename\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n\nfragment NodePageConnectionSection_node_VSGbW on Node {\n  __isNode: __typename\n  ...ConnectionList_node_VSGbW\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodePageOverview_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n    slug\n  }\n  data\n}\n"
   }
 };
 })();
