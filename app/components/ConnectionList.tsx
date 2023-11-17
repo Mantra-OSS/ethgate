@@ -79,7 +79,11 @@ export default function ConnectionList<TEdge extends SolverEdge>({
   renderItem: (edge: TEdge) => React.ReactNode;
   paginate?: boolean;
 }) {
-  const { data: node } = usePaginationFragment(connectionListFragment, nodeFragment);
+  const {
+    data: node,
+    hasNext,
+    loadNext,
+  } = usePaginationFragment(connectionListFragment, nodeFragment);
   useSubscription<ConnectionListSubscriptionQuery>({
     subscription: connectionListSubscriptionQuery,
     variables: {
@@ -102,9 +106,9 @@ export default function ConnectionList<TEdge extends SolverEdge>({
   // const lastPage = pages[pages.length - 1];
   // const edges = pages.flatMap((page) => page.edges);
 
-  // const onLoadNext = useCallback(() => {
-  //   setSize((size) => size + 1);
-  // }, [setSize]);
+  const onLoadNext = useCallback(() => {
+    loadNext(10);
+  }, [loadNext]);
 
   // const itemCount = edges.length + 1;
 
@@ -165,8 +169,8 @@ export default function ConnectionList<TEdge extends SolverEdge>({
         )}
       </InfiniteLoader> */}
       <InfiniteList
-      // loadPrevious={hasPrevious && onLoadPrevious}
-      // loadNext={paginate && loadNext}
+        // loadPrevious={hasPrevious && onLoadPrevious}
+        loadNext={paginate && hasNext && onLoadNext}
       >
         <List>
           <TransitionGroup>
