@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28599b8c1951f6343663da6188f8f2d2>>
+ * @generated SignedSource<<7b4a2f64ab48c02a2673ffa72017b61e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { GlobalId } from "@/lib-solver";
 import { FragmentRefs } from "relay-runtime";
 export type ConnectionList_node$data = {
   readonly connection: {
+    readonly __id: GlobalId;
     readonly edges: ReadonlyArray<{
       readonly headId: GlobalId;
       readonly " $fragmentSpreads": FragmentRefs<"ConnectionListItem_edge">;
@@ -193,6 +194,18 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -203,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "1c1196c0c93b9300a0905e6e87b40413";
+(node as any).hash = "c1ed0b5a31ee4415cf4f3f0aa821824f";
 
 export default node;

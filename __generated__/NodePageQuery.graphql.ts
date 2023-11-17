@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b66452e933e2ec81866f3a50a4e6fe50>>
+ * @generated SignedSource<<8a23591e319da5fdbf4d35690872e4a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -290,6 +290,18 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
               }
             ],
             "storageKey": "connection(first:20,type:\"ChainHasBlock\")"

@@ -1,6 +1,7 @@
 'use client';
 
 import type { ConnectionListItem_edge$key } from '@/__generated__/ConnectionListItem_edge.graphql';
+import type { ConnectionListSubscriptionQuery } from '@/__generated__/ConnectionListSubscriptionQuery.graphql';
 import type { ConnectionList_node$key } from '@/__generated__/ConnectionList_node.graphql';
 import { useConnection, useNode, useSolver } from '@/app/client/backend';
 import type { ConnectionPage, Log, SolverEdge, SolverNode, Transaction } from '@/lib-solver';
@@ -16,7 +17,7 @@ import {
   Stack,
 } from '@mui/material';
 import { Fragment, memo, useCallback, useEffect, useTransition } from 'react';
-import { useFragment, usePaginationFragment } from 'react-relay';
+import { useFragment, usePaginationFragment, useSubscription } from 'react-relay';
 import { TransitionGroup } from 'react-transition-group';
 import { FixedSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
@@ -40,7 +41,24 @@ export const connectionListFragment = graphql`
     }
     connection(type: $edgeTypeName, first: $first, after: $after)
       @connection(key: "ConnectionList_connection") {
+      __id
       edges {
+        ...ConnectionListItem_edge
+        headId
+      }
+    }
+  }
+`;
+
+const connectionListSubscriptionQuery = graphql`
+  subscription ConnectionListSubscriptionQuery(
+    $nodeId: ID!
+    $type: String!
+    $before: String
+    $connection: ID!
+  ) {
+    node_connection(id: $nodeId, type: $type, before: $before) {
+      edges @prependEdge(connections: [$connection]) {
         ...ConnectionListItem_edge
         headId
       }
@@ -62,6 +80,15 @@ export default function ConnectionList<TEdge extends SolverEdge>({
   paginate?: boolean;
 }) {
   const { data: node } = usePaginationFragment(connectionListFragment, nodeFragment);
+  useSubscription<ConnectionListSubscriptionQuery>({
+    subscription: connectionListSubscriptionQuery,
+    variables: {
+      nodeId: node.id,
+      type: edgeType.typeName,
+      // before: chain.connection.pageInfo.startCursor,
+      connection: node.connection.__id,
+    },
+  });
   // const node = useFragment(connectionListFragment, nodeFragment);
   const edges = node.connection.edges;
   // const {
