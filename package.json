@@ -33,6 +33,7 @@
     "dexie": "^3.2.4",
     "fake-indexeddb": "^5.0.1",
     "fp-ts": "^2.16.1",
+    "graphiql": "^3.0.9",
     "graphql": "^16.8.1",
     "json-schema-to-ts": "^2.9.2",
     "lodash": "^4.17.21",
