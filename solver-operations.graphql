@@ -1,0 +1,14 @@
+fragment NodeFragment on Node {
+  id
+  meta {
+    name
+    slug
+  }
+  data
+}
+
+query NodeQuery($nodeId: ID!) {
+  node(id: $nodeId) {
+    ...NodeFragment @inline
+  }
+}

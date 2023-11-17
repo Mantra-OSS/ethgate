@@ -278,24 +278,45 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
 
   const query = new GraphQLObjectType<undefined, Solver>({
     name: 'Query',
-    fields: {
-      node: {
-        type: nodeInterface,
-        args: {
-          id: {
-            type: new GraphQLNonNull(GraphQLID),
+    fields: () => {
+      // const nodeFields = Object.fromEntries(
+      //   nodes.map((node) => {
+      //     return [
+      //       node.name,
+      //       {
+      //         type: new GraphQLNonNull(node),
+      //         args: {
+      //           id: {
+      //             type: new GraphQLNonNull(GraphQLID),
+      //           },
+      //         },
+      //         resolve(_, { id }, solver) {
+      //           return solver.database.getNode(id);
+      //         },
+      //       },
+      //     ];
+      //   }),
+      // );
+
+      return {
+        node: {
+          type: nodeInterface,
+          args: {
+            id: {
+              type: new GraphQLNonNull(GraphQLID),
+            },
+          },
+          resolve(_, { id }, solver) {
+            return solver.database.getNode(id);
           },
         },
-        resolve(_, { id }, solver) {
-          return solver.database.getNode(id);
+        root: {
+          type: new GraphQLNonNull(root),
+          resolve(parent, args, solver) {
+            return solver.getRoot();
+          },
         },
-      },
-      root: {
-        type: new GraphQLNonNull(root),
-        resolve(parent, args, solver) {
-          return solver.getRoot();
-        },
-      },
+      };
     },
   });
 
