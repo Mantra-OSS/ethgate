@@ -23,7 +23,7 @@ const nodePageQuery = graphql`
   query NodePageQuery($nodeId: ID!) {
     node(id: $nodeId) {
       ...NodePageOverview_node
-      ...NodePageConnectionSection_node
+      ...NodePageConnectionSection_node @arguments(edgeTypeName: "ChainHasBlock", first: 20)
       ...NodeAvatar_node
       id
       meta {
@@ -90,8 +90,9 @@ export default function NodePage({ nodeId }: { nodeId: SolverNode['id'] }) {
 }
 
 const nodePageConnectionSectionFragment = graphql`
-  fragment NodePageConnectionSection_node on Node {
-    ...ConnectionList_node
+  fragment NodePageConnectionSection_node on Node
+  @argumentDefinitions(edgeTypeName: { type: "String!" }, first: { type: "Int!" }) {
+    ...ConnectionList_node @arguments(edgeTypeName: $edgeTypeName, first: $first)
     id
     meta {
       slug

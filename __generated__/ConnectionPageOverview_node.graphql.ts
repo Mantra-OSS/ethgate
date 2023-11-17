@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<789d7d09cdd001bd1aa466cff6421425>>
+ * @generated SignedSource<<8e582e4186f2180f3a9b300a95ce8c25>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,13 +25,35 @@ export type ConnectionPageOverview_node$key = {
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "edgeTypeName"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "first"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "ConnectionPageOverview_node",
   "selections": [
     {
-      "args": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "edgeTypeName",
+          "variableName": "edgeTypeName"
+        },
+        {
+          "kind": "Variable",
+          "name": "first",
+          "variableName": "first"
+        }
+      ],
       "kind": "FragmentSpread",
       "name": "ConnectionList_node"
     },
@@ -65,6 +87,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isNode"
 };
 
-(node as any).hash = "c6a6af38519a82b4727a56b1cfb1ef5a";
+(node as any).hash = "f7160fda3bff0f947a63dbea6f5e9665";
 
 export default node;

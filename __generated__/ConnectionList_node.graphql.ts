@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4c3c2d472dac7b6eeb6b042c4351e017>>
+ * @generated SignedSource<<28599b8c1951f6343663da6188f8f2d2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,10 +8,16 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Fragment, ReaderFragment } from 'relay-runtime';
+import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { GlobalId } from "@/lib-solver";
 import { FragmentRefs } from "relay-runtime";
 export type ConnectionList_node$data = {
+  readonly connection: {
+    readonly edges: ReadonlyArray<{
+      readonly headId: GlobalId;
+      readonly " $fragmentSpreads": FragmentRefs<"ConnectionListItem_edge">;
+    }>;
+  };
   readonly id: GlobalId;
   readonly meta: {
     readonly slug: string;
@@ -23,10 +29,57 @@ export type ConnectionList_node$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ConnectionList_node">;
 };
 
-const node: ReaderFragment = {
-  "argumentDefinitions": [],
+const node: ReaderFragment = (function(){
+var v0 = [
+  "connection"
+];
+return {
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "after"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "edgeTypeName"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "first"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": "first",
+        "cursor": "after",
+        "direction": "forward",
+        "path": (v0/*: any*/)
+      }
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "first",
+          "cursor": "after"
+        },
+        "backward": null,
+        "path": (v0/*: any*/)
+      },
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./ConnectionListPaginationQuery.graphql'),
+      "identifierInfo": {
+        "identifierField": "id",
+        "identifierQueryVariableName": "id"
+      }
+    }
+  },
   "name": "ConnectionList_node",
   "selections": [
     {
@@ -53,12 +106,103 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": "connection",
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "type",
+          "variableName": "edgeTypeName"
+        }
+      ],
+      "concreteType": null,
+      "kind": "LinkedField",
+      "name": "__ConnectionList_connection_connection",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": null,
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ConnectionListItem_edge"
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "headId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": null,
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Node",
   "abstractKey": "__isNode"
 };
+})();
 
-(node as any).hash = "402635d4cfa6b84d24c7485ceb752c79";
+(node as any).hash = "1c1196c0c93b9300a0905e6e87b40413";
 
 export default node;

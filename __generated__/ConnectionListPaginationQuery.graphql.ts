@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1b59f55f506b0f8e150138fe2c29635>>
+ * @generated SignedSource<<72d2fe60ae8dd1715661334ddb0be750>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,84 +11,77 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 import { GlobalId } from "@/lib-solver";
-export type ConnectionPageQuery$variables = {
+export type ConnectionListPaginationQuery$variables = {
+  after?: string | null | undefined;
   edgeTypeName: string;
-  nodeId: GlobalId;
+  first: number;
+  id: GlobalId;
 };
-export type ConnectionPageQuery$data = {
+export type ConnectionListPaginationQuery$data = {
   readonly node: {
-    readonly id: GlobalId;
-    readonly meta: {
-      readonly name: string;
-    };
-    readonly " $fragmentSpreads": FragmentRefs<"ConnectionPageOverview_node" | "NodeAvatar_node">;
+    readonly " $fragmentSpreads": FragmentRefs<"ConnectionList_node">;
   } | null | undefined;
 };
-export type ConnectionPageQuery = {
-  response: ConnectionPageQuery$data;
-  variables: ConnectionPageQuery$variables;
+export type ConnectionListPaginationQuery = {
+  response: ConnectionListPaginationQuery$data;
+  variables: ConnectionListPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "edgeTypeName"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "nodeId"
-},
-v2 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "after"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "edgeTypeName"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "first"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "id"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "id",
-    "variableName": "nodeId"
+    "variableName": "id"
   }
 ],
+v2 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
 v3 = {
-  "kind": "Literal",
+  "kind": "Variable",
   "name": "first",
-  "value": 20
+  "variableName": "first"
 },
 v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v7 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "id",
   "storageKey": null
 },
-v8 = [
-  (v3/*: any*/),
-  {
-    "kind": "Variable",
-    "name": "type",
-    "variableName": "edgeTypeName"
-  }
-],
-v9 = {
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "NodeMeta",
@@ -96,35 +89,43 @@ v9 = {
   "name": "meta",
   "plural": false,
   "selections": [
-    (v7/*: any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    }
   ],
   "storageKey": null
-};
+},
+v7 = [
+  (v2/*: any*/),
+  (v3/*: any*/),
+  {
+    "kind": "Variable",
+    "name": "type",
+    "variableName": "edgeTypeName"
+  }
+];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ConnectionPageQuery",
+    "name": "ConnectionListPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
         "selections": [
           {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "NodeAvatar_node"
-          },
-          {
             "args": [
+              (v2/*: any*/),
               {
                 "kind": "Variable",
                 "name": "edgeTypeName",
@@ -133,20 +134,7 @@ return {
               (v3/*: any*/)
             ],
             "kind": "FragmentSpread",
-            "name": "ConnectionPageOverview_node"
-          },
-          (v4/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "NodeMeta",
-            "kind": "LinkedField",
-            "name": "meta",
-            "plural": false,
-            "selections": [
-              (v5/*: any*/)
-            ],
-            "storageKey": null
+            "name": "ConnectionList_node"
           }
         ],
         "storageKey": null
@@ -157,49 +145,34 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ConnectionPageQuery",
+    "name": "ConnectionListPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": null,
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v4/*: any*/),
           {
             "kind": "TypeDiscriminator",
             "abstractKey": "__isNode"
           },
-          (v4/*: any*/),
+          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
-            "args": null,
-            "concreteType": "NodeMeta",
-            "kind": "LinkedField",
-            "name": "meta",
-            "plural": false,
-            "selections": [
-              (v5/*: any*/),
-              (v7/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v7/*: any*/),
             "concreteType": null,
             "kind": "LinkedField",
             "name": "connection",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -208,7 +181,7 @@ return {
                 "name": "edges",
                 "plural": true,
                 "selections": [
-                  (v6/*: any*/),
+                  (v4/*: any*/),
                   {
                     "kind": "TypeDiscriminator",
                     "abstractKey": "__isEdge"
@@ -228,9 +201,9 @@ return {
                     "name": "tail",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       (v6/*: any*/),
-                      (v9/*: any*/),
-                      (v4/*: any*/)
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -242,9 +215,9 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v6/*: any*/),
                       (v4/*: any*/),
-                      (v9/*: any*/),
+                      (v5/*: any*/),
+                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -295,7 +268,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v7/*: any*/),
             "filters": [
               "type"
             ],
@@ -310,16 +283,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "99be5c1010835ae2e4d7c23cf078ccf0",
+    "cacheID": "68398223295b76ce11a3f31e2786a25f",
     "id": null,
     "metadata": {},
-    "name": "ConnectionPageQuery",
+    "name": "ConnectionListPaginationQuery",
     "operationKind": "query",
-    "text": "query ConnectionPageQuery(\n  $nodeId: ID!\n  $edgeTypeName: String!\n) {\n  node(id: $nodeId) {\n    __typename\n    ...NodeAvatar_node\n    ...ConnectionPageOverview_node_3T3Zpf\n    id\n    meta {\n      name\n    }\n  }\n}\n\nfragment ConnectionListItem_edge on Edge {\n  __isEdge: __typename\n  headId\n  tail {\n    __typename\n    meta {\n      slug\n    }\n    id\n  }\n  node {\n    __typename\n    id\n    meta {\n      slug\n    }\n    data\n  }\n}\n\nfragment ConnectionList_node_3T3Zpf on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n  connection(type: $edgeTypeName, first: 20) {\n    __typename\n    edges {\n      __typename\n      ...ConnectionListItem_edge\n      headId\n      __isEdge: __typename\n      cursor\n      node {\n        __typename\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ConnectionPageOverview_node_3T3Zpf on Node {\n  __isNode: __typename\n  ...ConnectionList_node_3T3Zpf\n  id\n  meta {\n    slug\n  }\n}\n\nfragment NodeAvatar_node on Node {\n  __isNode: __typename\n  __typename\n  id\n  meta {\n    name\n  }\n}\n"
+    "text": "query ConnectionListPaginationQuery(\n  $after: String\n  $edgeTypeName: String!\n  $first: Int!\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...ConnectionList_node_3wPyRw\n    id\n  }\n}\n\nfragment ConnectionListItem_edge on Edge {\n  __isEdge: __typename\n  headId\n  tail {\n    __typename\n    meta {\n      slug\n    }\n    id\n  }\n  node {\n    __typename\n    id\n    meta {\n      slug\n    }\n    data\n  }\n}\n\nfragment ConnectionList_node_3wPyRw on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n  connection(type: $edgeTypeName, first: $first, after: $after) {\n    __typename\n    edges {\n      __typename\n      ...ConnectionListItem_edge\n      headId\n      __isEdge: __typename\n      cursor\n      node {\n        __typename\n        id\n      }\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0fe722097676ab15632aa2acade24334";
+(node as any).hash = "1c1196c0c93b9300a0905e6e87b40413";
 
 export default node;

@@ -28,20 +28,20 @@ const connectionPageQuery = graphql`
   query ConnectionPageQuery($nodeId: ID!, $edgeTypeName: String!) {
     node(id: $nodeId) {
       ...NodeAvatar_node
-      ...ConnectionPageOverview_node
+      ...ConnectionPageOverview_node @arguments(edgeTypeName: $edgeTypeName, first: 20)
       id
       meta {
         name
       }
-      connection(type: $edgeTypeName, first: 10)
-        @connection(key: "ConnectionPageQuery_connection") {
-        __id
-        edges {
-          node {
-            id
-          }
-        }
-      }
+      # connection(type: $edgeTypeName, first: 10)
+      #   @connection(key: "ConnectionPageQuery_connection") {
+      #   __id
+      #   edges {
+      #     node {
+      #       id
+      #     }
+      #   }
+      # }
       # ...NodePageOverview_node
       # ...NodePageConnectionSection_node
       # id
@@ -107,8 +107,9 @@ export default function ConnectionPage({
   );
 }
 export const connectionPageOverviewFragment = graphql`
-  fragment ConnectionPageOverview_node on Node {
-    ...ConnectionList_node
+  fragment ConnectionPageOverview_node on Node
+  @argumentDefinitions(edgeTypeName: { type: "String!" }, first: { type: "Int!" }) {
+    ...ConnectionList_node @arguments(edgeTypeName: $edgeTypeName, first: $first)
     id
     meta {
       slug

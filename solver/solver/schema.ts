@@ -227,6 +227,9 @@ export const createSolverSchema = (graph: SolverGraph): SolverSchema => {
           },
           tail: {
             type: new GraphQLNonNull(tail),
+            resolve(parent, args, solver) {
+              return solver.database.readNode(parent.tailId);
+            },
           },
           headId: {
             type: new GraphQLNonNull(GraphQLID),
