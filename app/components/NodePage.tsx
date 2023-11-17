@@ -1,4 +1,5 @@
 'use client';
+import type { NodePageConnectionSectionQuery } from '@/__generated__/NodePageConnectionSectionQuery.graphql';
 import type { NodePageConnectionSection_node$key } from '@/__generated__/NodePageConnectionSection_node.graphql';
 import type { NodePageQuery } from '@/__generated__/NodePageQuery.graphql';
 import type { SolverNode } from '@/lib-solver';
@@ -23,7 +24,7 @@ const nodePageQuery = graphql`
   query NodePageQuery($nodeId: ID!) {
     node(id: $nodeId) {
       ...NodePageOverview_node
-      ...NodePageConnectionSection_node @arguments(edgeTypeName: "ChainHasBlock", first: 20)
+      ...NodePageConnectionSection_node
       ...NodeAvatar_node
       id
       meta {
@@ -90,12 +91,18 @@ export default function NodePage({ nodeId }: { nodeId: SolverNode['id'] }) {
 }
 
 const nodePageConnectionSectionFragment = graphql`
-  fragment NodePageConnectionSection_node on Node
-  @argumentDefinitions(edgeTypeName: { type: "String!" }, first: { type: "Int!" }) {
-    ...ConnectionList_node @arguments(edgeTypeName: $edgeTypeName, first: $first)
+  fragment NodePageConnectionSection_node on Node {
     id
     meta {
       slug
+    }
+  }
+`;
+
+const nodePageConnectionSectionQuery = graphql`
+  query NodePageConnectionSectionQuery($nodeId: ID!, $edgeTypeName: String!, $first: Int!) {
+    node(id: $nodeId) {
+      ...ConnectionList_node @arguments(edgeTypeName: $edgeTypeName, first: $first)
     }
   }
 `;
@@ -107,7 +114,16 @@ export function NodePageConnectionSection({
   node: NodePageConnectionSection_node$key;
   edgeType: EdgeType<any>;
 }) {
-  const node = useFragment(nodePageConnectionSectionFragment, nodeFragment);
+  const nodeasd = useFragment(nodePageConnectionSectionFragment, nodeFragment);
+  const { node } = useLazyLoadQuery<NodePageConnectionSectionQuery>(
+    nodePageConnectionSectionQuery,
+    {
+      nodeId: nodeasd.id,
+      edgeTypeName: edgeType.typeName,
+      first: 10,
+    },
+  );
+  if (!node) notFound();
   const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
     createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
   return (
@@ -134,7 +150,7 @@ export function NodePageConnectionSection({
         <>
           <Tooltip title={<FormattedMessage id="Connection.viewAll" defaultMessage="View All" />}>
             <IconButton
-              href={`${node.meta.slug}/${edgeType.connectionName}`}
+              href={`${nodeasd.meta.slug}/${edgeType.connectionName}`}
               size="small"
               color="primary"
             >

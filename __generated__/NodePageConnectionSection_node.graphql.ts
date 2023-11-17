@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abfb6d794fc7e983b1e05dab84923ca8>>
+ * @generated SignedSource<<b2cbbc1ab2f470619e5398b9092554d9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type NodePageConnectionSection_node$data = {
   readonly meta: {
     readonly slug: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"ConnectionList_node">;
   readonly " $fragmentType": "NodePageConnectionSection_node";
 };
 export type NodePageConnectionSection_node$key = {
@@ -25,38 +24,11 @@ export type NodePageConnectionSection_node$key = {
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "edgeTypeName"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "first"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "NodePageConnectionSection_node",
   "selections": [
-    {
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "edgeTypeName",
-          "variableName": "edgeTypeName"
-        },
-        {
-          "kind": "Variable",
-          "name": "first",
-          "variableName": "first"
-        }
-      ],
-      "kind": "FragmentSpread",
-      "name": "ConnectionList_node"
-    },
     {
       "alias": null,
       "args": null,
@@ -87,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isNode"
 };
 
-(node as any).hash = "672694dba6bfba389bfd73c98416e20c";
+(node as any).hash = "17a9068667b9c04774ccf8cdffa7f1f2";
 
 export default node;
