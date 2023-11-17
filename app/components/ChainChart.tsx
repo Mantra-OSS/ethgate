@@ -9,6 +9,7 @@ import { type AnyD3Scale, scaleLinear, scaleTime } from '@visx/scale';
 import { LinePath } from '@visx/shape';
 import { extent, max, min } from '@visx/vendor/d3-array';
 import React, { Fragment, useState } from 'react';
+import { graphql } from 'relay-runtime';
 
 import type {
   Block,
@@ -22,6 +23,29 @@ import { useConnection, useNode, useNodes } from '../client/backend';
 
 import ConnectionChart from './ConnectionChart';
 import { FallbackBoundary } from './ui';
+
+// export const chainChartFragment = graphql`
+//   fragment ChainChart_node on Node
+//   @argumentDefinitions(
+//     edgeTypeName: { type: "String!" }
+//     first: { type: "Int!" }
+//     after: { type: "String" }
+//   )
+//   @refetchable(queryName: "ChainChartPaginationQuery") {
+//     id
+//     meta {
+//       slug
+//     }
+//     connection(type: $edgeTypeName, first: $first, after: $after)
+//       @connection(key: "ChainChart_connection") {
+//       __id
+//       edges {
+//         ...ChainChartItem_edge
+//         headId
+//       }
+//     }
+//   }
+// `;
 
 // data accessors
 // const getX = (edge: SolverEdge) => edge.time;
@@ -40,12 +64,7 @@ export type CurveProps = {
   showControls?: boolean;
 };
 
-export default function ChainChart<TEdgeType extends EdgeType<any>>({
-  edgeType,
-  tail,
-  width,
-  height,
-}: CurveProps) {
+export default function ChainChart({ edgeType, tail, width, height }: CurveProps) {
   const {
     data: pageData,
     error,

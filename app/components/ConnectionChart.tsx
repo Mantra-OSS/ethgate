@@ -18,7 +18,6 @@ import type {
   SolverEdge,
   SolverNode,
 } from '../../solver/graph';
-import { useConnection, useNode, useNodes } from '../client/backend';
 
 import { FallbackBoundary } from './ui';
 

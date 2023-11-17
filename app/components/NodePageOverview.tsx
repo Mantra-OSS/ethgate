@@ -22,6 +22,7 @@ import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 import { graphql, useFragment, useLazyLoadQuery } from 'react-relay';
 
 // import ChainChart from './ChainChart';
+import ChainChart from './ChainChart';
 import { useNow } from './now';
 import { FallbackBoundary, NodeAvatar2 } from './ui';
 
@@ -94,7 +95,7 @@ export function ChainOverview({ node: nodeFragment }: { node: NodePageOverview_n
           ))}
       </Stack>
       {/* Chart */}
-      {/* <Stack direction={{ md: 'row', xs: 'column' }} spacing={1} paddingX={2}>
+      <Stack direction={{ md: 'row', xs: 'column' }} spacing={1} paddingX={2}>
         <Stack flex={1} p={1}>
           <FallbackBoundary>
             <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
@@ -110,7 +111,7 @@ export function ChainOverview({ node: nodeFragment }: { node: NodePageOverview_n
             <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
           </FallbackBoundary>
         </Stack>
-      </Stack> */}
+      </Stack>
     </>
   );
 }

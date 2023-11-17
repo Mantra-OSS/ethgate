@@ -3,7 +3,6 @@
 import type { ConnectionListItem_edge$key } from '@/__generated__/ConnectionListItem_edge.graphql';
 import type { ConnectionListSubscriptionQuery } from '@/__generated__/ConnectionListSubscriptionQuery.graphql';
 import type { ConnectionList_node$key } from '@/__generated__/ConnectionList_node.graphql';
-import { useConnection, useNode, useSolver } from '@/app/client/backend';
 import type { ConnectionPage, Log, SolverEdge, SolverNode, Transaction } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import {

@@ -2,7 +2,6 @@
 
 import type { HomeViewChain_node$key } from '@/__generated__/HomeViewChain_node.graphql';
 import type { HomeViewQuery } from '@/__generated__/HomeViewQuery.graphql';
-import { useConnection, useNode, useNode2, useSolver } from '@/app/client/backend';
 import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 // import ChainBlockList from './ChainBlockList';
