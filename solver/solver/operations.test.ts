@@ -2,11 +2,16 @@ import type { schemaTestNodeChainChainHasBlockConnectionQuery } from '@/__genera
 import type { schemaTestNodeChainQuery } from '@/__generated__/schemaTestNodeChainQuery.graphql';
 import type { schemaTestNodeExplorerQuery } from '@/__generated__/schemaTestNodeExplorerQuery.graphql';
 import type { schemaTestRootQuery } from '@/__generated__/schemaTestRootQuery.graphql';
+import { codegen } from '@graphql-codegen/core';
+import * as typescriptPlugin from '@graphql-codegen/typescript';
+import * as typescriptGenericSdkPlugin from '@graphql-codegen/typescript-generic-sdk';
+import * as typescriptOperationsPlugin from '@graphql-codegen/typescript-operations';
 import { describe, expect, it } from '@jest/globals';
 import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
-import { print } from 'graphql';
+import { parse, print, printSchema } from 'graphql';
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { fetchQuery, graphql } from 'relay-runtime';
 
 import { AksharaDatabase } from '../../akshara/database';
@@ -17,6 +22,8 @@ import { createSolverOperations } from './operations';
 import { createRelayEnvironment } from './relay';
 import { createSolverSchema } from './schema';
 import { Solver, SolverGraph } from './solver';
+
+const projectRoot = resolve(fileURLToPath(import.meta.url), '../../../');
 
 describe('SolverSchema', () => {
   let solver: Solver;
@@ -38,13 +45,44 @@ describe('SolverSchema', () => {
   it('can dump operations', async () => {
     const graph = new SolverGraph();
     const operations = createSolverOperations(graph);
-    const printed = print(operations);
 
-    const platformPath = process.platform === 'win32' ? 'file:///' : 'file://';
-    const path = resolve(
-      import.meta.url.replace(platformPath, ''),
-      '../../../solver-operations.graphql',
+    const path = resolve(projectRoot, './solver/solver/sdk.ts');
+
+    const printed = await codegen({
+      schema: parse(printSchema(createSolverSchema(graph))),
+      documents: [
+        {
+          document: operations,
+        },
+      ],
+      filename: path,
+      config: {
+        useTypeImports: true,
+        emitLegacyCommonJSImports: false,
+        rawRequest: true,
+        // gqlImport: 'relay-runtime#graphql',
+      },
+      plugins: [
+        {
+          typescript: {},
+        },
+        {
+          typescriptOperations: {},
+        },
+        {
+          typescriptGenericSdk: {},
+        },
+      ],
+      pluginMap: {
+        typescript: typescriptPlugin,
+        typescriptOperations: typescriptOperationsPlugin,
+        typescriptGenericSdk: typescriptGenericSdkPlugin,
+      },
+    });
+
+    await writeFile(
+      path,
+      `/* eslint-disable @typescript-eslint/naming-convention */\n` + printed + '\n',
     );
-    await writeFile(path, printed + '\n');
   });
 });

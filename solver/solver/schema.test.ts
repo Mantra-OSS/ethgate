@@ -7,6 +7,7 @@ import { IDBFactory, IDBKeyRange } from 'fake-indexeddb';
 import { printSchema } from 'graphql';
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { fetchQuery, graphql } from 'relay-runtime';
 
 import { AksharaDatabase } from '../../akshara/database';
@@ -16,6 +17,8 @@ import { ETHGATE_NODE_TEST_CHAINS } from '../../akshara/testing';
 import { createRelayEnvironment } from './relay';
 import { createSolverSchema } from './schema';
 import { Solver, SolverGraph } from './solver';
+
+const projectRoot = resolve(fileURLToPath(import.meta.url), '../../../');
 
 describe('SolverSchema', () => {
   let solver: Solver;
@@ -39,8 +42,7 @@ describe('SolverSchema', () => {
     const schema = createSolverSchema(graph);
     const printed = printSchema(schema);
 
-    const platformPath = process.platform === 'win32' ? 'file:///' : 'file://';
-    const path = resolve(import.meta.url.replace(platformPath, ''), '../../../solver.graphql');
+    const path = resolve(projectRoot, './solver.graphql');
     await writeFile(path, printed + '\n');
   });
 
