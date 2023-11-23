@@ -10,7 +10,7 @@
     "fix": "prettier --write . && eslint --fix .",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "relay": "relay-compiler"
   },
   "dependencies": {
     "@badrap/result": "^0.2.13",
