@@ -3,6 +3,7 @@ import 'client-only';
 import { noise } from '@chainsafe/libp2p-noise';
 // import { mdns } from '@libp2p/mdns';
 import { bootstrap } from '@libp2p/bootstrap';
+import { mplex } from '@libp2p/mplex';
 import { webRTC } from '@libp2p/webrtc';
 import { multiaddr } from '@multiformats/multiaddr';
 import { createLibp2p } from 'libp2p';
