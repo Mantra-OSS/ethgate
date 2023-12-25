@@ -3,8 +3,11 @@ import 'client-only';
 import { noise } from '@chainsafe/libp2p-noise';
 // import { mdns } from '@libp2p/mdns';
 import { bootstrap } from '@libp2p/bootstrap';
+import { kadDHT, removePrivateAddressesMapper } from '@libp2p/kad-dht';
 import { mplex } from '@libp2p/mplex';
-import { webRTC } from '@libp2p/webrtc';
+// import { tcp } from '@libp2p/tcp';
+import { peerIdFromString } from '@libp2p/peer-id';
+import { webRTC, webRTCDirect } from '@libp2p/webrtc';
 import { multiaddr } from '@multiformats/multiaddr';
 import { createLibp2p } from 'libp2p';
 
@@ -25,7 +28,16 @@ async function main() {
         tagTTL: 120000, // in ms
       }),
     ],
+    services: {
+      // dht: kadDHT({}),
+      aminoDHT: kadDHT({
+        protocol: '/ipfs/kad/1.0.0',
+        peerInfoMapper: removePrivateAddressesMapper,
+      }),
+    },
+    streamMuxers: [mplex()],
     transports: [webRTC()],
+    // transports: [tcp()],
     connectionEncryption: [noise()],
   });
 
@@ -37,6 +49,11 @@ async function main() {
   console.log('Starting libp2p...');
   await node.start();
   console.log('Started libp2p.');
+
+  const peerId = peerIdFromString('QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ');
+  const peerInfo = await node.peerRouting.findPeer(peerId);
+
+  console.info(peerInfo);
 
   // const ma = multiaddr(
   //   '/ip4/0.0.0.0/udp/56093/webrtc/certhash/uEiByaEfNSLBexWBNFZy_QB1vAKEj7JAXDizRs4_SnTflsQ',
