@@ -13,6 +13,8 @@ import useSWRInfinite, { SWRInfiniteResponse } from 'swr/infinite';
 import type { SWRSubscription, SWRSubscriptionOptions } from 'swr/subscription';
 import useSWRSubscription from 'swr/subscription';
 
+import './p2p';
+
 class ClientAkshara extends Akshara {
   constructor() {
     const database = new AksharaDatabase({
