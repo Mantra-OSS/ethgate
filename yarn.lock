@@ -2505,6 +2505,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@leichtgewicht/ip-codec@npm:^2.0.1":
+  version: 2.0.4
+  resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
+  checksum: 3b0d8844d1d47c0a5ed7267c2964886adad3a642b85d06f95c148eeefd80cdabbd6aa0d63ccde8239967a2e9b6bb734a16bd57e1fda3d16bf56d50a7e7ec131b
+  languageName: node
+  linkType: hard
+
+"@libp2p/bootstrap@npm:^10.0.8":
+  version: 10.0.8
+  resolution: "@libp2p/bootstrap@npm:10.0.8"
+  dependencies:
+    "@libp2p/interface": "npm:^1.0.2"
+    "@libp2p/peer-id": "npm:^4.0.2"
+    "@multiformats/mafmt": "npm:^12.1.6"
+    "@multiformats/multiaddr": "npm:^12.1.10"
+  checksum: 13dd23c7f4e1fd5bf20a006613f4e5768b0b6e6bccecab07da5b51d79751f827c47d03ce0a5e2edc53b10ce6ae9bcc761788b313d44815b4a367915ad6a26a7e
+  languageName: node
+  linkType: hard
+
 "@libp2p/crypto@npm:^3.0.0, @libp2p/crypto@npm:^3.0.2":
   version: 3.0.2
   resolution: "@libp2p/crypto@npm:3.0.2"
@@ -2556,6 +2575,38 @@ __metadata:
     interface-datastore: "npm:^8.2.0"
     multiformats: "npm:^12.1.3"
   checksum: 7133abd989e086e6c3ef1435b5ffccae07321df138a6aff6ae3aeaad9866f00febf51bdf0c43deb6b92eb60dc248c31ee4450c97f67a4a231f4c12e54b67e85a
+  languageName: node
+  linkType: hard
+
+"@libp2p/mdns@npm:^10.0.8":
+  version: 10.0.8
+  resolution: "@libp2p/mdns@npm:10.0.8"
+  dependencies:
+    "@libp2p/interface": "npm:^1.0.2"
+    "@libp2p/peer-id": "npm:^4.0.2"
+    "@libp2p/utils": "npm:^5.1.0"
+    "@multiformats/multiaddr": "npm:^12.1.10"
+    "@types/multicast-dns": "npm:^7.2.1"
+    dns-packet: "npm:^5.4.0"
+    multicast-dns: "npm:^7.2.5"
+  checksum: 2108b7f456f183e35a3c2bbfc67e6ec1ad7eb4467e81e03395712d132ffcde6ace3ad7dd08c7b4c31135f8a18e19625f214ba45c5661a9382b69e2b652125ef2
+  languageName: node
+  linkType: hard
+
+"@libp2p/mplex@npm:^10.0.8":
+  version: 10.0.8
+  resolution: "@libp2p/mplex@npm:10.0.8"
+  dependencies:
+    "@libp2p/interface": "npm:^1.0.2"
+    "@libp2p/utils": "npm:^5.1.0"
+    benchmark: "npm:^2.1.4"
+    it-pushable: "npm:^3.2.1"
+    it-stream-types: "npm:^2.0.1"
+    rate-limiter-flexible: "npm:^3.0.0"
+    uint8-varint: "npm:^2.0.0"
+    uint8arraylist: "npm:^2.4.3"
+    uint8arrays: "npm:^5.0.0"
+  checksum: a70243b19d276746a09f47a3676043f3daa570e8ea13ec2c6aadcfd43814274a236bc9d6d9690bd41aa53cc8c097bf66c40efdca3018099c21f2b34b5c75ce5e
   languageName: node
   linkType: hard
 
@@ -2723,6 +2774,9 @@ __metadata:
     "@emotion/react": "npm:^11.11.1"
     "@emotion/styled": "npm:^11.11.0"
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.1.0"
+    "@libp2p/bootstrap": "npm:^10.0.8"
+    "@libp2p/mdns": "npm:^10.0.8"
+    "@libp2p/mplex": "npm:^10.0.8"
     "@libp2p/webrtc": "npm:^4.0.12"
     "@mantra-oss/chains": "npm:^0.7.0"
     "@mdx-js/loader": "npm:^3.0.0"
@@ -5428,6 +5482,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dns-packet@npm:*":
+  version: 5.6.4
+  resolution: "@types/dns-packet@npm:5.6.4"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 63653491adb5e0ac49c000eb7493df154361eded7f6e524deb53cf4f873af6c55c537f59b7dccd6947947f013375647b15ed0907431129db382d0d0534fbdc7a
+  languageName: node
+  linkType: hard
+
 "@types/doctrine@npm:^0.0.3":
   version: 0.0.3
   resolution: "@types/doctrine@npm:0.0.3"
@@ -5680,6 +5743,16 @@ __metadata:
   version: 0.7.33
   resolution: "@types/ms@npm:0.7.33"
   checksum: ef610d94ebee838243af37800cb5d1a52b2ae0fb6880675fbb9276c0c4afcefda755f16889fa597ee4e5b377998a7e67b453614aae68d3225e5f7219984284df
+  languageName: node
+  linkType: hard
+
+"@types/multicast-dns@npm:^7.2.1":
+  version: 7.2.4
+  resolution: "@types/multicast-dns@npm:7.2.4"
+  dependencies:
+    "@types/dns-packet": "npm:*"
+    "@types/node": "npm:*"
+  checksum: f2d7e62cd6cbd1042e2f1c42b9dfa1e5f6c509836d86f2d4b16d803bb0cb3d30e2c740e54ba9d887adbf0b67fb17cd636b5a34efd1911ed5df55a8c4de85e48a
   languageName: node
   linkType: hard
 
@@ -7474,6 +7547,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"benchmark@npm:^2.1.4":
+  version: 2.1.4
+  resolution: "benchmark@npm:2.1.4"
+  dependencies:
+    lodash: "npm:^4.17.4"
+    platform: "npm:^1.3.3"
+  checksum: 510224c01f7578e9aa60cef67ec3dd8f84ac6670007bcc96285f87865375122aca0853ab4e542cc80cfeeed436356dfdd63bb66cb5e72365abb912685b2139be
+  languageName: node
+  linkType: hard
+
 "better-opn@npm:^3.0.2":
   version: 3.0.2
   resolution: "better-opn@npm:3.0.2"
@@ -9083,6 +9166,15 @@ __metadata:
     debug: "npm:^4.3.4"
     receptacle: "npm:^1.3.2"
   checksum: fd65ffa574b76b696fe720a4686793a76d523863c85063910e49ae1ef510399ae3c445f94bf20514403cbc1e65beb140a57053d02de6d658cba05433add3e960
+  languageName: node
+  linkType: hard
+
+"dns-packet@npm:^5.2.2, dns-packet@npm:^5.4.0":
+  version: 5.6.1
+  resolution: "dns-packet@npm:5.6.1"
+  dependencies:
+    "@leichtgewicht/ip-codec": "npm:^2.0.1"
+  checksum: 8948d3d03063fb68e04a1e386875f8c3bcc398fc375f535f2b438fad8f41bf1afa6f5e70893ba44f4ae884c089247e0a31045722fa6ff0f01d228da103f1811d
   languageName: node
   linkType: hard
 
@@ -13045,7 +13137,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21":
+"lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.4":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
@@ -14080,6 +14172,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"multicast-dns@npm:^7.2.5":
+  version: 7.2.5
+  resolution: "multicast-dns@npm:7.2.5"
+  dependencies:
+    dns-packet: "npm:^5.2.2"
+    thunky: "npm:^1.0.2"
+  bin:
+    multicast-dns: cli.js
+  checksum: 5120171d4bdb1577764c5afa96e413353bff530d1b37081cb29cccc747f989eb1baf40574fe8e27060fc1aef72b59c042f72b9b208413de33bcf411343c69057
+  languageName: node
+  linkType: hard
+
 "multiformats@npm:^12.0.1, multiformats@npm:^12.1.3":
   version: 12.1.3
   resolution: "multiformats@npm:12.1.3"
@@ -15026,6 +15130,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"platform@npm:^1.3.3":
+  version: 1.3.6
+  resolution: "platform@npm:1.3.6"
+  checksum: 69f2eb692e15f1a343dd0d9347babd9ca933824c8673096be746ff66f99f2bdc909fadd8609076132e6ec768349080babb7362299f2a7f885b98f1254ae6224b
+  languageName: node
+  linkType: hard
+
 "pnp-webpack-plugin@npm:^1.7.0":
   version: 1.7.0
   resolution: "pnp-webpack-plugin@npm:1.7.0"
@@ -15554,6 +15665,13 @@ __metadata:
   version: 1.2.1
   resolution: "range-parser@npm:1.2.1"
   checksum: 96c032ac2475c8027b7a4e9fe22dc0dfe0f6d90b85e496e0f016fbdb99d6d066de0112e680805075bd989905e2123b3b3d002765149294dce0c1f7f01fcc2ea0
+  languageName: node
+  linkType: hard
+
+"rate-limiter-flexible@npm:^3.0.0":
+  version: 3.0.6
+  resolution: "rate-limiter-flexible@npm:3.0.6"
+  checksum: 734775693cc7b43c7df9375a76fb223ef4066c1b8ca0f121bbfa560b3fcf7fa111f5ed018a9bcce603112baaa105d726f5ae63099209a6a975432bb95350f0e9
   languageName: node
   linkType: hard
 
@@ -17480,6 +17598,13 @@ __metadata:
     readable-stream: "npm:~2.3.6"
     xtend: "npm:~4.0.1"
   checksum: cbfe5b57943fa12b4f8c043658c2a00476216d79c014895cef1ac7a1d9a8b31f6b438d0e53eecbb81054b93128324a82ecd59ec1a4f91f01f7ac113dcb14eade
+  languageName: node
+  linkType: hard
+
+"thunky@npm:^1.0.2":
+  version: 1.1.0
+  resolution: "thunky@npm:1.1.0"
+  checksum: 369764f39de1ce1de2ba2fa922db4a3f92e9c7f33bcc9a713241bc1f4a5238b484c17e0d36d1d533c625efb00e9e82c3e45f80b47586945557b45abb890156d2
   languageName: node
   linkType: hard
 
