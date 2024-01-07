@@ -23,21 +23,6 @@ interface Client {
 }
 
 /**
- * A client for DOM environments.
- *
- * This client would use WebTransport, WebRTC, WebSockets, etc.
- */
-interface DomClient extends Client {}
-
-/**
- * A client for Node.js environments.
- *
- * This client would use WebTransport, WebRTC, WebSockets, QUIC, TCP, etc.
- * Since we can use QUIC and TCP, these clients will also be able to act as relays.
- */
-interface NodeClient extends Client {}
-
-/**
  * Clients have interfaces to access network, storage and other resources.
  */
 interface Interface {}
@@ -47,8 +32,20 @@ interface Interface {}
  */
 interface NetworkInterface extends Interface {}
 
-interface NodeNetworkInterface extends NetworkInterface {}
+/**
+ * A network interface for DOM environments.
+ *
+ * This would use WebTransport, WebRTC, WebSockets, etc.
+ */
 interface DomNetworkInterface extends NetworkInterface {}
+
+/**
+ * A network interface for Node.js environments.
+ *
+ * This would use WebTransport, WebRTC, WebSockets, QUIC, TCP, etc.
+ * Since we can use QUIC and TCP, these clients will also be able to act as relays.
+ */
+interface NodeNetworkInterface extends NetworkInterface {}
 
 /**
  * Signing interfaces are used to sign messages.
