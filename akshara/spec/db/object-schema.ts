@@ -16,7 +16,7 @@ export type AksharaObjectSchemas = {
 };
 
 export const chainSchema = {
-  aksharaType: 'Chain',
+  title: 'Chain',
   type: 'object',
   properties: {
     chainId: chainIdSchema,
@@ -62,7 +62,7 @@ export const chainSchema = {
 } as const;
 
 export const blockSchema = {
-  aksharaType: 'Block',
+  title: 'Block',
   type: 'object',
   properties: {
     chainId: chainIdSchema,
@@ -98,7 +98,7 @@ export const blockSchema = {
 } as const;
 
 export const transactionSchema = {
-  aksharaType: 'Transaction',
+  title: 'Transaction',
   type: 'object',
   properties: {
     chainId: chainIdSchema,
@@ -136,7 +136,7 @@ export const transactionSchema = {
 } as const;
 
 export const logSchema = {
-  aksharaType: 'Log',
+  title: 'Log',
   type: 'object',
   properties: {
     chainId: chainIdSchema,
@@ -168,7 +168,7 @@ export const logSchema = {
 } as const;
 
 export const receiptSchema = {
-  aksharaType: 'Receipt',
+  title: 'Receipt',
   type: 'object',
   properties: {
     chainId: chainIdSchema,

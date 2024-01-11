@@ -21,12 +21,12 @@ export type AksharaTypeContext = {
   aks: Ethgate.Akshara;
 };
 export class AksharaNodeType<T extends AksharaNode> extends NodeType<T> {
-  schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>;
+  schema: Extract<Ethgate.AksharaObjectSchema, { title: T['type'] }>;
   constructor(
     create: NodeCreateFn<T>,
-    schema: Extract<Ethgate.AksharaObjectSchema, { aksharaType: T['type'] }>,
+    schema: Extract<Ethgate.AksharaObjectSchema, { title: T['type'] }>,
   ) {
-    const name = schema.aksharaType;
+    const name = schema.title;
     const getData = async (id: T['id'], ctx: AksharaTypeContext) => {
       const [, localId] = parseGlobalId(id);
       const obj = await ctx.aks.getObject(localId);

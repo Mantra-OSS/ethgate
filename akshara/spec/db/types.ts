@@ -8,7 +8,7 @@ export type AksharaScalarSchema =
   | typeof u64Schema;
 
 export const hexSchema = {
-  aksharaType: 'Hex',
+  title: 'Hex',
   type: 'string',
   pattern: '^0x[0-9a-fA-F]*$',
 } as const;
@@ -16,7 +16,7 @@ export type Hex = FromSchema<typeof hexSchema>;
 export const zeroHex: Hex = '0x';
 
 export const hashSchema = {
-  aksharaType: 'Hash',
+  title: 'Hash',
   type: 'string',
   pattern: '^0x[0-9a-fA-F]{64}$',
 } as const;
@@ -24,7 +24,7 @@ export type Hash = FromSchema<typeof hashSchema>;
 export const zeroHash: Hash = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export const addressSchema = {
-  aksharaType: 'Address',
+  title: 'Address',
   type: 'string',
   pattern: '^0x[0-9a-fA-F]{40}$',
 } as const;
@@ -32,21 +32,21 @@ export type Address = FromSchema<typeof addressSchema>;
 export const zeroAddress: Address = '0x0000000000000000000000000000000000000000';
 
 export const chainIdSchema = {
-  aksharaType: 'ChainId',
+  title: 'ChainId',
   type: 'string',
   pattern: '^[0-9]+$',
 } as const;
 export type AksharaChainId = FromSchema<typeof chainIdSchema>;
 
 export const u64Schema = {
-  aksharaType: 'U64',
+  title: 'U64',
   type: 'number',
 } as const;
 export type U64 = FromSchema<typeof u64Schema>;
 export const zeroU64: U64 = 0;
 
 export const timeSchema = {
-  aksharaType: 'U64',
+  title: 'U64',
   type: 'number',
 } as const;
 export type Time = FromSchema<typeof timeSchema>;
