@@ -1,5 +1,6 @@
 'use client';
-// import type { NodePageQuery } from '@/__generated__/NodePageQuery.graphql';
+
+import type { NodePageQuery } from '@/__generated__/NodePageQuery.graphql';
 import type { SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { ArrowOutward } from '@mui/icons-material';
@@ -7,8 +8,8 @@ import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } fro
 import { notFound } from 'next/navigation';
 import { createElement, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-// import { useLazyLoadQuery } from 'react-relay';
-// import { graphql } from 'relay-runtime';
+import { useLazyLoadQuery } from 'react-relay';
+import { graphql } from 'relay-runtime';
 
 import { useNode, useSolver } from '../client/backend';
 
@@ -17,23 +18,23 @@ import { listItemComponents } from './list-items';
 import { overviewComponents } from './overviews';
 import { FallbackBoundary, NodeAvatar, Section } from './ui';
 
-// const nodePageQuery = graphql`
-//   query NodePageQuery($id: ID!) {
-//     node(id: $id) {
-//       id
-//       meta {
-//         name
-//       }
-//       data
-//     }
-//   }
-// `;
+const nodePageQuery = graphql`
+  query NodePageQuery($id: ID!) {
+    node(id: $id) {
+      id
+      meta {
+        name
+      }
+      data
+    }
+  }
+`;
 
 export default function NodePage({ node }: { node: SolverNode }) {
-  // const { node: node2 } = useLazyLoadQuery<NodePageQuery>(nodePageQuery, { id: node.id });
-  // if (!node2) notFound();
-  // console.log('node2', node2);
-  const node2 = node;
+  const { node: node2 } = useLazyLoadQuery<NodePageQuery>(nodePageQuery, { id: node.id });
+  if (!node2) notFound();
+  console.log('node2', node2);
+  // const node2 = node;
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setReady(true);
