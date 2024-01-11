@@ -1,13 +1,13 @@
 'use client';
 
-import type { HomeViewChainQuery } from '@/__generated__/HomeViewChainQuery.graphql';
-import { useConnection, useNode, useNode2, useSolver } from '@/app/client/backend';
+import type { HomeViewChain_chain$key } from '@/__generated__/HomeViewChain_chain.graphql';
+import type { HomeViewQuery } from '@/__generated__/HomeViewQuery.graphql';
 import type { Block, Chain, ChainHasBlock } from '@/lib-solver';
 import { Avatar, Container, Divider, Grid, Link, Paper, Stack, Typography } from '@mui/material';
 // import ChainBlockList from './ChainBlockList';
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
-import { useLazyLoadQuery } from 'react-relay';
+import { useFragment, useLazyLoadQuery } from 'react-relay';
 import { graphql } from 'relay-runtime';
 
 import type { Explorer } from '../../solver/graph/explorer';
@@ -21,9 +21,23 @@ import HomeChart from './HomeChart';
 // import ChainOverview from './ChainOverview';
 // import ChainTransactionList from './ChainTransactionList';
 
+const homeViewQuery = graphql`
+  query HomeViewQuery {
+    root {
+      chains {
+        edges {
+          node {
+            id
+            ...HomeViewChain_chain
+          }
+        }
+      }
+    }
+  }
+`;
+
 export default function HomeView() {
-  const node = useNode2<Explorer>('Explorer:');
-  if (!node) return <SuspenseFallback />;
+  const { root } = useLazyLoadQuery<HomeViewQuery>(homeViewQuery, {});
 
   return (
     <>
@@ -48,8 +62,8 @@ export default function HomeView() {
               <Divider />
               <FallbackBoundary>
                 <Stack direction="row" padding={3} justifyContent="space-between">
-                  {Object.values(node.data.chains).map((chain) => {
-                    return <HomeViewChain chainId={`Chain:${chain.chainId}`} key={chain.chainId} />;
+                  {Object.values(root.chains.edges).map(({ node: chain }) => {
+                    return <HomeViewChain chain={chain} key={chain.id} />;
                   })}
                 </Stack>
               </FallbackBoundary>
@@ -72,28 +86,26 @@ export default function HomeView() {
   );
 }
 
-const homeViewChainQuery = graphql`
-  query HomeViewChainQuery($chainId: ID!) {
-    node(id: $chainId) {
-      id
-      meta {
-        name
-        slug
-      }
-      connection(type: "ChainHasBlock", first: 1) {
-        edges {
-          node {
-            id
-            data
-          }
+const homeViewChain_chainFragment = graphql`
+  fragment HomeViewChain_chain on Chain {
+    id
+    meta {
+      name
+      slug
+    }
+    connection(type: "ChainHasBlock", first: 1) {
+      edges {
+        node {
+          id
+          data
         }
       }
     }
   }
 `;
 
-function HomeViewChain({ chainId }: { chainId: any }) {
-  const { node: chain } = useLazyLoadQuery<HomeViewChainQuery>(homeViewChainQuery, { chainId });
+function HomeViewChain({ chain: chainFragment }: { chain: HomeViewChain_chain$key }) {
+  const chain = useFragment(homeViewChain_chainFragment, chainFragment);
   // const chain = useNode<Chain>(chainId);
   // const solver = useSolver();
   // const edgeType = solver.graph.getEdgeType('ChainHasBlock');
@@ -106,10 +118,6 @@ function HomeViewChain({ chainId }: { chainId: any }) {
   // } = useConnection(edgeType, chainId, { first: 11 });
   // const latestChainHasBlock: ChainHasBlock | undefined = pageData?.edges[0];
   // const latestBlock: Block | undefined = useNode<Block>(latestChainHasBlock?.headId as any);
-
-  if (!chain?.id || !chain?.meta) {
-    throw new Error(`Chain not found: ${chainId}`);
-  }
 
   return (
     <Link href={`/${chain.meta.slug}`} style={{ textDecoration: 'none' }}>
