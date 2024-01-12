@@ -1,0 +1,46 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.rules.customizations": [
+    {
+      "rule": "@typescript-eslint/no-unused-vars",
+      "severity": "downgrade"
+    },
+    {
+      "rule": "@typescript-eslint/no-empty-function",
+      "severity": "downgrade"
+    },
+    {
+      "rule": "sort-imports",
+      "severity": "downgrade"
+    },
+    {
+      "rule": "import/order",
+      "severity": "downgrade"
+    },
+    {
+      "rule": "require-yield",
+      "severity": "downgrade"
+    },
+    {
+      "rule": "prefer-const",
+      "severity": "downgrade"
+    },
+    {
+      "rule": "@typescript-eslint/consistent-type-imports",
+      "severity": "downgrade"
+    }
+  ],
+  "nodejs-testing.extensions": [
+    {
+      "extensions": ["mjs", "cjs", "js"],
+      "parameters": []
+    },
+    {
+      "extensions": ["mts", "cts", "ts"],
+      "parameters": ["--import", "tsx"]
+    }
+  ]
+}

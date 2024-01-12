@@ -1,0 +1,19 @@
+{
+  "name": "akshara-v1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "yarn@4.0.1",
+  "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.1.0",
+    "@tsconfig/node20": "^20.1.2",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "libp2p": "^1.1.2"
+  }
+}
