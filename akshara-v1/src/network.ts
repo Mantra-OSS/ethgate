@@ -26,6 +26,7 @@ import {
 } from '@libp2p/interface';
 import { createLibp2p } from 'libp2p';
 import { peerIdFromKeys } from '@libp2p/peer-id';
+import { KadDHT } from '@libp2p/kad-dht';
 import { createSecp256k1PeerId } from '@libp2p/peer-id-factory';
 import { Multiaddr, multiaddr } from '@multiformats/multiaddr';
 import { noise } from '@chainsafe/libp2p-noise';
@@ -41,7 +42,7 @@ export interface Libp2pServices extends Record<string, unknown> {
   // autoNAT: unknown
   // dcutr: unknown
   // delegatedRouting: unknown
-  // dht: KadDHT
+  dht: KadDHT;
   identify: Identify;
   // keychain: Keychain
   ping: PingService;
@@ -71,6 +72,8 @@ export class NodeNetworkInterface implements NetworkInterface {
     // console.log('asd', text);
 
     const libp2p = helia.libp2p;
+
+    // libp2p.
 
     // const libp2p = await createLibp2p({
     //   connectionManager: {},

@@ -1732,6 +1732,8 @@ __metadata:
     "@typescript-eslint/parser": "npm:^6.18.1"
     eslint: "npm:^8.56.0"
     helia: "npm:^3.0.1"
+    ipns: "npm:^8.0.2"
+    it-all: "npm:^3.0.4"
     libp2p: "npm:^1.1.2"
     prettier: "npm:^3.2.1"
     tsx: "npm:^4.7.0"
@@ -3164,7 +3166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ipns@npm:^8.0.0":
+"ipns@npm:^8.0.0, ipns@npm:^8.0.2":
   version: 8.0.2
   resolution: "ipns@npm:8.0.2"
   dependencies:
@@ -3294,7 +3296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"it-all@npm:^3.0.0, it-all@npm:^3.0.1, it-all@npm:^3.0.2":
+"it-all@npm:^3.0.0, it-all@npm:^3.0.1, it-all@npm:^3.0.2, it-all@npm:^3.0.4":
   version: 3.0.4
   resolution: "it-all@npm:3.0.4"
   checksum: 858d7210f32b1b9519ec39e7c86a1a19b6452f068e8286fc02e96733a978915a7d510207f1fd69d5327d4332454fd664b25c9f48b2f0192d21e70b2663478682

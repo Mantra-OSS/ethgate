@@ -44,6 +44,8 @@
     "@multiformats/uri-to-multiaddr": "^7.0.0",
     "@noble/secp256k1": "^2.0.0",
     "helia": "^3.0.1",
+    "ipns": "^8.0.2",
+    "it-all": "^3.0.4",
     "libp2p": "^1.1.2"
   }
 }

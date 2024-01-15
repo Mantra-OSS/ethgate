@@ -1,15 +1,18 @@
 /// <reference lib="dom" />
 
+import type { PeerId } from '@libp2p/interface';
+import { peerIdFromString } from '@libp2p/peer-id';
 import { describe, test } from 'node:test';
 import assert from 'node:assert';
 import multiaddrFromUri from '@multiformats/uri-to-multiaddr';
 import * as secp from '@noble/secp256k1';
-
+import all from 'it-all';
 import { NodeClientFactory } from './client.js';
 import { NodeSigningInterface } from './signing.js';
 import { multiaddr } from '@multiformats/multiaddr';
 import { TestActor, sleep } from './testing.js';
 import { SubscriptionChangeData } from '@libp2p/interface';
+import { CID } from 'multiformats';
 
 describe('Client', () => {
   // describe('SigningInterface', () => {
@@ -27,17 +30,58 @@ describe('Client', () => {
       // Setup Alice
       const alice = await TestActor.create('alice');
       const aliceLibp2p = alice.client.networkInterface.libp2p;
+
+      console.log('peerId', aliceLibp2p.peerId);
+
       // aliceLibp2p.services.pubsub.addEventListener('subscription-change', (event) => {
       //   console.log('alice:subscription-change', event.detail.subscriptions);
       // });
 
+      // const key = '/fruit';
+      // const h = await sha256.digest(bytes)
+      // return {
+      //   cid: CID.createV1(raw.code, h),
+      //   value: bytes
+      // }
+      // const cid = CID.parse('bafybeigmfwlweiecbubdw4lq6uqngsioqepntcfohvrccr2o5f7flgydme');
+      // await all(aliceLibp2p.services.dht.provide(cid));
+
+      // // aliceLibp2p.addEventListener('peer:identify', (event) => {
+      // //   console.log('peer:identify', event.detail.protocols, event.detail.listenAddrs);
+      // // });
+
+      // while (true) {
+      //   const events = await all(aliceLibp2p.services.dht.findProviders(cid));
+      //   const provs = Object.values(
+      //     events.reduce<Record<string, PeerId>>((acc, curr) => {
+      //       if (curr.name === 'PEER_RESPONSE') {
+      //         curr.providers.forEach((peer) => {
+      //           acc[peer.id.toString()] = peer.id;
+      //         });
+      //       }
+
+      //       return acc;
+      //     }, {}),
+      //   );
+      //   console.log('provs', provs);
+      // }
+
       aliceLibp2p.services.pubsub.addEventListener('message', (message) => {
-        console.log(
-          `message: ${message.detail.topic}:`,
-          new TextDecoder().decode(message.detail.data),
-        );
+        if (message.detail.topic === 'fruit') {
+          console.log(
+            `message: ${message.detail.topic}:`,
+            new TextDecoder().decode(message.detail.data),
+          );
+        }
       });
       aliceLibp2p.services.pubsub.subscribe('fruit');
+
+      console.log('connecting...');
+
+      // const id = peerIdFromString('12D3KooWKJ7TJiNzXqTdidnkdp2JLvy5dJ1BNM6dSWq76syjaTGy');
+      // const conn = await aliceLibp2p.dial(id);
+      // console.log(conn);
+      // await aliceLibp2p.services.identify.identify(conn);
 
       // console.log('waiting...');
 
