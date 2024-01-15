@@ -49,42 +49,42 @@ export interface Libp2pServices extends Record<string, unknown> {
 
 export class NodeNetworkInterface implements NetworkInterface {
   static async create() {
-    // const helia = await createHelia();
-    // const libp2p = helia.libp2p;
+    const helia = await createHelia();
+    const libp2p = helia.libp2p;
 
-    const libp2p = await createLibp2p({
-      connectionManager: {},
-      addresses: {
-        listen: ['/ip4/0.0.0.0/tcp/0'],
-      },
-      transports: [tcp()],
-      connectionEncryption: [noise()],
-      streamMuxers: [yamux(), mplex()],
-      peerDiscovery: [
-        // bootstrap({
-        //   list: [
-        //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
-        //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa',
-        //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
-        //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt',
-        //     '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ',
-        //   ],
-        // }),
-        // pubsubPeerDiscovery({
-        //   // topics: [TOPIC, 'fruit'],
-        // }),
-      ],
-      services: {
-        identify: identify({
-          maxOutboundStreams: 100,
-          maxInboundStreams: 100,
-        }),
-        ping: ping(),
-        pubsub: gossipsub({
-          // allowPublishToZeroPeers: true,
-        }),
-      },
-    });
+    // const libp2p = await createLibp2p({
+    //   connectionManager: {},
+    //   addresses: {
+    //     listen: ['/ip4/0.0.0.0/tcp/0'],
+    //   },
+    //   transports: [tcp()],
+    //   connectionEncryption: [noise()],
+    //   streamMuxers: [yamux(), mplex()],
+    //   peerDiscovery: [
+    //     // bootstrap({
+    //     //   list: [
+    //     //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
+    //     //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa',
+    //     //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
+    //     //     '/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt',
+    //     //     '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ',
+    //     //   ],
+    //     // }),
+    //     // pubsubPeerDiscovery({
+    //     //   // topics: [TOPIC, 'fruit'],
+    //     // }),
+    //   ],
+    //   services: {
+    //     identify: identify({
+    //       maxOutboundStreams: 100,
+    //       maxInboundStreams: 100,
+    //     }),
+    //     ping: ping(),
+    //     pubsub: gossipsub({
+    //       // allowPublishToZeroPeers: true,
+    //     }),
+    //   },
+    // });
 
     // // await libp2p.start();
     // await libp2p.afterStart;

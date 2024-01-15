@@ -68,7 +68,7 @@ describe('Client', () => {
       // Connect Alice and Bob
       const aliceAddrs = alice.client.getAddresses();
       const conn = await bobLibp2p.dial(aliceAddrs[0]);
-      const result = await bobLibp2p.services.identify.identify(conn);
+      // const result = await bobLibp2p.services.identify.identify(conn);
       // console.log(result);
       // console.log(conn);
       // const pingRTT = await bob.client.networkInterface.libp2p.services.ping.ping(aliceAddrs[0]);
@@ -77,15 +77,22 @@ describe('Client', () => {
       console.log('waiting...');
 
       await new Promise((resolve) => {
-        bobLibp2p.addEventListener('peer:identify', resolve, { once: true });
-        // bobLibp2p.services.pubsub.addEventListener('subscription-change', resolve, { once: true });
+        bobLibp2p.services.pubsub.addEventListener('subscription-change', (event) => {
+          if (
+            event.detail.peerId === conn.remotePeer &&
+            event.detail.subscriptions.some(
+              (sub) => sub.topic === 'fruit' && sub.subscribe === true,
+            )
+          ) {
+            console.log(event.detail);
+            resolve(undefined);
+          }
+        });
       });
 
       console.log('publishing...');
 
-      bobLibp2p.services.pubsub.publish('fruit', new TextEncoder().encode('banana'));
-
-      const message = await new Promise((resolve) => {
+      const messagePromise = new Promise((resolve) => {
         aliceLibp2p.services.pubsub.addEventListener('message', (event) => {
           if (event.detail.topic === 'fruit') {
             const message = new TextDecoder().decode(event.detail.data);
@@ -93,6 +100,25 @@ describe('Client', () => {
           }
         });
       });
+
+      const asd2 = await bobLibp2p.services.pubsub.getSubscribers('fruit');
+      console.log('asd2', asd2);
+
+      while (true) {
+        const asd = await bobLibp2p.services.pubsub.publish(
+          'fruit',
+          new TextEncoder().encode('banana'),
+        );
+        if (asd.recipients.length > 0) {
+          break;
+        }
+      }
+
+      console.log('waiting...');
+
+      const message = await messagePromise;
+
+      console.log('asserting...');
 
       assert.equal(message, 'banana');
 
