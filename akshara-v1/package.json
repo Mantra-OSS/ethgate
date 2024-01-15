@@ -17,6 +17,7 @@
   "dependencies": {
     "@chainsafe/discv5": "^7.1.0",
     "@chainsafe/enr": "^2.0.2",
+    "@chainsafe/libp2p-gossipsub": "^11.0.1",
     "@chainsafe/libp2p-noise": "^14.1.0",
     "@chainsafe/libp2p-yamux": "^6.0.1",
     "@chainsafe/ssz": "^0.14.0",
@@ -42,6 +43,7 @@
     "@multiformats/multiaddr": "^12.1.12",
     "@multiformats/uri-to-multiaddr": "^7.0.0",
     "@noble/secp256k1": "^2.0.0",
+    "helia": "^3.0.1",
     "libp2p": "^1.1.2"
   }
 }
