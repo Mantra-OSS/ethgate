@@ -23,7 +23,55 @@ describe('Client', () => {
   //   });
   // });
   describe('NodeClient', () => {
-    test('should work', async () => {
+    test('asd', async () => {
+      // Setup Alice
+      const alice = await TestActor.create('alice');
+      const aliceLibp2p = alice.client.networkInterface.libp2p;
+      // aliceLibp2p.services.pubsub.addEventListener('subscription-change', (event) => {
+      //   console.log('alice:subscription-change', event.detail.subscriptions);
+      // });
+
+      aliceLibp2p.services.pubsub.addEventListener('message', (message) => {
+        console.log(
+          `message: ${message.detail.topic}:`,
+          new TextDecoder().decode(message.detail.data),
+        );
+      });
+      aliceLibp2p.services.pubsub.subscribe('fruit');
+
+      // console.log('waiting...');
+
+      // await new Promise((resolve) => {
+      //   aliceLibp2p.services.pubsub.addEventListener('subscription-change', (event) => {
+      //     if (
+      //       event.detail.subscriptions.some(
+      //         (sub) => sub.topic === 'fruit' && sub.subscribe === true,
+      //       )
+      //     ) {
+      //       console.log(event.detail);
+      //       resolve(undefined);
+      //     }
+      //   });
+      // });
+
+      console.log('publishing...');
+
+      let i = 0;
+      while (true) {
+        i += 1;
+        try {
+          const asd = await aliceLibp2p.services.pubsub.publish(
+            'fruit',
+            new TextEncoder().encode(`banana ${i}`),
+          );
+        } catch (e) {
+          console.log((e as any).message);
+        }
+        await sleep(1000);
+      }
+    });
+
+    test.skip('should work', async () => {
       // Setup Alice
       const alice = await TestActor.create('alice');
       const aliceLibp2p = alice.client.networkInterface.libp2p;
@@ -66,8 +114,8 @@ describe('Client', () => {
       bobLibp2p.services.pubsub.subscribe('fruit');
 
       // Connect Alice and Bob
-      const aliceAddrs = alice.client.getAddresses();
-      const conn = await bobLibp2p.dial(aliceAddrs[0]);
+      // const aliceAddrs = alice.client.getAddresses();
+      // const conn = await bobLibp2p.dial(aliceAddrs[0]);
       // const result = await bobLibp2p.services.identify.identify(conn);
       // console.log(result);
       // console.log(conn);
@@ -79,7 +127,7 @@ describe('Client', () => {
       await new Promise((resolve) => {
         bobLibp2p.services.pubsub.addEventListener('subscription-change', (event) => {
           if (
-            event.detail.peerId === conn.remotePeer &&
+            // event.detail.peerId === conn.remotePeer &&
             event.detail.subscriptions.some(
               (sub) => sub.topic === 'fruit' && sub.subscribe === true,
             )

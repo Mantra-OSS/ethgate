@@ -1,4 +1,7 @@
 import type { Libp2p } from 'libp2p';
+import { unixfs } from '@helia/unixfs';
+import { CID } from 'multiformats';
+
 import { DefaultLibp2pServices } from 'helia';
 import { Identify } from '@libp2p/identify';
 import { PingService } from '@libp2p/ping';
@@ -50,6 +53,23 @@ export interface Libp2pServices extends Record<string, unknown> {
 export class NodeNetworkInterface implements NetworkInterface {
   static async create() {
     const helia = await createHelia();
+
+    // const fs = unixfs(helia);
+
+    // const cid = CID.parse('bafybeigmfwlweiecbubdw4lq6uqngsioqepntcfohvrccr2o5f7flgydme');
+
+    // const decoder = new TextDecoder();
+    // let text = '';
+
+    // // read the file from the blockstore using the second Helia node
+    // for await (const chunk of fs.cat(cid)) {
+    //   text += decoder.decode(chunk, {
+    //     stream: true,
+    //   });
+    // }
+
+    // console.log('asd', text);
+
     const libp2p = helia.libp2p;
 
     // const libp2p = await createLibp2p({
