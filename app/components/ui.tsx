@@ -1,3 +1,4 @@
+// import type { uiNodeAvatar2_node$key } from '@/__generated__/uiNodeAvatar2_node.graphql';
 import type { Chain, SolverNode } from '@/lib-solver';
 import { Article, Receipt, ViewInAr } from '@mui/icons-material';
 import type { SvgIconTypeMap } from '@mui/material';
@@ -6,6 +7,8 @@ import type { DefaultComponentProps } from '@mui/material/OverridableComponent';
 import { Suspense } from 'react';
 import type { FallbackProps } from 'react-error-boundary';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useFragment } from 'react-relay';
+import { graphql } from 'relay-runtime';
 
 import EthgateLogo from '../(explorer)/EthgateLogo';
 import { useNode2, useSolver } from '../client/backend';
@@ -134,6 +137,72 @@ export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
     </Suspense>
   );
 }
+
+// const uiNodeAvatar2_nodeFragment = graphql`
+//   fragment uiNodeAvatar2_node on Node {
+//     __typename
+//     id
+//     meta {
+//       name
+//       # imageUrl
+//     }
+//   }
+// `;
+
+// export function NodeAvatar2({ node: nodeFragment }: { node: uiNodeAvatar2_node$key }) {
+//   const node = useFragment(uiNodeAvatar2_nodeFragment, nodeFragment);
+//   const solver = useSolver();
+//   const nodeType = solver.graph.getNodeTypeById(node.id);
+//   // const node = useNode2(nodeId);
+//   let imageSrc;
+//   let body;
+//   if (node) {
+//     // imageSrc = node.meta.imageUrl;
+//     // if (!imageSrc) {
+//     //   // TODO: Add API routes for node images
+//     //   // switch (node.type) {
+//     //   switch (node.__typename) {
+//     //     case 'Chain': {
+//     //       imageSrc = `/statics/${(node as Chain).data.chainId}.svg`;
+//     //       break;
+//     //     }
+//     //     case 'Block':
+//     //     case 'Transaction':
+//     //     case 'Receipt':
+//     //     case 'Log': {
+//     //       // body = <NodeTypeIcon nodeType={node.__typename} color="primary" />;
+//     //       body = <NodeTypeIcon nodeType={node.type} color="primary" />;
+//     //       break;
+//     //     }
+//     //   }
+//     // }
+//   }
+//   return (
+//     <Suspense
+//       fallback={
+//         <Avatar>
+//           <NodeTypeIcon nodeType={nodeType.name} color="primary" />
+//           {/* <NodeTypeIcon nodeType={node.__typename.name} color="primary" /> */}
+//         </Avatar>
+//       }
+//     >
+//       {node ? (
+//         <Avatar alt={node.meta.name} src={imageSrc}>
+//           {body ??
+//             node.meta.name
+//               .split(' ')
+//               .map((word) => word[0])
+//               .join('')}
+//         </Avatar>
+//       ) : (
+//         <Avatar>
+//           <NodeTypeIcon nodeType={nodeType.name} color="primary" />
+//           {/* <NodeTypeIcon nodeType={node.__typename.name} color="primary" /> */}
+//         </Avatar>
+//       )}
+//     </Suspense>
+//   );
+// }
 
 export function FormattedHex({ value }: { value: string }) {
   return (

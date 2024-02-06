@@ -1,5 +1,6 @@
 'use client';
 
+import type { NodePageConnectionSection_node$key } from '@/__generated__/NodePageConnectionSection_node.graphql';
 import type { NodePageQuery } from '@/__generated__/NodePageQuery.graphql';
 import type { SolverNode } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
@@ -8,10 +9,10 @@ import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } fro
 import { notFound } from 'next/navigation';
 import { createElement, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useLazyLoadQuery } from 'react-relay';
+import { useFragment, useLazyLoadQuery } from 'react-relay';
 import { graphql } from 'relay-runtime';
 
-import { useNode, useSolver } from '../client/backend';
+import { useSolver } from '../client/backend';
 
 import ConnectionList from './ConnectionList';
 import { listItemComponents } from './list-items';
@@ -21,6 +22,7 @@ import { FallbackBoundary, NodeAvatar, Section } from './ui';
 const nodePageQuery = graphql`
   query NodePageQuery($id: ID!) {
     node(id: $id) {
+      ...NodePageConnectionSection_node
       id
       meta {
         name
@@ -78,7 +80,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
             xs={12}
             md={edgeTypes.length > 2 ? 4 : edgeTypes.length > 1 ? 6 : 12}
           >
-            <NodePageConnectionSection tailId={node.id} edgeType={edgeType} />
+            <NodePageConnectionSection tail={node2} edgeType={edgeType} />
           </Grid>
         ))}
       </Grid>
@@ -86,14 +88,23 @@ export default function NodePage({ node }: { node: SolverNode }) {
   );
 }
 
+const nodePageConnectionSection_nodeFragment = graphql`
+  fragment NodePageConnectionSection_node on Node {
+    id
+    meta {
+      slug
+    }
+  }
+`;
+
 export function NodePageConnectionSection({
-  tailId,
+  tail: tailFragment,
   edgeType,
 }: {
-  tailId: SolverNode['id'];
+  tail: NodePageConnectionSection_node$key;
   edgeType: EdgeType<any>;
 }) {
-  const tail = useNode(tailId);
+  const tail = useFragment(nodePageConnectionSection_nodeFragment, tailFragment);
   const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
     createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
   return (
@@ -138,7 +149,12 @@ export function NodePageConnectionSection({
       // }}
       >
         <FallbackBoundary>
-          <ConnectionList baseHref="" tailId={tailId} edgeType={edgeType} renderItem={renderItem} />
+          <ConnectionList
+            baseHref=""
+            tailId={tail.id}
+            edgeType={edgeType}
+            renderItem={renderItem}
+          />
         </FallbackBoundary>
       </Stack>
       <Divider />
