@@ -5,7 +5,7 @@
   "schema": "./solver.graphql",
   "eagerEsModules": false,
   "exclude": ["**/node_modules/**", "**/__mocks__/**", "**/__generated__/**"],
-  "customScalars": {
+  "customScalarTypes": {
     "ID": { "name": "GlobalId", "path": "@/lib-solver" }
   }
 }
