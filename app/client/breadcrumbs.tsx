@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 import type { SolverNode } from '../../solver/graph';
 
-import { useNode } from './backend';
+// import { useNode } from './backend';
 
 export function AppBreadcrumbs() {
   const isMobile = useMediaQuery('(max-width: 600px)');
@@ -115,11 +115,12 @@ export function AppBreadcrumbs() {
 }
 
 export function NodeBreadcrumb({ nodeId }: { nodeId: SolverNode['id'] }) {
-  const node = useNode(nodeId);
+  // const node = useNode(nodeId);
 
   return (
     <Typography variant="h5" color="primary">
-      {node.meta.name}
+      {/* {node.meta.name} */}
+      {nodeId}
     </Typography>
   );
 }

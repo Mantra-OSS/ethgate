@@ -14,8 +14,6 @@ import { graphql } from 'relay-runtime';
 
 import { useSolver } from '../client/backend';
 
-import ConnectionList from './ConnectionList';
-import { listItemComponents } from './list-items';
 import { FallbackBoundary, NodeAvatar, Section } from './ui';
 
 const nodePageQuery = graphql`
@@ -104,8 +102,7 @@ export function NodePageConnectionSection({
   edgeType: EdgeType<any>;
 }) {
   const tail = useFragment(nodePageConnectionSection_nodeFragment, tailFragment);
-  const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
-    createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
+
   return (
     <Section
       title={
@@ -147,14 +144,7 @@ export function NodePageConnectionSection({
       //   overflowY: 'auto',
       // }}
       >
-        <FallbackBoundary>
-          <ConnectionList
-            baseHref=""
-            tailId={tail.id}
-            edgeType={edgeType}
-            renderItem={renderItem}
-          />
-        </FallbackBoundary>
+        <FallbackBoundary>[CONNECTION LIST]</FallbackBoundary>
       </Stack>
       <Divider />
       <Box pt={1} />

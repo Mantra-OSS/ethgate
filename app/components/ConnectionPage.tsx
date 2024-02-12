@@ -8,14 +8,6 @@ import { FormattedMessage } from 'react-intl';
 
 import { useSolver } from '../client/backend';
 
-import ConnectionList from './ConnectionList';
-import {
-  BlockListItem,
-  ChainListItem,
-  LogListItem,
-  TransactionListItem,
-  listItemComponents,
-} from './list-items';
 import { FallbackBoundary, NodeAvatar, Section } from './ui';
 
 // import ChainBlockList from './ChainBlockList';
@@ -76,8 +68,6 @@ export function NodeConnectionPageOverview({
   node: SolverNode;
   edgeType: EdgeType<any>;
 }) {
-  const renderItem: React.ComponentProps<typeof ConnectionList>['renderItem'] = ({ headId }) =>
-    createElement((listItemComponents as any)[edgeType.typeName], { nodeId: headId });
   return (
     <Section
       title={
@@ -113,15 +103,7 @@ export function NodeConnectionPageOverview({
       }
     >
       <Stack minHeight={300}>
-        <FallbackBoundary>
-          <ConnectionList
-            baseHref="../"
-            paginate
-            tailId={node.id}
-            edgeType={edgeType}
-            renderItem={renderItem}
-          />
-        </FallbackBoundary>
+        <FallbackBoundary>[CONNECTION LIST]</FallbackBoundary>
       </Stack>
       <Divider />
       <Box pt={1} />

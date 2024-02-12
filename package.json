@@ -51,8 +51,7 @@
     "relay-runtime": "^16.2.0",
     "rxjs": "^7.8.1",
     "server-only": "^0.0.1",
-    "styled-jsx": "^5.1.2",
-    "swr": "^2.2.4"
+    "styled-jsx": "^5.1.2"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.6.7",
