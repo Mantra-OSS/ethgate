@@ -16,7 +16,6 @@ import { useSolver } from '../client/backend';
 
 import ConnectionList from './ConnectionList';
 import { listItemComponents } from './list-items';
-import { overviewComponents } from './overviews';
 import { FallbackBoundary, NodeAvatar, Section } from './ui';
 
 const nodePageQuery = graphql`
@@ -54,7 +53,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
     }
     return true;
   });
-  const children = createElement((overviewComponents as any)[nodeType.name], { node });
+
   if (!ready) return null;
   return (
     <>
@@ -70,7 +69,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
               </Stack>
             </Stack>
             <Divider />
-            <FallbackBoundary>{children}</FallbackBoundary>
+            <FallbackBoundary>[OVERVIEW COMPONENT]</FallbackBoundary>
           </Paper>
         </Grid>
         {edgeTypes.map((edgeType) => (

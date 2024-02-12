@@ -11,7 +11,7 @@ import { useFragment } from 'react-relay';
 import { graphql } from 'relay-runtime';
 
 import EthgateLogo from '../(explorer)/EthgateLogo';
-import { useNode2, useSolver } from '../client/backend';
+import { useSolver } from '../client/backend';
 
 export function FallbackContainer({ children }: { children: React.ReactNode }) {
   return (
@@ -90,29 +90,7 @@ export function NodeTypeIcon({
 export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
   const solver = useSolver();
   const nodeType = solver.graph.getNodeTypeById(nodeId);
-  const node = useNode2(nodeId);
-  let imageSrc;
-  let body;
-  if (node) {
-    imageSrc = node.meta.imageUrl;
 
-    if (!imageSrc) {
-      // TODO: Add API routes for node images
-      switch (node.type) {
-        case 'Chain': {
-          imageSrc = `/statics/${(node as Chain).data.chainId}.svg`;
-          break;
-        }
-        case 'Block':
-        case 'Transaction':
-        case 'Receipt':
-        case 'Log': {
-          body = <NodeTypeIcon nodeType={node.type} color="primary" />;
-          break;
-        }
-      }
-    }
-  }
   return (
     <Suspense
       fallback={
@@ -121,19 +99,9 @@ export function NodeAvatar({ nodeId }: { nodeId: SolverNode['id'] }) {
         </Avatar>
       }
     >
-      {node ? (
-        <Avatar alt={node.meta.name} src={imageSrc}>
-          {body ??
-            node.meta.name
-              .split(' ')
-              .map((word) => word[0])
-              .join('')}
-        </Avatar>
-      ) : (
-        <Avatar>
-          <NodeTypeIcon nodeType={nodeType.name} color="primary" />
-        </Avatar>
-      )}
+      <Avatar>
+        <NodeTypeIcon nodeType={nodeType.name} color="primary" />
+      </Avatar>
     </Suspense>
   );
 }
