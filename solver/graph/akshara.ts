@@ -20,7 +20,7 @@ import type { SolverNode } from './graph/abstract';
 export type AksharaTypeContext = {
   aks: Ethgate.Akshara;
 };
-export class AksharaNodeType<T extends AksharaNode> extends NodeType<T> {
+class AksharaNodeType<T extends AksharaNode> extends NodeType<T> {
   schema: Extract<Ethgate.AksharaObjectSchema, { title: T['type'] }>;
   constructor(
     create: NodeCreateFn<T>,
@@ -40,9 +40,9 @@ export class AksharaNodeType<T extends AksharaNode> extends NodeType<T> {
   }
 }
 
-export class AksharaEdgeType {}
+class AksharaEdgeType {}
 
-export abstract class AksharaNode<
+abstract class AksharaNode<
   TName extends string = any,
   TData extends object = any,
   TId extends GlobalId<TName> = GlobalId<TName>,
@@ -58,7 +58,7 @@ export abstract class AksharaNode<
   }
 }
 
-export abstract class AksharaEdge<
+abstract class AksharaEdge<
   TName extends string = any,
   TTailId extends string = any,
   THeadId extends string = any,
