@@ -15,7 +15,6 @@ import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 // import { graphql, useLazyLoadQuery } from 'react-relay';
 
-// import ChainChart from './ChainChart';
 import { useNow } from './now';
 import { FallbackBoundary, NodeAvatar } from './ui';
 
@@ -60,24 +59,6 @@ export function ChainOverview({ node }: { node: Chain }) {
             />
           ))}
       </Stack>
-      {/* Chart */}
-      {/* <Stack direction={{ md: 'row', xs: 'column' }} spacing={1} paddingX={2}>
-        <Stack flex={1} p={1}>
-          <FallbackBoundary>
-            <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
-          </FallbackBoundary>
-        </Stack>
-        <Stack flex={1} p={1}>
-          <FallbackBoundary>
-            <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
-          </FallbackBoundary>
-        </Stack>
-        <Stack flex={1} p={1}>
-          <FallbackBoundary>
-            <ChainChart width={500} height={200} edgeType={ChainHasBlock} tail={node} />
-          </FallbackBoundary>
-        </Stack>
-      </Stack> */}
     </>
   );
 }

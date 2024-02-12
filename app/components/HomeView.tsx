@@ -14,8 +14,6 @@ import type { Explorer } from '../../solver/graph/explorer';
 import { FallbackBoundary, NodeAvatar } from '../components/ui';
 import { SuspenseFallback } from '../components/ui';
 
-import HomeChart from './HomeChart';
-
 // import ChainDescendantBlockList from './ChainDescendantBlockList';
 // import ChainChainList from './ChainChainList';
 // import ChainOverview from './ChainOverview';
