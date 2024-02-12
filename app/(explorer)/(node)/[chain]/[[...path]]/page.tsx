@@ -1,4 +1,3 @@
-import ConnectionPage from '@/app/components/ConnectionPage';
 import NodePage from '@/app/components/NodePage';
 import { getSolver } from '@/app/server/backend';
 import { notFound } from 'next/navigation';
@@ -16,7 +15,8 @@ export default async function Page({ params }: Props) {
     }
     case 'connection': {
       const [, node, edgeType] = resolved;
-      return <ConnectionPage node={{ ...node }} edgeTypeName={edgeType.typeName} />;
+      // return <ConnectionPage node={{ ...node }} edgeTypeName={edgeType.typeName} />;
+      return <>[CONNECTION PAGE]</>;
     }
   }
 }
