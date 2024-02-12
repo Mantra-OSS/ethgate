@@ -20,6 +20,7 @@ const nodePageQuery = graphql`
   query NodePageQuery($id: ID!) {
     node(id: $id) {
       ...NodePageConnectionSection_node
+      __typename
       id
       meta {
         name
@@ -39,8 +40,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
     setReady(true);
   }, []);
   const solver = useSolver();
-  const nodeType = solver.graph.getNodeTypeById(node2.id);
-  const edgeTypes = solver.graph.getEdgeTypesForNode(nodeType.name).filter((edgeType) => {
+  const edgeTypes = solver.graph.getEdgeTypesForNode(node2.__typename).filter((edgeType) => {
     if (edgeType.typeName === 'BlockHasReceipt') {
       return false;
     } else if (

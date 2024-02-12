@@ -1,4 +1,3 @@
-import type { ConnectionData } from '@/app/client/backend';
 import { GraphQLInterfaceType } from 'graphql';
 import {
   ASTNode,
@@ -21,9 +20,15 @@ import {
 } from 'graphql';
 
 import type { Chain, NodeType, SolverEdge, SolverNode } from '../graph';
+import type { ConnectionPage } from '../spec';
 
 import { GraphQLJSONObject } from './schema/scalars';
 import type { Solver, SolverGraph } from './solver';
+
+type ConnectionData<TEdge extends SolverEdge = SolverEdge> = ConnectionPage<TEdge> & {
+  type: TEdge['type'];
+  tailId: TEdge['tailId'];
+};
 
 export type SolverSchema = GraphQLSchema;
 export const createSolverSchema = (graph: SolverGraph): SolverSchema => {

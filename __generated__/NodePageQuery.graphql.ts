@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<679be1d91be9daa4303a4f9547308c36>>
+ * @generated SignedSource<<fc686a65943a82991bc34ad0835f9ad2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type NodePageQuery$variables = {
 };
 export type NodePageQuery$data = {
   readonly node: {
+    readonly __typename: string;
     readonly data: any;
     readonly id: GlobalId;
     readonly meta: {
@@ -48,17 +49,24 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -86,6 +94,7 @@ return {
             "name": "NodePageConnectionSection_node"
           },
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -94,11 +103,11 @@ return {
             "name": "meta",
             "plural": false,
             "selections": [
-              (v3/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -121,17 +130,10 @@ return {
         "plural": false,
         "selections": [
           {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "__typename",
-            "storageKey": null
-          },
-          {
             "kind": "TypeDiscriminator",
             "abstractKey": "__isNode"
           },
-          (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -147,27 +149,28 @@ return {
                 "name": "slug",
                 "storageKey": null
               },
-              (v3/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
-          (v4/*: any*/)
+          (v2/*: any*/),
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "30ce04aa3722988708d5f28182068e93",
+    "cacheID": "e2a9924233ec57922829f9b41335d3c5",
     "id": null,
     "metadata": {},
     "name": "NodePageQuery",
     "operationKind": "query",
-    "text": "query NodePageQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...NodePageConnectionSection_node\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment NodePageConnectionSection_node on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n}\n"
+    "text": "query NodePageQuery(\n  $id: ID!\n) {\n  node(id: $id) {\n    ...NodePageConnectionSection_node\n    __typename\n    id\n    meta {\n      name\n    }\n    data\n  }\n}\n\nfragment NodePageConnectionSection_node on Node {\n  __isNode: __typename\n  id\n  meta {\n    slug\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7abefce6b25a9d9441087c3401ec5f49";
+(node as any).hash = "9d793017b9d1da80b60f77bc37212935";
 
 export default node;
