@@ -2,7 +2,7 @@
 
 import type { NodePageConnectionSection_node$key } from '@/__generated__/NodePageConnectionSection_node.graphql';
 import type { NodePageQuery } from '@/__generated__/NodePageQuery.graphql';
-import type { SolverNode } from '@/lib-solver';
+import type { GlobalId } from '@/lib-solver';
 import type { EdgeType } from '@/lib-solver';
 import { ArrowOutward } from '@mui/icons-material';
 import { Box, Divider, Grid, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
@@ -30,17 +30,17 @@ const nodePageQuery = graphql`
   }
 `;
 
-export default function NodePage({ node }: { node: SolverNode }) {
-  const { node: node2 } = useLazyLoadQuery<NodePageQuery>(nodePageQuery, { id: node.id });
-  if (!node2) notFound();
-  console.log('node2', node2);
+export default function NodePage({ nodeId }: { nodeId: GlobalId }) {
+  const { node } = useLazyLoadQuery<NodePageQuery>(nodePageQuery, { id: nodeId });
+  if (!node) notFound();
+  console.log('node2', node);
   // const node2 = node;
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setReady(true);
   }, []);
   const solver = useSolver();
-  const edgeTypes = solver.graph.getEdgeTypesForNode(node2.__typename).filter((edgeType) => {
+  const edgeTypes = solver.graph.getEdgeTypesForNode(node.__typename).filter((edgeType) => {
     if (edgeType.typeName === 'BlockHasReceipt') {
       return false;
     } else if (
@@ -59,10 +59,10 @@ export default function NodePage({ node }: { node: SolverNode }) {
         <Grid item xs={12}>
           <Paper>
             <Stack direction="row" alignItems="center" gap={1} p={1} pl={2}>
-              <NodeAvatar nodeId={node2.id} />
+              <NodeAvatar nodeId={node.id} />
               <Stack>
                 <Typography variant="h3" flex={1}>
-                  {node2.meta.name}
+                  {node.meta.name}
                 </Typography>
               </Stack>
             </Stack>
@@ -77,7 +77,7 @@ export default function NodePage({ node }: { node: SolverNode }) {
             xs={12}
             md={edgeTypes.length > 2 ? 4 : edgeTypes.length > 1 ? 6 : 12}
           >
-            <NodePageConnectionSection tail={node2} edgeType={edgeType} />
+            <NodePageConnectionSection tail={node} edgeType={edgeType} />
           </Grid>
         ))}
       </Grid>
