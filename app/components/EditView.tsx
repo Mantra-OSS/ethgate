@@ -1,11 +1,13 @@
 import { Close } from '@mui/icons-material';
 import {
+  Alert,
   Avatar,
   Button,
   Divider,
   IconButton,
   Paper,
   Snackbar,
+  SnackbarContent,
   Stack,
   TextField,
   Typography,
@@ -34,30 +36,22 @@ export default function EditView() {
     'com.twitter': '',
     'org.telegram': '',
   });
-  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState<React.ReactNode>();
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
+  function createMessage(type: string, error?: any): JSX.Element {
+    switch (type) {
+      case 'info':
+        return <Alert severity="info">Pending wallet confirmation.</Alert>;
+      case 'waiting':
+        return <Alert severity="info">Waiting for transaction to be mined.</Alert>;
+      case 'success':
+        return <Alert severity="success">Transaction successful.</Alert>;
+      case 'error':
+        return <Alert severity="error">{error}</Alert>;
+      default:
+        return <></>;
     }
-
-    setOpen(false);
-  };
-
-  const action = (
-    <>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button>
-      <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-        <Close fontSize="small" />
-      </IconButton>
-    </>
-  );
+  }
 
   async function initializeProfile() {
     if (address) {
@@ -97,10 +91,20 @@ export default function EditView() {
         functionName: 'multicall',
         args: [multicallArgs],
       });
-      const tx = await walletClient.writeContract(request);
+      setMessage(createMessage('info'));
 
-      console.log('request', request);
-      console.log('tx', tx);
+      const tx = await walletClient.writeContract(request);
+      setMessage(createMessage('waiting'));
+
+      const receipt = await publicClient.waitForTransactionReceipt({ hash: tx });
+      if (receipt.status === 'success') {
+        setMessage(createMessage('success'));
+        setTimeout(() => {
+          setMessage(undefined);
+        }, 3000);
+      } else {
+        setMessage(createMessage('error', receipt));
+      }
     }
   }
 
@@ -206,16 +210,7 @@ export default function EditView() {
           Save
         </Button>
       </Stack>
-      <div>
-        <Button onClick={handleClick}>Open Snackbar</Button>
-        <Snackbar
-          open={open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          message="Note archived"
-          action={action}
-        />
-      </div>
+      {message}
     </Paper>
   );
 }
