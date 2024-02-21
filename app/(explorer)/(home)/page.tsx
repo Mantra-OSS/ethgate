@@ -5,16 +5,16 @@ import ExplorerLayout from '../ExplorerLayout';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `ethgate.io | Ethereum & L2 explorer`,
-    description: `Discover the Ethereum and L2 blocks, transactions, logs, and more on ethgate.io`,
+    title: `punker.io | Ethereum Social Club`,
+    description: `Punker is a social club for Ethereum users. Connect with friends, share updates, and explore the Ethereum blockchain.`,
     icons: '/icon',
     openGraph: {
-      title: `ethgate.io | Ethereum & L2 explorer`,
-      description: `Discover the Ethereum and L2 blocks, transactions, logs, and more on ethgate.io`,
+      title: `punker.io | Ethereum Social Club`,
+      description: `Punker is a social club for Ethereum users. Connect with friends, share updates, and explore the Ethereum blockchain.`,
     },
     twitter: {
-      title: `ethgate.io | Ethereum & L2 explorer`,
-      description: `Discover the Ethereum and L2 blocks, transactions, logs, and more on ethgate.io`,
+      title: `punker.io | Ethereum Social Club`,
+      description: `Punker is a social club for Ethereum users. Connect with friends, share updates, and explore the Ethereum blockchain.`,
     },
   };
 }

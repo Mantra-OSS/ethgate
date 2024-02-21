@@ -1,35 +1,27 @@
 'use client';
-
-import { GitHub, Telegram, Twitter } from '@mui/icons-material';
+import { Settings } from '@mui/icons-material';
 import {
   Alert,
   AppBar,
+  Badge,
   Box,
   Button,
-  IconButton,
+  Container,
+  Grid,
   Link,
+  Paper,
   Stack,
   Toolbar,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 
 import ClientProvider from '../client/AppProvider';
-import { AppBreadcrumbs } from '../client/breadcrumbs';
+import LeftSidebar from '../components/LeftSidebar';
+import RightSidebar from '../components/RightSidebar';
 import { FallbackBoundary } from '../components/ui';
 
 import EthgateLogo from './EthgateLogo';
-import Loading from './loading';
-
-export default function ExplorerLayout({
-  children,
-  nav,
-}: {
-  children: React.ReactNode;
-  nav?: React.ReactNode;
-}) {
-  const isMobile = useMediaQuery('(max-width: 600px)');
-
+export default function ExplorerLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClientProvider>
       <Stack role="banner" style={{ minHeight: '100vh' }}>
@@ -42,67 +34,45 @@ export default function ExplorerLayout({
                 </Link>
               </Typography>
             </Box>
-            {nav ?? <AppBreadcrumbs />}
+            <Typography variant="h5" color="primary">
+              <Link href="/">Punker</Link>
+            </Typography>
             <Box flex={1} />
-            <Stack direction="row" spacing={{ md: 2, xs: 0 }} alignItems="center">
-              {/* {isMobile ? null : <Button href="/about">About</Button>} */}
-              <Socials />
-              {/* <ChangeLanguage /> */}
-            </Stack>
+            <w3m-button />
+            <Button href="/settings">
+              <Badge badgeContent={0} color="primary">
+                <Settings color="action" />
+              </Badge>
+            </Button>
           </Toolbar>
           <Alert severity="warning">
-            This is a beta! Send feedback here:{' '}
-            <Link href="https://forms.gle/RweA6zGf6LE1hjN49">
-              https://forms.gle/RweA6zGf6LE1hjN49
-            </Link>
+            This is a beta! Send feedback here: <Link href="#">#</Link>
           </Alert>
         </AppBar>
-        <FallbackBoundary>{children}</FallbackBoundary>
+        <FallbackBoundary>
+          <Container maxWidth="xl">
+            <Grid container spacing={1} padding={1}>
+              <Grid item xs={3}>
+                <Paper>
+                  <FallbackBoundary>
+                    <LeftSidebar />
+                  </FallbackBoundary>
+                </Paper>
+              </Grid>
+              <Grid item xs={6}>
+                <FallbackBoundary>{children}</FallbackBoundary>
+              </Grid>
+              <Grid item xs={3}>
+                <Paper>
+                  <FallbackBoundary>
+                    <RightSidebar />
+                  </FallbackBoundary>
+                </Paper>
+              </Grid>
+            </Grid>
+          </Container>
+        </FallbackBoundary>
       </Stack>
-      <Box p={1} pt={4} mt="auto">
-        {/* <Paper> */}
-        <Stack width="100%" direction="row" justifyContent="flex-end" padding={1}>
-          <Socials />
-        </Stack>
-        {/* </Paper> */}
-      </Box>
     </ClientProvider>
-  );
-}
-
-// function Navigation(props: { children: React.ReactNode }) {
-//   const path = usePathname().split('/');
-//   const matches = path.map((base, i) => ({
-//     title: base.length ? base : 'ethgate.io',
-//     href: i === 0 ? '/' : path.slice(0, i + 1).join('/'),
-//   }));
-
-//   return (
-//     <Breadcrumbs separator={<NavigateNext fontSize="small" />} aria-label="breadcrumb">
-//       {matches.map((match, i) => (
-//         <Link key={i} href={`${match.href as any}` as any}>
-//           <Typography variant="h5" color="primary">
-//             {match.title}
-//           </Typography>
-//         </Link>
-//       ))}
-//       {props.children}
-//     </Breadcrumbs>
-//   );
-// }
-
-function Socials() {
-  return (
-    <>
-      <IconButton href="https://github.com/mantra-oss/" target="_blank" color="secondary">
-        <GitHub />
-      </IconButton>
-      <IconButton href="https://t.me/ethgate_io" target="_blank" color="secondary">
-        <Telegram />
-      </IconButton>
-      <IconButton href="https://twitter.com/ethgate_io" target="_blank" color="secondary">
-        <Twitter />
-      </IconButton>
-    </>
   );
 }
