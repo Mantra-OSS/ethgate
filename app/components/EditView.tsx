@@ -1,17 +1,4 @@
-import { Close } from '@mui/icons-material';
-import {
-  Alert,
-  Avatar,
-  Button,
-  Divider,
-  IconButton,
-  Paper,
-  Snackbar,
-  SnackbarContent,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Alert, Avatar, Button, Divider, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { namehash } from 'viem';
 import { useAccount } from 'wagmi';
