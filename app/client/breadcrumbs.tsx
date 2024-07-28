@@ -114,12 +114,12 @@ export function AppBreadcrumbs() {
   );
 }
 
-export function NodeBreadcrumb({ nodeId }: { nodeId: SolverNode['id'] }) {
-  const node = useNode(nodeId);
+// export function NodeBreadcrumb({ nodeId }: { nodeId: SolverNode['id'] }) {
+//   const node = useNode(nodeId);
 
-  return (
-    <Typography variant="h5" color="primary">
-      {node.meta.name}
-    </Typography>
-  );
-}
+//   return (
+//     <Typography variant="h5" color="primary">
+//       {node.meta.name}
+//     </Typography>
+//   );
+// }
