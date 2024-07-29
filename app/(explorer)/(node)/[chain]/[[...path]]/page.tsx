@@ -12,7 +12,7 @@ export default async function Page({ params }: Props) {
   switch (resolved[0]) {
     case 'node': {
       const [, node] = resolved;
-      return <NodePage node={{ ...node }} />;
+      return <NodePage nodeId={node.id} />;
     }
     case 'connection': {
       const [, node, edgeType] = resolved;

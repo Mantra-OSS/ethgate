@@ -1,3 +1,4 @@
+import type { NodeOverview_node$key } from '@/__generated__/NodeOverview_node.graphql';
 import { useNode2 } from '@/app/client/backend';
 import type { Receipt } from '@/lib-solver';
 import {
@@ -14,10 +15,32 @@ import { green, red } from '@mui/material/colors';
 import { DateTime } from 'luxon';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 // import { graphql, useLazyLoadQuery } from 'react-relay';
+import { useFragment } from 'react-relay';
+import { graphql } from 'relay-runtime';
 
 // import ChainChart from './ChainChart';
+
 import { useNow } from './now';
 import { FallbackBoundary, NodeAvatar } from './ui';
+
+const nodeOverview_nodeFragment = graphql`
+  fragment NodeOverview_node on Node {
+    __typename
+    id
+    meta {
+      name
+      slug
+    }
+    data
+  }
+`;
+
+export function NodeOverview({ node: nodeFragment }: { node: NodeOverview_node$key }) {
+  const node = useFragment(nodeOverview_nodeFragment, nodeFragment);
+
+  const OverviewComponent = (overviewComponents as any)[node.__typename];
+  return <OverviewComponent node={node} />;
+}
 
 export const overviewComponents = {
   Chain: ChainOverview,
